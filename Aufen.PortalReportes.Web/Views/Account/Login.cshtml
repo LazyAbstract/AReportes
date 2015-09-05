@@ -1,0 +1,60 @@
+﻿@model Aufen.PortalReportes.Web.Models.LoginModel
+
+@{
+    ViewBag.Title = "Ingresar al sistema";
+}
+
+<div class="col-lg-12">
+    <div class="col-lg-6">
+        <div class="text-center">
+            <h3>Portal de Consulta</h3>
+            <img src="@Url.Content("~/Content/imagenes/logoAufen.png")" alt="logo_baldrich" />
+        </div>
+
+    </div>
+    <div class="col-lg-6">
+        <div class="panel panel-default ">
+            <div class="panel-heading">
+                <h4>Ingresar al sistema</h4>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm(null, null, new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.UserName, new { @class = "col-sm-4 control-label" })
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.UserName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-sm-4 control-label" })
+                        <div class="col-sm-8">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Password)
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-sm-push-4 col-sm-8">
+                            <div class="checkbox">
+                                <label>
+                                    @Html.CheckBoxFor(m => m.RememberMe, new { @class = "" }) Recordarme
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-push-4 col-sm-8">
+                            <input type="submit" value="Ingresar" class="btn btn-default" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+ 

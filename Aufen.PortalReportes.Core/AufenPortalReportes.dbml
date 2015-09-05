@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ZkTimeEnterprise" Class="AufenPortalReportesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=192.168.1.38;Initial Catalog=ZkTimeEnterprise;Persist Security Info=True;User ID=aufen" SettingsObjectName="Aufen.PortalReportes.Core.Properties.Settings" SettingsPropertyName="ZkTimeEnterpriseConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.EMPRESAS" Member="EMPRESAs">
+    <Type Name="EMPRESA">
+      <Column Name="Codigo" Type="System.String" DbType="Char(3) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="Char(60)" CanBeNull="true" />
+      <Column Name="EtiquetaUbicacion" Type="System.String" DbType="Char(15)" CanBeNull="true" />
+      <Column Name="EtiquetaCentro" Type="System.String" DbType="Char(15)" CanBeNull="true" />
+      <Column Name="FormatoNombre" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="UltimaVersion" Type="System.String" DbType="Char(7) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Function Name="dbo.sp_LibroAtrasos" Method="sp_LibroAtrasos">
+    <Parameter Name="fechaInicio" Type="System.String" DbType="VarChar(10)" />
+    <Parameter Name="fechaFin" Type="System.String" DbType="VarChar(10)" />
+    <Parameter Name="num" Type="System.String" DbType="VarChar(2)" />
+    <ElementType Name="sp_LibroAtrasosResult">
+      <Column Name="Fecha" Type="System.String" DbType="Char(8)" CanBeNull="true" />
+      <Column Name="IdEmpleado" Type="System.String" DbType="Char(9)" CanBeNull="true" />
+      <Column Name="Nombre" Type="System.String" DbType="Char(40)" CanBeNull="true" />
+      <Column Name="Apellidos" Type="System.String" DbType="Char(60)" CanBeNull="true" />
+      <Column Name="IdHorario" Type="System.String" DbType="Char(4) NOT NULL" CanBeNull="false" />
+      <Column Name="Entrada" Type="System.String" DbType="Char(6)" CanBeNull="true" />
+      <Column Name="Salida" Type="System.String" DbType="Char(6)" CanBeNull="true" />
+      <Column Name="EntradaTeorica1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="SalidaTeorica1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="Colacion" Type="System.Decimal" DbType="Decimal(2,1) NOT NULL" CanBeNull="false" />
+      <Column Name="Observacion" Type="System.String" DbType="VarChar(29)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+</Database>
