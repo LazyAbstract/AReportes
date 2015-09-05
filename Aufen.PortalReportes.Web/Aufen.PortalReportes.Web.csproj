@@ -243,6 +243,7 @@
     <Compile Include="Configuration\MapperConfiguration.cs" />
     <Compile Include="Configuration\RutModelBinder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="MapperProfile\DefaultProfileMapper.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\ReportesModels\LibroAtrasos.cs" />
     <Compile Include="Models\ReportesModels\ListarReporteFormModel.cs" />
     <Compile Include="Models\ReportesModels\ListarReporteViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -16,10 +16,13 @@
     <Parameter Name="num" Type="System.String" DbType="VarChar(2)" />
     <ElementType Name="sp_LibroAtrasosResult">
       <Column Name="Fecha" Type="System.String" DbType="Char(8)" CanBeNull="true" />
+      <Column Name="NumSemana" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="IdEmpleado" Type="System.String" DbType="Char(9)" CanBeNull="true" />
       <Column Name="Nombre" Type="System.String" DbType="Char(40)" CanBeNull="true" />
       <Column Name="Apellidos" Type="System.String" DbType="Char(60)" CanBeNull="true" />
       <Column Name="IdHorario" Type="System.String" DbType="Char(4) NOT NULL" CanBeNull="false" />
+      <Column Name="IdEmpresa" Type="System.String" DbType="VarChar(2) NOT NULL" CanBeNull="false" />
+      <Column Name="IdUbicacion" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
       <Column Name="Entrada" Type="System.String" DbType="Char(6)" CanBeNull="true" />
       <Column Name="Salida" Type="System.String" DbType="Char(6)" CanBeNull="true" />
       <Column Name="EntradaTeorica1" Type="System.String" DbType="Char(4)" CanBeNull="true" />

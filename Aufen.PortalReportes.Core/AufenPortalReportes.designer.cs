@@ -268,6 +268,8 @@ namespace Aufen.PortalReportes.Core
 		
 		private string _Fecha;
 		
+		private System.Nullable<int> _NumSemana;
+		
 		private string _IdEmpleado;
 		
 		private string _Nombre;
@@ -275,6 +277,10 @@ namespace Aufen.PortalReportes.Core
 		private string _Apellidos;
 		
 		private string _IdHorario;
+		
+		private string _IdEmpresa;
+		
+		private string _IdUbicacion;
 		
 		private string _Entrada;
 		
@@ -304,6 +310,22 @@ namespace Aufen.PortalReportes.Core
 				if ((this._Fecha != value))
 				{
 					this._Fecha = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumSemana", DbType="Int")]
+		public System.Nullable<int> NumSemana
+		{
+			get
+			{
+				return this._NumSemana;
+			}
+			set
+			{
+				if ((this._NumSemana != value))
+				{
+					this._NumSemana = value;
 				}
 			}
 		}
@@ -368,6 +390,38 @@ namespace Aufen.PortalReportes.Core
 				if ((this._IdHorario != value))
 				{
 					this._IdHorario = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdEmpresa", DbType="VarChar(2) NOT NULL", CanBeNull=false)]
+		public string IdEmpresa
+		{
+			get
+			{
+				return this._IdEmpresa;
+			}
+			set
+			{
+				if ((this._IdEmpresa != value))
+				{
+					this._IdEmpresa = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdUbicacion", DbType="Char(2) NOT NULL", CanBeNull=false)]
+		public string IdUbicacion
+		{
+			get
+			{
+				return this._IdUbicacion;
+			}
+			set
+			{
+				if ((this._IdUbicacion != value))
+				{
+					this._IdUbicacion = value;
 				}
 			}
 		}

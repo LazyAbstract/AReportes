@@ -25,7 +25,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public IEnumerable<string> Empresa { get; set; }
 
         [DisplayName("Departamento")]
-        public string Departamento { get; set; }
+        public IEnumerable<string> Departamento { get; set; }
 
         public IEnumerable<int> IdTipoReportes { get; set; }
     }
