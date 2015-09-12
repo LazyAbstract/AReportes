@@ -73,6 +73,14 @@ namespace Aufen.PortalReportes.Core
 			}
 		}
 		
+		public System.Data.Linq.Table<vw_Ubicacione> vw_Ubicaciones
+		{
+			get
+			{
+				return this.GetTable<vw_Ubicacione>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_LibroAtrasos")]
 		public ISingleResult<sp_LibroAtrasosResult> sp_LibroAtrasos([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(10)")] string fechaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(10)")] string fechaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string num)
 		{
@@ -263,6 +271,69 @@ namespace Aufen.PortalReportes.Core
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.vw_Ubicaciones")]
+	public partial class vw_Ubicacione
+	{
+		
+		private string _Codigo;
+		
+		private string _Descripcion;
+		
+		private string _IdEmpresa;
+		
+		public vw_Ubicacione()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Codigo", DbType="Char(2) NOT NULL", CanBeNull=false)]
+		public string Codigo
+		{
+			get
+			{
+				return this._Codigo;
+			}
+			set
+			{
+				if ((this._Codigo != value))
+				{
+					this._Codigo = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Descripcion", DbType="Char(50)")]
+		public string Descripcion
+		{
+			get
+			{
+				return this._Descripcion;
+			}
+			set
+			{
+				if ((this._Descripcion != value))
+				{
+					this._Descripcion = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdEmpresa", DbType="VarChar(2) NOT NULL", CanBeNull=false)]
+		public string IdEmpresa
+		{
+			get
+			{
+				return this._IdEmpresa;
+			}
+			set
+			{
+				if ((this._IdEmpresa != value))
+				{
+					this._IdEmpresa = value;
+				}
+			}
+		}
+	}
+	
 	public partial class sp_LibroAtrasosResult
 	{
 		
@@ -270,7 +341,7 @@ namespace Aufen.PortalReportes.Core
 		
 		private System.Nullable<int> _NumSemana;
 		
-		private string _IdEmpleado;
+		private string _Rut;
 		
 		private string _Nombre;
 		
@@ -280,7 +351,7 @@ namespace Aufen.PortalReportes.Core
 		
 		private string _IdEmpresa;
 		
-		private string _IdUbicacion;
+		private string _IdDepartamento;
 		
 		private string _Entrada;
 		
@@ -330,18 +401,18 @@ namespace Aufen.PortalReportes.Core
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdEmpleado", DbType="Char(9)")]
-		public string IdEmpleado
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Rut", DbType="Char(9)")]
+		public string Rut
 		{
 			get
 			{
-				return this._IdEmpleado;
+				return this._Rut;
 			}
 			set
 			{
-				if ((this._IdEmpleado != value))
+				if ((this._Rut != value))
 				{
-					this._IdEmpleado = value;
+					this._Rut = value;
 				}
 			}
 		}
@@ -410,18 +481,18 @@ namespace Aufen.PortalReportes.Core
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdUbicacion", DbType="Char(2) NOT NULL", CanBeNull=false)]
-		public string IdUbicacion
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdDepartamento", DbType="Char(2) NOT NULL", CanBeNull=false)]
+		public string IdDepartamento
 		{
 			get
 			{
-				return this._IdUbicacion;
+				return this._IdDepartamento;
 			}
 			set
 			{
-				if ((this._IdUbicacion != value))
+				if ((this._IdDepartamento != value))
 				{
-					this._IdUbicacion = value;
+					this._IdDepartamento = value;
 				}
 			}
 		}

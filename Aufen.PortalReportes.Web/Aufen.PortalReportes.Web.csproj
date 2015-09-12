@@ -59,6 +59,10 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.6.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.6\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Mvc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Mvc2Futures.2.0.50217.0\lib\Microsoft.Web.Mvc.dll</HintPath>
@@ -253,10 +257,12 @@
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="MapperProfile\DefaultProfileMapper.cs" />
+    <Compile Include="MapperProfile\ReportesMappers\sp_LibroAtrasosResultsp_LibroAtrasosResultDTO.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ReportesModels\LibroAtrasos.cs" />
     <Compile Include="Models\ReportesModels\ListarReporteFormModel.cs" />
     <Compile Include="Models\ReportesModels\ListarReporteViewModel.cs" />
+    <Compile Include="Models\ReportesModels\sp_LibroAtrasosResultDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

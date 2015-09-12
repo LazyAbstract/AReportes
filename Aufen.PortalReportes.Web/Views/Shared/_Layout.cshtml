@@ -15,7 +15,9 @@
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/myScripts")
+        @Scripts.Render("~/bundles/myScripts")
+        <script src="@Url.Content("~/Scripts/globalize/globalize.js")"></script>
+    <script src="@Url.Content("~/Scripts/globalize/cultures/globalize.culture.es-CL.js")"></script>
     <script type="text/javascript">
         jQuery.browser = {};
         (function () {
@@ -26,6 +28,39 @@
                 jQuery.browser.version = RegExp.$1;
             }
         })();
+        $(document).ready(function () { 
+            // use the language provided from server… 
+            var lang = $("html").attr("lang");  
+            if (typeof Globalize != 'undefined') 
+                Globalize.culture('es-CL');
+        });
+        // replace methods in jquery.validate.js ($.validator.methods) as necessary for localized validation:
+
+        $.validator.methods.number = function (value, element) {
+            return this.optional(element) || !isNaN(Globalize.parseFloat(value));
+        }
+
+        $.validator.methods.date = function (value, element) {
+            if (this.optional(element))
+                return true;
+            var result = Globalize.parseDate(value);
+            return !isNaN(result) && (result != null);
+        }
+
+        $.validator.methods.min = function (value, element, param) {
+            return this.optional(element) || Globalize.parseFloat(value) >= param;
+        }
+
+        $.validator.methods.max = function (value, element, param) {
+            return this.optional(element) || Globalize.parseFloat(value) <= param;
+        }
+
+        $.validator.methods.range = function (value, element, param) {
+            if (this.optional(element))
+                return true;
+            var result = Globalize.parseFloat(value);
+            return (result >= param[0] && result <= param[1]);
+        }
     </script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>

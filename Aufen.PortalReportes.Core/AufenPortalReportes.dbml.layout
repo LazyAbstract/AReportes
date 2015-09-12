@@ -8,5 +8,11 @@
         <elementListCompartment Id="6b313476-2559-4c65-b1d0-a882ec7f4187" absoluteBounds="1.5150000000000001, 1.585, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="75839f86-25b6-4e1e-95bf-76cc3e040339" absoluteBounds="2.125, 3.625, 2, 1.3862939453125">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/vw_Ubicacione" />
+      <nestedChildShapes>
+        <elementListCompartment Id="98ceaa66-4abc-47ce-990b-eb5dc631b1b1" absoluteBounds="2.14, 4.085, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

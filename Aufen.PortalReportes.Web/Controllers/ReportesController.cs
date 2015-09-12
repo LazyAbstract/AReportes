@@ -7,6 +7,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
+using AutoMapper;
+using ICSharpCode.SharpZipLib.Core;
 
 namespace Aufen.PortalReportes.Web.Controllers
 {
@@ -35,22 +37,30 @@ namespace Aufen.PortalReportes.Web.Controllers
                         //{
                         foreach (var tipoReporte in FORM.IdTipoReportes)
                         {
-                            ZipEntry zipEntry = new ZipEntry(String.Format("{0}/LibroAtrasos.pdf", empresa));
-                            zipEntry.DateTime = DateTime.Now;
+                            
                             byte[] buffer = new byte[] { };
-                            switch (tipoReporte)
-                            {
-                                case TipoReporte.LibroAtrasos:
-                                    IEnumerable<sp_LibroAtrasosResult> resultadoLibroAtrasos =
+                            IEnumerable<sp_LibroAtrasosResult> resultadoLibroAtrasos =
                                         db.sp_LibroAtrasos(
                                         FORM.FechaDesde.Value.ToString("yyyyMMdd"),
                                         FORM.FechaHasta.Value.ToString("yyyyMMdd"),
-                                        int.Parse(empresa).ToString()).AsEnumerable();
-                                    LibroAtrasos libroAtrasos = new LibroAtrasos(resultadoLibroAtrasos);
-                                    break;
+                                        int.Parse(empresa).ToString()).ToList();
+                            List<sp_LibroAtrasosResultDTO> resultados = new List<sp_LibroAtrasosResultDTO>();
+                            foreach (var resultadoLibroAtraso in resultadoLibroAtrasos)
+                            {
+                                resultados.Add(Mapper.Map<sp_LibroAtrasosResult,
+                                sp_LibroAtrasosResultDTO>(resultadoLibroAtraso));
                             }
-                            zipOutput.PutNextEntry(zipEntry);
-                            zipOutput.Write(buffer, 0, buffer.Length);
+                            
+                            switch (tipoReporte)
+                            {
+                                case TipoReporte.LibroAtrasos:
+                                    LibroAtrasos libroAtrasos = new LibroAtrasos(resultados,db);
+                                    ZipEntry zipEntry = new ZipEntry(String.Format("{0}/LibroAtrasos.pdf", empresa));
+                                    zipEntry.DateTime = DateTime.Now;
+                                    zipOutput.PutNextEntry(zipEntry);
+                                    zipOutput.Write(libroAtrasos.Archiv, 0, libroAtrasos.Archiv.Length);
+                                    break;
+                            }  
                         }
                         //}
                     }
