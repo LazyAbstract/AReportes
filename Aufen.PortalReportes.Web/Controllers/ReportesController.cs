@@ -33,8 +33,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                     zipOutput.SetLevel(9);
                     foreach (var empresa in FORM.Empresa)
                     {
-                        //foreach (var departamento in FORM.Departamento)
-                        //{
+                        
                         foreach (var tipoReporte in FORM.IdTipoReportes)
                         {
                             
@@ -50,19 +49,29 @@ namespace Aufen.PortalReportes.Web.Controllers
                                 resultados.Add(Mapper.Map<sp_LibroAtrasosResult,
                                 sp_LibroAtrasosResultDTO>(resultadoLibroAtraso));
                             }
-                            
+                            ZipEntry zipEntry = null;
+                            //foreach (var departamento in FORM.Departamento)
+                            //{ Los nombres de los zipentry esta abierto sólo por empresa
                             switch (tipoReporte)
                             {
                                 case TipoReporte.LibroAtrasos:
                                     LibroAtrasos libroAtrasos = new LibroAtrasos(resultados,db);
-                                    ZipEntry zipEntry = new ZipEntry(String.Format("{0}/LibroAtrasos.pdf", empresa));
+                                    zipEntry = new ZipEntry(String.Format("{0}/LibroAtrasos.pdf", empresa));
                                     zipEntry.DateTime = DateTime.Now;
                                     zipOutput.PutNextEntry(zipEntry);
-                                    zipOutput.Write(libroAtrasos.Archiv, 0, libroAtrasos.Archiv.Length);
+                                    zipOutput.Write(libroAtrasos.Archivo, 0, libroAtrasos.Archivo.Length);
+                                    break;
+                                case TipoReporte.AsistenciaLegal:
+                                    //Server.MapPath("~/Content/ReporteAsistenciaLegal.pdf");
+                                    //AsistenciaLegal asistenciaLega = new AsistenciaLegal(resultados, db, HttpContext.Server.MapPath(""));
+                                    //zipEntry = new ZipEntry(String.Format("{0}/AsistenciaLegal.pdf", empresa));
+                                    //zipEntry.DateTime = DateTime.Now;
+                                    //zipOutput.PutNextEntry(zipEntry);
+                                    //zipOutput.Write(asistenciaLega.Archivo, 0, asistenciaLega.Archivo.Length);
                                     break;
                             }  
+                            //}
                         }
-                        //}
                     }
                     zipOutput.Finish();
                     byte[] newBytes = new byte[memOutput.Length];

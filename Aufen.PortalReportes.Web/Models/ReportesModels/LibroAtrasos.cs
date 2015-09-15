@@ -19,6 +19,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public LibroAtrasos(IEnumerable<sp_LibroAtrasosResultDTO> resultado, AufenPortalReportesDataContext db)
         {
+            Configuracion();
             libroAtrasos = resultado;//.Where(x => x.Salida.Subtract(x.Entrada) < x.SalidaTeorica.Subtract(x.EntradaTeorica));
             Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
             using (var ms = new MemoryStream())
@@ -95,7 +96,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         }
 
-        public byte[] Archiv
+        public byte[] Archivo
         {
             get
             {
