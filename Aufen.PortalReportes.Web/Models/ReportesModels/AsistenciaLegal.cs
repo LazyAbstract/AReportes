@@ -54,9 +54,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Tipo{1}",i,j),dia!=null ? dia.Observacion : String.Empty);
                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Dia{1}",i,j),String.Format("{0} {1}",dia!=null ? dia.Fecha.Value.ToString("dd/MM") : string.Empty , diasSemana[j]));
                                 }
-                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Jornada", i), new DateTime(semana.Sum(x => x.SalidaTeorica.Subtract(x.EntradaTeorica).Ticks)).ToString("HH:mm"));
-                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Asistencia", i), new DateTime(semana.Sum(x => x.Salida.Subtract(x.Entrada).Ticks)).ToString("HH:mm")); // SUmar timestramp de la deiferencia de entrada y salida
-                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Salidas", i), ""); // ??
+
+                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Jornada", i),CalculaJornada(semana));
+                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Asistencia", i), CalculaAsistencia(semana));
+                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Salidas", i), ""); 
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}Ausencias", i), "");
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}AtrasosSalidas", i), "");
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroAtrasos", i), "");
@@ -76,6 +77,22 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 copy.Close();
                 _Archivo = finalStream.ToArray();
             }
+        }
+
+        private string CalculaJornada(IEnumerable<sp_LibroAtrasosResultDTO> lista)
+        {
+            return lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue) ?
+                        new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
+                        .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Ticks))
+                            .ToString("HH:mm") : String.Empty;
+
+        }
+
+        private string CalculaAsistencia(IEnumerable<sp_LibroAtrasosResultDTO> lista)
+        {
+            return lista.Any(x => x.Salida.HasValue && x.Entrada.HasValue) ?
+                new DateTime(lista.Where(x => x.Salida.HasValue && x.Entrada.HasValue)
+                .Sum(x => x.Salida.Value.Subtract(x.Entrada.Value).Ticks)).ToString("HH:mm") : String.Empty;
         }
 
         private void Configuracion()
