@@ -62,12 +62,12 @@ namespace Aufen.PortalReportes.Web.Controllers
                                     zipOutput.Write(libroAtrasos.Archivo, 0, libroAtrasos.Archivo.Length);
                                     break;
                                 case TipoReporte.AsistenciaLegal:
-                                    //Server.MapPath("~/Content/ReporteAsistenciaLegal.pdf");
-                                    //AsistenciaLegal asistenciaLega = new AsistenciaLegal(resultados, db, HttpContext.Server.MapPath(""));
-                                    //zipEntry = new ZipEntry(String.Format("{0}/AsistenciaLegal.pdf", empresa));
-                                    //zipEntry.DateTime = DateTime.Now;
-                                    //zipOutput.PutNextEntry(zipEntry);
-                                    //zipOutput.Write(asistenciaLega.Archivo, 0, asistenciaLega.Archivo.Length);
+                                    Server.MapPath("~/Content/ReporteAsistenciaLegal.pdf");
+                                    AsistenciaLegal asistenciaLega = new AsistenciaLegal(resultados, db, HttpContext.Server.MapPath(""));
+                                    zipEntry = new ZipEntry(String.Format("{0}/AsistenciaLegal.pdf", empresa));
+                                    zipEntry.DateTime = DateTime.Now;
+                                    zipOutput.PutNextEntry(zipEntry);
+                                    zipOutput.Write(asistenciaLega.Archivo, 0, asistenciaLega.Archivo.Length);
                                     break;
                             }  
                             //}

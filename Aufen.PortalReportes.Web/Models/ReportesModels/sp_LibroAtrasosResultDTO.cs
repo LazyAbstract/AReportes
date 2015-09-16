@@ -16,11 +16,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public string IdHorario { get; set; }
         public string IdEmpresa { get; set; }
         public string IdDepartamento { get; set; }
-        public DateTime Entrada { get; set; }
-        public DateTime Salida { get; set; }
-        public DateTime EntradaTeorica { get; set; }
-        public DateTime SalidaTeorica { get; set; }
-        public TimeSpan TiempoColacion { get; set; }
+        public DateTime? Entrada { get; set; }
+        public DateTime? Salida { get; set; }
+        public DateTime? EntradaTeorica { get; set; }
+        public DateTime? SalidaTeorica { get; set; }
+        public TimeSpan? TiempoColacion { get; set; }
         public string Observacion { get; set; }
     }
 }

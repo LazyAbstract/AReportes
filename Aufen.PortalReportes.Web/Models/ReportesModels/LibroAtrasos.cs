@@ -26,7 +26,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                 doc.Open();
-                foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }))
+                foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
                 {
                     var departamento = db.vw_Ubicaciones.SingleOrDefault(x =>
                         x.Codigo == reporte.Key.IdDepartamento &&
@@ -64,16 +64,16 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                     foreach (var atraso in reporte)
                     {
-                        TimeSpan tiempoAtraso = atraso.Salida.Subtract(atraso.Entrada) - atraso.SalidaTeorica.Subtract(atraso.EntradaTeorica);
-                        TimeSpan tiempoNormal = atraso.SalidaTeorica.Subtract(atraso.EntradaTeorica);
+                        TimeSpan tiempoAtraso = (atraso.Salida.Value.Subtract(atraso.Entrada.Value)) - atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value);
+                        TimeSpan tiempoNormal = atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value);
                         tabla.AddCell(new PdfPCell(new Phrase(atraso.Fecha.Value.ToString("ddd dd/MM"))) { Colspan = 10, HorizontalAlignment = Element.ALIGN_LEFT });
                         tabla.AddCell(new PdfPCell(new Phrase(atraso.Rut.ToStringConGuion())));
                         tabla.AddCell(new PdfPCell(new Phrase(atraso.Apellidos)));
                         tabla.AddCell(new PdfPCell(new Phrase(atraso.Nombres)));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Entrada.ToString("HH:mm"))));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Salida.ToString("HH:mm"))));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.EntradaTeorica.ToString("HH:mm"))));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.SalidaTeorica.ToString("HH:mm"))));
+                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Entrada.HasValue ? atraso.Entrada.Value.ToString("HH:mm") : String.Empty)));
+                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Salida.HasValue ? atraso.Salida.Value.ToString("HH:mm") : String.Empty)));
+                        tabla.AddCell(new PdfPCell(new Phrase(atraso.EntradaTeorica.HasValue ? atraso.EntradaTeorica.Value.ToString("HH:mm") : String.Empty)));
+                        tabla.AddCell(new PdfPCell(new Phrase(atraso.SalidaTeorica.HasValue ? atraso.SalidaTeorica.Value.ToString("HH:mm") : String.Empty)));
                         tabla.AddCell(new PdfPCell(new Phrase(String.Format("{0}:{1}",
                             Math.Floor(tiempoAtraso.TotalMinutes / 60.0).ToString("00"),
                             (tiempoAtraso.TotalMinutes - Math.Floor(tiempoAtraso.TotalMinutes / 60.0) * 60).ToString("00")

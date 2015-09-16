@@ -23,7 +23,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             using (MemoryStream finalStream = new MemoryStream())
             {
                 PdfCopyFields copy = new PdfCopyFields(finalStream);
-                foreach (var reporte in resultado.GroupBy(x => new { x.Rut, Mes = x.Fecha.Value.ToString("MMMM yyyy"), x.IdEmpresa, Nombre = x.Nombres + " " + x.Apellidos }))
+                foreach (var reporte in resultado.GroupBy(x => new { 
+                    x.Rut, Mes = x.Fecha.Value.ToString("MMMM yyyy"), 
+                    x.IdEmpresa, Nombre = x.Nombres + " " + x.Apellidos }).Take(3))
                 {
                     using (MemoryStream ms = new MemoryStream())
                     {
@@ -52,8 +54,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Tipo{1}",i,j),dia!=null ? dia.Observacion : String.Empty);
                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Dia{1}",i,j),String.Format("{0} {1}",dia!=null ? dia.Fecha.Value.ToString("dd/MM") : string.Empty , diasSemana[j]));
                                 }
-                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Jornada", i), "");// SUmar los timestpas de la diferencia de entrada y salida teórica
-                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Asistencia", i), ""); // SUmar timestramp de la deiferencia de entrada y salida
+                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Jornada", i), new DateTime(semana.Sum(x => x.SalidaTeorica.Subtract(x.EntradaTeorica).Ticks)).ToString("HH:mm"));
+                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}Asistencia", i), new DateTime(semana.Sum(x => x.Salida.Subtract(x.Entrada).Ticks)).ToString("HH:mm")); // SUmar timestramp de la deiferencia de entrada y salida
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}Salidas", i), ""); // ??
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}Ausencias", i), "");
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}AtrasosSalidas", i), "");
