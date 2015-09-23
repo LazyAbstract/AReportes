@@ -82,9 +82,9 @@ namespace Aufen.PortalReportes.Core
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_LibroAtrasos")]
-		public ISingleResult<sp_LibroAtrasosResult> sp_LibroAtrasos([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(10)")] string fechaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(10)")] string fechaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string num)
+		public ISingleResult<sp_LibroAtrasosResult> sp_LibroAtrasos([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(10)")] string fechaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(10)")] string fechaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string num, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> tipoDia)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fechaInicio, fechaFin, num);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fechaInicio, fechaFin, num, tipoDia);
 			return ((ISingleResult<sp_LibroAtrasosResult>)(result.ReturnValue));
 		}
 	}
@@ -361,7 +361,7 @@ namespace Aufen.PortalReportes.Core
 		
 		private string _SalidaTeorica1;
 		
-		private decimal _Colacion;
+		private System.Nullable<decimal> _Colacion;
 		
 		private string _Observacion;
 		
@@ -561,8 +561,8 @@ namespace Aufen.PortalReportes.Core
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Colacion", DbType="Decimal(2,1) NOT NULL")]
-		public decimal Colacion
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Colacion", DbType="Decimal(2,1)")]
+		public System.Nullable<decimal> Colacion
 		{
 			get
 			{
