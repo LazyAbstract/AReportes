@@ -42,7 +42,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                                         db.sp_LibroAtrasos(
                                         FORM.FechaDesde.Value.ToString("yyyyMMdd"),
                                         FORM.FechaHasta.Value.ToString("yyyyMMdd"),
-                                        int.Parse(empresa).ToString()).ToList();
+                                        int.Parse(empresa).ToString(),null).ToList();
                             List<sp_LibroAtrasosResultDTO> resultados = new List<sp_LibroAtrasosResultDTO>();
                             foreach (var resultadoLibroAtraso in resultadoLibroAtrasos)
                             {
@@ -63,11 +63,18 @@ namespace Aufen.PortalReportes.Web.Controllers
                                     break;
                                 case TipoReporte.AsistenciaLegal:
                                     Server.MapPath("~/Content/ReporteAsistenciaLegal.pdf");
-                                    AsistenciaLegal asistenciaLega = new AsistenciaLegal(resultados, db, HttpContext.Server.MapPath(""));
+                                    AsistenciaLegal asistenciaLega = new AsistenciaLegal(resultados, db, HttpContext.Server.MapPath("~/Content"));
                                     zipEntry = new ZipEntry(String.Format("{0}/AsistenciaLegal.pdf", empresa));
                                     zipEntry.DateTime = DateTime.Now;
                                     zipOutput.PutNextEntry(zipEntry);
                                     zipOutput.Write(asistenciaLega.Archivo, 0, asistenciaLega.Archivo.Length);
+                                    break;
+                                case TipoReporte.LibroSobreTiempo:
+                                    LibroSobreTiempo libroSobreTiempo = new LibroSobreTiempo(resultados, db, FORM.FechaDesde.GetValueOrDefault(DateTime.Now), FORM.FechaHasta.GetValueOrDefault(DateTime.Now));
+                                    zipEntry = new ZipEntry(String.Format("{0}/LibroSobreTiempo.pdf", empresa));
+                                    zipEntry.DateTime = DateTime.Now;
+                                    zipOutput.PutNextEntry(zipEntry);
+                                    zipOutput.Write(libroSobreTiempo.Archivo, 0, libroSobreTiempo.Archivo.Length);
                                     break;
                             }  
                             //}

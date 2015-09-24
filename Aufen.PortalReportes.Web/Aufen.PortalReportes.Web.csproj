@@ -260,6 +260,7 @@
     <Compile Include="MapperProfile\ReportesMappers\sp_LibroAtrasosResultsp_LibroAtrasosResultDTO.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ReportesModels\AsistenciaLegal.cs" />
+    <Compile Include="Models\ReportesModels\LibroSobreTiempo.cs" />
     <Compile Include="Models\ReportesModels\LibroAtrasos.cs" />
     <Compile Include="Models\ReportesModels\ListarReporteFormModel.cs" />
     <Compile Include="Models\ReportesModels\ListarReporteViewModel.cs" />
