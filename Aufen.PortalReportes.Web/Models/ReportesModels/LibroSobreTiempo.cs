@@ -7,21 +7,32 @@ using iTextSharp;
 using iTextSharp.text.pdf;
 using System.IO;
 using iTextSharp.text;
+using AutoMapper;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace Aufen.PortalReportes.Web.Models.ReportesModels
 {
-    public class LibroSobreTiempo
+    public class LibroSobreTiempo : IArchivoReporte
     {
         private byte[] _Archivo { get; set; }
-        private IEnumerable<sp_LibroAtrasosResultDTO> libroSobretiempo { get; set; }
+        private string NombreArchivo { get; set; }
         private Font Titulo { set; get; }
         private Font Normal { set; get; }
         private Font Chico { set; get; }
 
-        public LibroSobreTiempo(IEnumerable<sp_LibroAtrasosResultDTO> resultado, AufenPortalReportesDataContext db, DateTime fechaDesde, DateTime fechaHasta)
+        public LibroSobreTiempo(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime fechaDesde, DateTime fechaHasta)
         {
+            // Nombre del archivo y ubiación en el árbol de carpetas
+            NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
+            // Vamos a buscar los datos que nos permitirtán armar elreporte
+            IEnumerable<sp_LibroAtrasosResult> resultadolibroSobretiempo =
+                                           db.sp_LibroAtrasos(
+                                           fechaDesde.ToString("yyyyMMdd"),
+                                           fechaHasta.ToString("yyyyMMdd"),
+                                           int.Parse(empresa.Codigo).ToString(), null).ToList();
+            IEnumerable<sp_LibroAtrasosResultDTO> libroSobretiempo = Mapper.Map<IEnumerable<sp_LibroAtrasosResult>,
+                IEnumerable<sp_LibroAtrasosResultDTO>>(resultadolibroSobretiempo);
             Configuracion();
-            libroSobretiempo = resultado; // TODO: Falta el where
             Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
             using (var ms = new MemoryStream())
             {
@@ -29,9 +40,6 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 doc.Open();
                 foreach (var reporte in libroSobretiempo.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa, NombreCompleto = x.Nombres+" "+x.Apellidos }).Take(3))
                 {
-                    var departamento = db.vw_Ubicaciones.SingleOrDefault(x =>
-                        x.Codigo == reporte.Key.IdDepartamento &&
-                        x.IdEmpresa == reporte.Key.IdEmpresa);
                     doc.AddAuthor("Aufen");
                     doc.AddCreationDate();
                     doc.AddCreator("Aufen");
@@ -120,6 +128,23 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 return _Archivo;
             }
+        }
+
+        public ZipEntry GetZipArchivoReporte()
+        {
+            ZipEntry zipEntry = new ZipEntry(NombreArchivo);
+            zipEntry.DateTime = DateTime.Now;
+            return zipEntry;
+        }
+
+        public byte[] GetArchivo()
+        {
+            return _Archivo;
+        }
+
+        public int GetArchivoLength()
+        {
+            return _Archivo.Length;
         }
     }
 }

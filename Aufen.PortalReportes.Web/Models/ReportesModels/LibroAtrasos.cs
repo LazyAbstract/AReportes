@@ -7,21 +7,34 @@ using iTextSharp;
 using iTextSharp.text.pdf;
 using System.IO;
 using iTextSharp.text;
+using ICSharpCode.SharpZipLib.Zip;
+using AutoMapper;
 
 namespace Aufen.PortalReportes.Web.Models.ReportesModels
 {
-    public class LibroAtrasos
+    public class LibroAtrasos : IArchivoReporte
     {
         private byte[] _Archivo { get; set; }
-        private IEnumerable<sp_LibroAtrasosResultDTO> libroAtrasos { get; set; }
+        private string NombreArchivo { get; set; }
         private Font Titulo { set; get; }
         private Font Normal { set; get; }
         private Font Chico { set; get; }
 
-        public LibroAtrasos(IEnumerable<sp_LibroAtrasosResultDTO> resultado, AufenPortalReportesDataContext db)
+        public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta)
         {
+            // Nombre del archivo y ubiación en el árbol de carpetas
+            NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
+            // Vamos a buscar los datos que nos permitirtán armar elreporte
+            IEnumerable<sp_LibroAtrasosResult> resultadoLibroAtrasos =
+                                           db.sp_LibroAtrasos(
+                                           FechaDesde.ToString("yyyyMMdd"),
+                                           FechaHasta.ToString("yyyyMMdd"),
+                                           int.Parse(empresa.Codigo).ToString(), null).ToList();
+            IEnumerable<sp_LibroAtrasosResultDTO> libroAtrasos = Mapper.Map<IEnumerable<sp_LibroAtrasosResult>,
+                IEnumerable<sp_LibroAtrasosResultDTO>>(resultadoLibroAtrasos);
+            //.Where(x => x.Salida.Subtract(x.Entrada) < x.SalidaTeorica.Subtract(x.EntradaTeorica));
+            // COmenzaremos a crear el reporte
             Configuracion();
-            libroAtrasos = resultado;//.Where(x => x.Salida.Subtract(x.Entrada) < x.SalidaTeorica.Subtract(x.EntradaTeorica));
             Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
             using (var ms = new MemoryStream())
             {
@@ -29,9 +42,6 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 doc.Open();
                 foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
                 {
-                    var departamento = db.vw_Ubicaciones.SingleOrDefault(x =>
-                        x.Codigo == reporte.Key.IdDepartamento &&
-                        x.IdEmpresa == reporte.Key.IdEmpresa);
                     doc.AddAuthor("Aufen");
                     doc.AddCreationDate();
                     doc.AddCreator("Aufen");
@@ -102,12 +112,21 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         }
 
-        public byte[] Archivo
+        public ZipEntry GetZipArchivoReporte()
         {
-            get
-            {
-                return _Archivo;
-            }
+            ZipEntry zipEntry = new ZipEntry(NombreArchivo);
+            zipEntry.DateTime = DateTime.Now;
+            return zipEntry;
+        }
+
+        public byte[] GetArchivo()
+        {
+            return _Archivo;
+        }
+
+        public int GetArchivoLength()
+        {
+            return _Archivo.Length;
         }
     }
 }

@@ -23,61 +23,35 @@ namespace Aufen.PortalReportes.Web.Controllers
             }
             if (ModelState.IsValid)
             {
+                // Armamos nuestro archivo de salida por empresa y departamento
                 MemoryStream outputMemStream = new MemoryStream();
                 ZipOutputStream zipStream = new ZipOutputStream(outputMemStream);
                 zipStream.SetLevel(3); //0-9, 9 being the highest level of compression
-
                 using (Stream memOutput = new MemoryStream())
                 using (ZipOutputStream zipOutput = new ZipOutputStream(memOutput))
                 {
-                    zipOutput.SetLevel(9);
-                    foreach (var empresa in FORM.Empresa)
+                    zipOutput.SetLevel(3); //0-9, 9 being the highest level of compression
+                    foreach (var tipoEmpresa in FORM.Empresa)
                     {
-                        
-                        foreach (var tipoReporte in FORM.IdTipoReportes)
+                        var empresa = db.EMPRESAs.SingleOrDefault(x => x.Codigo == tipoEmpresa);
+                        foreach (var tipoDepartamento in FORM.Departamento)
                         {
-                            
-                            byte[] buffer = new byte[] { };
-                            IEnumerable<sp_LibroAtrasosResult> resultadoLibroAtrasos =
-                                        db.sp_LibroAtrasos(
-                                        FORM.FechaDesde.Value.ToString("yyyyMMdd"),
-                                        FORM.FechaHasta.Value.ToString("yyyyMMdd"),
-                                        int.Parse(empresa).ToString(),null).ToList();
-                            List<sp_LibroAtrasosResultDTO> resultados = new List<sp_LibroAtrasosResultDTO>();
-                            foreach (var resultadoLibroAtraso in resultadoLibroAtrasos)
+                            var departamento = db.vw_Ubicaciones
+                                .SingleOrDefault(x => x.Codigo == tipoDepartamento && x.IdEmpresa == tipoEmpresa);
+                            foreach (var tipoReporte in FORM.IdTipoReportes)
                             {
-                                resultados.Add(Mapper.Map<sp_LibroAtrasosResult,
-                                sp_LibroAtrasosResultDTO>(resultadoLibroAtraso));
+                                ArchivoReporteFactoria archivoReporteFactoria = new ArchivoReporteFactoria();
+                                IArchivoReporte archivoReporte = archivoReporteFactoria.CrearArchivoReporteFactoria(
+                                    tipoReporte, 
+                                    db, 
+                                    empresa, 
+                                    departamento, 
+                                    FORM.FechaDesde.Value, 
+                                    FORM.FechaHasta.Value, 
+                                    HttpContext.Server.MapPath("~/Content"));
+                                zipOutput.PutNextEntry(archivoReporte.GetZipArchivoReporte());
+                                zipOutput.Write(archivoReporte.GetArchivo(), 0, archivoReporte.GetArchivoLength());
                             }
-                            ZipEntry zipEntry = null;
-                            //foreach (var departamento in FORM.Departamento)
-                            //{ Los nombres de los zipentry esta abierto sólo por empresa
-                            switch (tipoReporte)
-                            {
-                                case TipoReporte.LibroAtrasos:
-                                    LibroAtrasos libroAtrasos = new LibroAtrasos(resultados,db);
-                                    zipEntry = new ZipEntry(String.Format("{0}/LibroAtrasos.pdf", empresa));
-                                    zipEntry.DateTime = DateTime.Now;
-                                    zipOutput.PutNextEntry(zipEntry);
-                                    zipOutput.Write(libroAtrasos.Archivo, 0, libroAtrasos.Archivo.Length);
-                                    break;
-                                case TipoReporte.AsistenciaLegal:
-                                    Server.MapPath("~/Content/ReporteAsistenciaLegal.pdf");
-                                    AsistenciaLegal asistenciaLega = new AsistenciaLegal(resultados, db, HttpContext.Server.MapPath("~/Content"));
-                                    zipEntry = new ZipEntry(String.Format("{0}/AsistenciaLegal.pdf", empresa));
-                                    zipEntry.DateTime = DateTime.Now;
-                                    zipOutput.PutNextEntry(zipEntry);
-                                    zipOutput.Write(asistenciaLega.Archivo, 0, asistenciaLega.Archivo.Length);
-                                    break;
-                                case TipoReporte.LibroSobreTiempo:
-                                    LibroSobreTiempo libroSobreTiempo = new LibroSobreTiempo(resultados, db, FORM.FechaDesde.GetValueOrDefault(DateTime.Now), FORM.FechaHasta.GetValueOrDefault(DateTime.Now));
-                                    zipEntry = new ZipEntry(String.Format("{0}/LibroSobreTiempo.pdf", empresa));
-                                    zipEntry.DateTime = DateTime.Now;
-                                    zipOutput.PutNextEntry(zipEntry);
-                                    zipOutput.Write(libroSobreTiempo.Archivo, 0, libroSobreTiempo.Archivo.Length);
-                                    break;
-                            }  
-                            //}
                         }
                     }
                     zipOutput.Finish();
