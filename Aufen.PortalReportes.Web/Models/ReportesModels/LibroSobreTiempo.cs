@@ -25,20 +25,22 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             // Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
-            IEnumerable<sp_LibroAtrasosResult> resultadolibroSobretiempo =
-                                           db.sp_LibroAtrasos(
-                                           fechaDesde.ToString("yyyyMMdd"),
-                                           fechaHasta.ToString("yyyyMMdd"),
+            IEnumerable<sp_LibroAsistenciaResult> resultadolibroSobretiempo =
+                                           db.sp_LibroAsistencia(
+                                           fechaDesde,
+                                           fechaHasta,
                                            int.Parse(empresa.Codigo).ToString(), null).ToList();
-            IEnumerable<sp_LibroAtrasosResultDTO> libroSobretiempo = Mapper.Map<IEnumerable<sp_LibroAtrasosResult>,
-                IEnumerable<sp_LibroAtrasosResultDTO>>(resultadolibroSobretiempo);
+
+            IEnumerable<LibroAsistenciaDTO> libroSobretiempo = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
+                IEnumerable<LibroAsistenciaDTO>>(resultadolibroSobretiempo);
+            libroSobretiempo = libroSobretiempo.Where(x => x.Entrada < x.EntradaTeorica || x.Salida > x.SalidaTeorica);
             Configuracion();
             Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
             using (var ms = new MemoryStream())
             {
                 PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                 doc.Open();
-                foreach (var reporte in libroSobretiempo.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa, NombreCompleto = x.Nombres+" "+x.Apellidos }).Take(3))
+                foreach (var reporte in libroSobretiempo.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa, NombreCompleto = x.Nombres + " " + x.Apellidos }).Take(3))
                 {
                     doc.AddAuthor("Aufen");
                     doc.AddCreationDate();
@@ -55,7 +57,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     doc.Add(parrafo);
                     doc.Add(new Phrase());
                     //Agregamos el mes y tabla con siglas para el reporte
-                    PdfPTable bajada = new PdfPTable(new float[] { 1,1});
+                    PdfPTable bajada = new PdfPTable(new float[] { 1, 1 });
                     bajada.AddCell(new PdfPCell(new Phrase(String.Format("Mes de {0}", fechaHasta.ToString("MMMM")), Normal)) { Rowspan = 2, Border = Rectangle.NO_BORDER });
                     PdfPTable bajadaSiglas = new PdfPTable(new float[] { 1, 1 });
                     bajadaSiglas.AddCell(new PdfPCell(new Phrase("HE: Horario Entrada", Normal)) { Border = Rectangle.NO_BORDER });
@@ -66,7 +68,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     doc.Add(bajada);
                     doc.Add(new Phrase());
                     // tabla
-                    PdfPTable tabla = new PdfPTable(new float[] {2,1,1,1,1,1,1,1,1,2});
+                    PdfPTable tabla = new PdfPTable(new float[] { 2, 1, 1, 1, 1, 1, 1, 1, 1, 2 });
                     // Primera lìnea cabecera
                     tabla.AddCell(new PdfPCell(new Phrase(String.Format("Departamento: {0}", departamento.Descripcion), Normal)) { Colspan = 5 });
                     tabla.AddCell(new PdfPCell(new Phrase(String.Format("Rut: {0}", reporte.Key.Rut.ToStringConGuion()), Normal)) { Colspan = 2 });
@@ -85,8 +87,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     // Filas con datos
                     foreach (var sobretiempo in reporte)
                     {
-                        TimeSpan tiempoAtraso = (sobretiempo.Salida.Value.Subtract(sobretiempo.Entrada.Value)) - sobretiempo.SalidaTeorica.Value.Subtract(sobretiempo.EntradaTeorica.Value);
-                        TimeSpan tiempoNormal = sobretiempo.SalidaTeorica.Value.Subtract(sobretiempo.EntradaTeorica.Value);
+                        TimeSpan tiempoAtraso =
+    (sobretiempo.Salida.HasValue && sobretiempo.Entrada.HasValue ? sobretiempo.Salida.Value.Subtract(sobretiempo.Entrada.Value) : new TimeSpan(0)) -
+    (sobretiempo.SalidaTeorica.HasValue && sobretiempo.EntradaTeorica.HasValue ? sobretiempo.SalidaTeorica.Value.Subtract(sobretiempo.EntradaTeorica.Value) : new TimeSpan(0));
+                        TimeSpan tiempoNormal = sobretiempo.SalidaTeorica.HasValue && sobretiempo.EntradaTeorica.HasValue ? sobretiempo.SalidaTeorica.Value.Subtract(sobretiempo.EntradaTeorica.Value) : new TimeSpan(0);
+
+                        //TimeSpan tiempoAtraso =  (sobretiempo.Salida.Value.Subtract(sobretiempo.Entrada.Value)) - sobretiempo.SalidaTeorica.Value.Subtract(sobretiempo.EntradaTeorica.Value);
+                        //TimeSpan tiempoNormal = sobretiempo.SalidaTeorica.Value.Subtract(sobretiempo.EntradaTeorica.Value);
                         tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Fecha.Value.ToString("dd/MM/yyyy ddd"), Chico)) { HorizontalAlignment = Element.ALIGN_LEFT });
                         tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.EntradaTeorica.HasValue ? sobretiempo.EntradaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.SalidaTeorica.HasValue ? sobretiempo.SalidaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
@@ -105,8 +112,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     tabla.AddCell(new PdfPCell(new Phrase("", Normal)));
                     tabla.AddCell(new PdfPCell(new Phrase("", Normal)));
                     tabla.AddCell(new PdfPCell(new Phrase("", Normal)));
-                   doc.Add(tabla);
-                   doc.NewPage();
+                    doc.Add(tabla);
+                    doc.NewPage();
                 }
                 doc.Close();
                 _Archivo = ms.ToArray();

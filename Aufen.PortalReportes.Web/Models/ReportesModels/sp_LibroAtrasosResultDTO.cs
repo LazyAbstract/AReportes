@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Aufen.PortalReportes.Web.Models.ReportesModels
 {
-    public class sp_LibroAtrasosResultDTO
+    public class LibroAsistenciaDTO
     {
         public DateTime? Fecha { get; set; }
         public int? NumSemana { get; set; }
@@ -24,14 +24,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public string Observacion { get; set; }
     }
 
-    public static class Sp_LibroAtrasosResultDTOHelpers
+    public static class LibroAsistenciaDTOHelpers
     {
         /// <summary>
         ///     A partir de un DTO de resultado del SP calculo la jornada teórica utilizando las filas que tienen los datos de salida y entrada teórica
         /// </summary>
         /// <param name="lista">Enumeración de sp_LibroAtrasosResultDTO para hacer el calculo</param>
         /// <returns>Las Horas y minutos correspondientes al cálculo de la hora jornada teórica en formato de texto HH:mm</returns>
-        public static string CalculaJornada(this IEnumerable<sp_LibroAtrasosResultDTO> lista)
+        public static string CalculaJornada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             return lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue) ?
                         new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
@@ -44,7 +44,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// </summary>
         /// <param name="lista">Enumeración de sp_LibroAtrasosResultDTO para hacer el calculo</param>
         /// <returns>Las Horas y minutos correspondientes al cálculo de la hora jornada  realen formato de texto HH:mm</returns>
-        public static string CalculaAsistencia(this IEnumerable<sp_LibroAtrasosResultDTO> lista)
+        public static string CalculaAsistencia(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             return lista.Any(x => x.Salida.HasValue && x.Entrada.HasValue) ?
                 new DateTime(lista.Where(x => x.Salida.HasValue && x.Entrada.HasValue)
@@ -56,7 +56,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// </summary>
         /// <param name="lista">Enumeración de sp_LibroAtrasosResultDTO para hacer el calculo</param>
         /// <returns>Ticks correspondientes al cálculo de los atrasos/returns>
-        public static long CalculaAtrasoEntrada(this IEnumerable<sp_LibroAtrasosResultDTO> lista)
+        public static long CalculaAtrasoEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             return lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica) ?
                 lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica)
@@ -68,7 +68,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// </summary>
         /// <param name="lista">Enumeración de sp_LibroAtrasosResultDTO para hacer el calculo</param>
         /// <returns>Ticks correspondientes al cálculo de los atrasos</returns>
-        public static long CalculaAtrasoSalida(this IEnumerable<sp_LibroAtrasosResultDTO> lista)
+        public static long CalculaAtrasoSalida(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             return lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica) ?
                 lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)

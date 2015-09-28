@@ -10,6 +10,7 @@ namespace Aufen.PortalReportes.Core
         public const int LibroAtrasos = 1;
         public const int AsistenciaLegal = 2;
         public const int LibroSobreTiempo = 4;
+        public const int AsistenciaPersonal = 5;
         public const int PruebaNico = 3;
 
         public int IdTipoReporte { get; set; }
@@ -23,8 +24,9 @@ namespace Aufen.PortalReportes.Core
         {
             List<TipoReporte> lista = new List<TipoReporte>();
             lista.Add(new TipoReporte() { IdTipoReporte = TipoReporte.LibroAtrasos, Nombre = "Libro de Atrasos" });
-            lista.Add(new TipoReporte() { IdTipoReporte = TipoReporte.AsistenciaLegal, Nombre = "Asistencia Legal" });
-            lista.Add(new TipoReporte() { IdTipoReporte = TipoReporte.LibroSobreTiempo, Nombre = "SobreTiempo" });
+            lista.Add(new TipoReporte() { IdTipoReporte = TipoReporte.AsistenciaLegal, Nombre = "Libro de Asistencia Legal" });
+            lista.Add(new TipoReporte() { IdTipoReporte = TipoReporte.LibroSobreTiempo, Nombre = "Libro de SobreTiempo" });
+            lista.Add(new TipoReporte() { IdTipoReporte = TipoReporte.AsistenciaPersonal, Nombre = "Libro de Asistencia Personal" });
             //lista.Add(new TipoReporte() { IdTipoReporte = TipoReporte.PruebaNico, Nombre = "PruebaNico" });
 
             return lista;

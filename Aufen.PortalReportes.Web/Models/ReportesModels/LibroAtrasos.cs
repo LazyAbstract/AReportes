@@ -22,16 +22,16 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta)
         {
-            // Nombre del archivo y ubiación en el árbol de carpetas
+             //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
-            IEnumerable<sp_LibroAtrasosResult> resultadoLibroAtrasos =
-                                           db.sp_LibroAtrasos(
-                                           FechaDesde.ToString("yyyyMMdd"),
-                                           FechaHasta.ToString("yyyyMMdd"),
+            IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
+                                           db.sp_LibroAsistencia(
+                                           FechaDesde,
+                                           FechaHasta,
                                            int.Parse(empresa.Codigo).ToString(), null).ToList();
-            IEnumerable<sp_LibroAtrasosResultDTO> libroAtrasos = Mapper.Map<IEnumerable<sp_LibroAtrasosResult>,
-                IEnumerable<sp_LibroAtrasosResultDTO>>(resultadoLibroAtrasos);
+            IEnumerable<LibroAsistenciaDTO> libroAtrasos = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
+                IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
             //.Where(x => x.Salida.Subtract(x.Entrada) < x.SalidaTeorica.Subtract(x.EntradaTeorica));
             // COmenzaremos a crear el reporte
             Configuracion();
@@ -78,8 +78,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                     foreach (var atraso in reporte)
                     {
-                        TimeSpan tiempoAtraso = (atraso.Salida.Value.Subtract(atraso.Entrada.Value)) - atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value);
-                        TimeSpan tiempoNormal = atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value);
+                        TimeSpan tiempoAtraso =  
+                            (atraso.Salida.HasValue && atraso.Entrada.HasValue ? atraso.Salida.Value.Subtract(atraso.Entrada.Value) : new TimeSpan(0)) -
+                            (atraso.SalidaTeorica.HasValue && atraso.EntradaTeorica.HasValue ? atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value) : new TimeSpan(0));
+                        TimeSpan tiempoNormal = atraso.SalidaTeorica.HasValue && atraso.EntradaTeorica.HasValue ? atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value) : new TimeSpan(0);
                         tabla.AddCell(new PdfPCell(new Phrase(atraso.Fecha.Value.ToString("ddd dd/MM"), Chico)) { HorizontalAlignment = Element.ALIGN_LEFT });
                         tabla.AddCell(new PdfPCell(new Phrase(atraso.Rut.ToStringConGuion(), Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase(atraso.Apellidos, Chico)));

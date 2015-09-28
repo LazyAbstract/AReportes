@@ -14,5 +14,11 @@
         <elementListCompartment Id="98ceaa66-4abc-47ce-990b-eb5dc631b1b1" absoluteBounds="2.14, 4.085, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
+    <classShape Id="994886a2-7669-49d8-ad17-ae097a4f782e" absoluteBounds="4.375, 1.375, 2, 2.5401025390625">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/vw_Empleado" />
+      <nestedChildShapes>
+        <elementListCompartment Id="2703e193-ffc2-4774-bd9d-af1e0c425209" absoluteBounds="4.39, 1.835, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
   </nestedChildShapes>
 </ordesignerObjectsDiagram>

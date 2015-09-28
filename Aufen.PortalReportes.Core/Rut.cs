@@ -84,9 +84,9 @@ namespace Aufen.PortalReportes.Core
         /// <param name="rutConDV">Rut en formato BSS (Sin puntos ni guion, con DV al final)</param>
         public Rut(string rutConDV)
         {
-            rutConDV = rutConDV.Trim();
+            rutConDV = (rutConDV ?? String.Empty).Trim();
             rutConDV = rutConDV.Replace(".", "");
-            string rutTitularString = rutConDV.Substring(0, rutConDV.Length - 1);
+            string rutTitularString = rutConDV.Length == 0 ? rutConDV : rutConDV.Substring(0, rutConDV.Length - 1);
             try
             {
                 Numero = int.Parse(rutTitularString);

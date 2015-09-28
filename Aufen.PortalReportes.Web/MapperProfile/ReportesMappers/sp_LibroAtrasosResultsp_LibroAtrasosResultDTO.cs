@@ -19,14 +19,24 @@ namespace Aufen.PortalReportes.Web.MapperProfile.ReportesMappers
         protected override void Configure()
         {
             base.Configure();
-            Mapper.CreateMap<sp_LibroAtrasosResult, sp_LibroAtrasosResultDTO>()
+            DateTime? nulo = null;
+            Mapper.CreateMap<sp_LibroAsistenciaResult, LibroAsistenciaDTO>()
                 .ForMember(x=>x.Fecha, prop=> prop.MapFrom(x=> DateTime.ParseExact(x.Fecha,"yyyyMMdd", CultureInfo.CurrentCulture)))
-                .ForMember(x => x.Entrada, prop => prop.MapFrom(x => DateTime.ParseExact(x.Fecha + (!String.IsNullOrEmpty(x.Entrada) ? "080000" : x.Entrada), "yyyyMMddHHmmss", CultureInfo.CurrentCulture)))
-                .ForMember(x => x.Salida, prop => prop.MapFrom(x => DateTime.ParseExact(x.Fecha + (!String.IsNullOrEmpty(x.Salida) ? "180000" : x.Entrada), "yyyyMMddHHmmss", CultureInfo.CurrentCulture)))
-                .ForMember(x => x.EntradaTeorica, prop => prop.MapFrom(x => DateTime.ParseExact(x.Fecha + (!String.IsNullOrEmpty(x.EntradaTeorica1) ? "080000" : x.Entrada), "yyyyMMddHHmmss", CultureInfo.CurrentCulture)))
-                .ForMember(x => x.SalidaTeorica, prop => prop.MapFrom(x => DateTime.ParseExact(x.Fecha + (!String.IsNullOrEmpty(x.SalidaTeorica1) ? "180000" : x.Entrada), "yyyyMMddHHmmss", CultureInfo.CurrentCulture)))
-                .ForMember(x => x.TiempoColacion, prop => prop.MapFrom(x => new TimeSpan((long)x.Colacion*60*60*100)))
-                .ForMember(x => x.Rut, prop=> prop.MapFrom(x =>new Rut(x.Rut)))
+                .ForMember(x => x.Entrada, prop => {
+                    prop.MapFrom(x => !String.IsNullOrWhiteSpace(x.Entrada) ? DateTime.ParseExact(x.Fecha + (x.Entrada), "yyyyMMddHHmmss", CultureInfo.CurrentCulture) : nulo);
+                })
+                .ForMember(x => x.Salida, prop =>
+                    {
+                        prop.MapFrom(x => !String.IsNullOrWhiteSpace(x.Salida) ?  DateTime.ParseExact(x.Fecha + x.Salida, "yyyyMMddHHmmss", CultureInfo.CurrentCulture): nulo);
+                    })
+                .ForMember(x => x.EntradaTeorica, prop => {
+                    prop.MapFrom(x => !String.IsNullOrWhiteSpace(x.EntradaTeorica1) ? DateTime.ParseExact(x.Fecha + x.EntradaTeorica1, "yyyyMMddHHmm", CultureInfo.CurrentCulture) : nulo);
+                })
+                .ForMember(x => x.SalidaTeorica, prop => {
+                    prop.MapFrom(x => !String.IsNullOrWhiteSpace(x.SalidaTeorica1) ? DateTime.ParseExact(x.Fecha + x.SalidaTeorica1, "yyyyMMddHHmm", CultureInfo.CurrentCulture) : nulo);
+                })
+                .ForMember(x => x.TiempoColacion, prop => prop.MapFrom(x =>  new TimeSpan(x.Colacion.HasValue ? (long)x.Colacion*60*60*100 : 0)))
+                .ForMember(x => x.Rut, prop=> prop.MapFrom(x =>!String.IsNullOrEmpty(x.Rut) ?  new Rut(x.Rut) : new Rut()))
                 ;
 
         }

@@ -24,13 +24,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             // Nombre del archivo y ubiación en el árbol de carpetas
              NombreArchivo = String.Format("{0}/{1}/AsistenciaLegal.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
-            IEnumerable<sp_LibroAtrasosResult> resultadoLibroAtrasos =
-                                           db.sp_LibroAtrasos(
-                                           FechaDesde.ToString("yyyyMMdd"),
-                                           FechaHasta.ToString("yyyyMMdd"),
-                                           int.Parse(empresa.Codigo).ToString(), null).ToList();
-            IEnumerable<sp_LibroAtrasosResultDTO> resultado = Mapper.Map<IEnumerable<sp_LibroAtrasosResult>,
-                IEnumerable<sp_LibroAtrasosResultDTO>>(resultadoLibroAtrasos);
+             IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
+                                           db.sp_LibroAsistencia(
+                                           FechaDesde,
+                                           FechaHasta,
+                                           int.Parse(empresa.Codigo).ToString(), null).ToList().Where(x=>x.IdDepartamento == departamento.Codigo);
+             IEnumerable<LibroAsistenciaDTO> resultado = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
+             IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
             string[] diasSemana = new[] { "dom", "lun", "mar", "mie", "ju", "vie", "sab" };
             using (MemoryStream finalStream = new MemoryStream())
             {

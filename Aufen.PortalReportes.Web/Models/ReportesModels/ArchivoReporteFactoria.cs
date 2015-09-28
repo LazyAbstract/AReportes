@@ -26,7 +26,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     archivoReporte = new AsistenciaLegal(db, empresa, departamento, FechaDesde, FechaHasta, path);
                     break;
                 case TipoReporte.LibroSobreTiempo:
-                    LibroSobreTiempo libroSobreTiempo = new LibroSobreTiempo(db, empresa, departamento, FechaDesde, FechaHasta);
+                    archivoReporte = new LibroSobreTiempo(db, empresa, departamento, FechaDesde, FechaHasta);
+                    break;
+                case TipoReporte.AsistenciaPersonal:
+                    archivoReporte = new AsistenciaPersonal(db, empresa, departamento, FechaDesde, FechaHasta);
                     break;
             }
             return archivoReporte;
