@@ -11,6 +11,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
     {
         public ListarReporteFormModel FORM { get; set; }
         public SelectList Empresas { get; set; }
+        public SelectList Departamentos { get; set; }
         public IEnumerable<TipoReporte> TipoReportes { get; set; }
 
         public ListarReporteViewModel()
@@ -19,10 +20,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             AufenPortalReportesDataContext db = new AufenPortalReportesDataContext()
             .WithConnectionStringFromConfiguration();
             Empresas = new SelectList(db.EMPRESAs, "Codigo", "Descripcion");
+            Departamentos = new SelectList(db.vw_Ubicaciones, "Codigo", "Descripcion");
             TipoReportes = ReportesHelper.GetTipoReportes();
         }
 
-        public ListarReporteViewModel(ListarReporteFormModel form):this()
+        public ListarReporteViewModel(ListarReporteFormModel form)
+            : this()
         {
             FORM = form;
         }
