@@ -29,79 +29,83 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            db.sp_LibroAsistencia(
                                            FechaDesde,
                                            FechaHasta,
-                                           int.Parse(empresa.Codigo).ToString(), null).ToList();
+                                           int.Parse(empresa.Codigo).ToString(), null).ToList()
+                                           .Where(x => x.IdDepartamento == departamento.Codigo); 
             IEnumerable<LibroAsistenciaDTO> libroAtrasos = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
-                IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
-            //.Where(x => x.Salida.Subtract(x.Entrada) < x.SalidaTeorica.Subtract(x.EntradaTeorica));
-            // COmenzaremos a crear el reporte
-            Configuracion();
-            Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
-            using (var ms = new MemoryStream())
+                IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos)
+            .Where(x =>x.Entrada.HasValue && x.Salida.HasValue && x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue &&
+                x.Salida.Value.Subtract(x.Entrada.Value) < x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value));
+            // Comenzaremos a crear el reporte
+            if (libroAtrasos.Any())
             {
-                PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
-                doc.Open();
-                foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
+                Configuracion();
+                Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+                using (var ms = new MemoryStream())
                 {
-                    doc.AddAuthor("Aufen");
-                    doc.AddCreationDate();
-                    doc.AddCreator("Aufen");
-                    doc.AddTitle("Libro de Atrasos");
-
-                    // Texto 
-                    Paragraph parrafo = new Paragraph();
-                    parrafo.Add(new Paragraph(
-                        String.Format("Departamento: {1}, Fecha de Reporte: {0}",
-                        DateTime.Now.ToShortDateString(),
-                        departamento != null ? departamento.Descripcion : "Sin Información"), Normal) { Alignment = Element.ALIGN_CENTER });
-                    parrafo.Add(new Paragraph("Informe de Atrasos por Área", Titulo) { Alignment = Element.ALIGN_CENTER });
-                    doc.Add(parrafo);
-                    doc.Add(new Phrase());
-                    // tabla
-                    PdfPTable tabla = new PdfPTable(new float[] { 3, 3, 3, 1, 1, 1, 1, 1, 1, 4 });
-                    // Primera lìnea cabecera
-                    tabla.AddCell(new PdfPCell(new Phrase("Empleado", Chico)) { Colspan = 3 });
-                    tabla.AddCell(new PdfPCell(new Phrase("Horario", Chico)) { Colspan = 2 });
-                    tabla.AddCell(new PdfPCell(new Phrase("Marcas", Chico)) { Colspan = 2 });
-                    tabla.AddCell(new PdfPCell(new Phrase("Horas Trabajadas", Chico)) { Colspan = 2 });
-                    tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Chico)));
-                    // Segunda lìnea cabecera
-                    tabla.AddCell(new PdfPCell(new Phrase("Rut", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Apellidos", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Nombres", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Sal.", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Sal.", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Atrasos", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("H.T.N.", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Permisos", Chico)));
-
-                    foreach (var atraso in reporte)
+                    PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
+                    doc.Open();
+                    foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
                     {
-                        TimeSpan tiempoAtraso =  
-                            (atraso.Salida.HasValue && atraso.Entrada.HasValue ? atraso.Salida.Value.Subtract(atraso.Entrada.Value) : new TimeSpan(0)) -
-                            (atraso.SalidaTeorica.HasValue && atraso.EntradaTeorica.HasValue ? atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value) : new TimeSpan(0));
-                        TimeSpan tiempoNormal = atraso.SalidaTeorica.HasValue && atraso.EntradaTeorica.HasValue ? atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value) : new TimeSpan(0);
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Fecha.Value.ToString("ddd dd/MM"), Chico)) { HorizontalAlignment = Element.ALIGN_LEFT });
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Rut.ToStringConGuion(), Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Apellidos, Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Nombres, Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Entrada.HasValue ? atraso.Entrada.Value.ToString("HH:mm") : String.Empty, Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Salida.HasValue ? atraso.Salida.Value.ToString("HH:mm") : String.Empty, Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.EntradaTeorica.HasValue ? atraso.EntradaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.SalidaTeorica.HasValue ? atraso.SalidaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase(String.Format("{0}:{1}",
-                            Math.Floor(tiempoAtraso.TotalMinutes / 60.0).ToString("00"),
-                            (tiempoAtraso.TotalMinutes - Math.Floor(tiempoAtraso.TotalMinutes / 60.0) * 60).ToString("00")
-                            ), Chico)));
-                        //tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase(atraso.Observacion, Chico)));
+                        doc.AddAuthor("Aufen");
+                        doc.AddCreationDate();
+                        doc.AddCreator("Aufen");
+                        doc.AddTitle("Libro de Atrasos");
+                        // Texto 
+                        Paragraph parrafo = new Paragraph();
+                        parrafo.Add(new Paragraph(
+                            String.Format("Departamento: {1}, Fecha de Reporte: {0}",
+                            DateTime.Now.ToShortDateString(),
+                            departamento != null ? departamento.Descripcion : "Sin Información"), Normal) { Alignment = Element.ALIGN_CENTER });
+                        parrafo.Add(new Paragraph("Informe de Atrasos por Área", Titulo) { Alignment = Element.ALIGN_CENTER });
+                        doc.Add(parrafo);
+                        doc.Add(new Phrase());
+                        // tabla
+                        PdfPTable tabla = new PdfPTable(new float[] { 3, 3, 3, 1, 1, 1, 1, 1, 1, 4 });
+                        // Primera lìnea cabecera
+                        tabla.AddCell(new PdfPCell(new Phrase("Empleado", Chico)) { Colspan = 3 });
+                        tabla.AddCell(new PdfPCell(new Phrase("Horario", Chico)) { Colspan = 2 });
+                        tabla.AddCell(new PdfPCell(new Phrase("Marcas", Chico)) { Colspan = 2 });
+                        tabla.AddCell(new PdfPCell(new Phrase("Horas Trabajadas", Chico)) { Colspan = 2 });
+                        tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Chico)));
+                        // Segunda lìnea cabecera
+                        tabla.AddCell(new PdfPCell(new Phrase("Rut", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Apellidos", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Nombres", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Sal.", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Sal.", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Atrasos", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("H.T.N.", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Permisos", Chico)));
+
+                        foreach (var atraso in reporte)
+                        {
+                            TimeSpan tiempoAtraso =
+                                (atraso.Salida.HasValue && atraso.Entrada.HasValue ? atraso.Salida.Value.Subtract(atraso.Entrada.Value) : new TimeSpan(0)) -
+                                (atraso.SalidaTeorica.HasValue && atraso.EntradaTeorica.HasValue ? atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value) : new TimeSpan(0));
+                            TimeSpan tiempoNormal = atraso.SalidaTeorica.HasValue && atraso.EntradaTeorica.HasValue ? atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value) : new TimeSpan(0);
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Fecha.Value.ToString("ddd dd/MM"), Chico)) { HorizontalAlignment = Element.ALIGN_LEFT });
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Rut.ToStringConGuion(), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Apellidos, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Nombres, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Entrada.HasValue ? atraso.Entrada.Value.ToString("HH:mm") : String.Empty, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Salida.HasValue ? atraso.Salida.Value.ToString("HH:mm") : String.Empty, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.EntradaTeorica.HasValue ? atraso.EntradaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.SalidaTeorica.HasValue ? atraso.SalidaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(String.Format("{0}:{1}",
+                                Math.Floor(tiempoAtraso.TotalMinutes / 60.0).ToString("00"),
+                                (tiempoAtraso.TotalMinutes - Math.Floor(tiempoAtraso.TotalMinutes / 60.0) * 60).ToString("00")
+                                ), Chico)));
+                            //tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Observacion, Chico)));
+                        }
+                        doc.Add(tabla);
+                        doc.NewPage();
                     }
-                   doc.Add(tabla);
-                   doc.NewPage();
+                    doc.Close();
+                    _Archivo = ms.ToArray();
                 }
-                doc.Close();
-                _Archivo = ms.ToArray();
             }
         }
 

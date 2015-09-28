@@ -267,7 +267,7 @@
     <Compile Include="Models\ReportesModels\LibroAtrasos.cs" />
     <Compile Include="Models\ReportesModels\ListarReporteFormModel.cs" />
     <Compile Include="Models\ReportesModels\ListarReporteViewModel.cs" />
-    <Compile Include="Models\ReportesModels\sp_LibroAtrasosResultDTO.cs" />
+    <Compile Include="Models\ReportesModels\LibroAsistenciaDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

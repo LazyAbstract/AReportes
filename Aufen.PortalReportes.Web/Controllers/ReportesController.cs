@@ -34,10 +34,8 @@ namespace Aufen.PortalReportes.Web.Controllers
                     foreach (var tipoEmpresa in FORM.Empresa)
                     {
                         var empresa = db.EMPRESAs.SingleOrDefault(x => x.Codigo == tipoEmpresa);
-                        foreach (var tipoDepartamento in FORM.Departamento)
+                        foreach(var departamento in db.vw_Ubicaciones.Where(x =>  x.IdEmpresa == tipoEmpresa))
                         {
-                            var departamento = db.vw_Ubicaciones
-                                .SingleOrDefault(x => x.Codigo == tipoDepartamento && x.IdEmpresa == tipoEmpresa);
                             foreach (var tipoReporte in FORM.IdTipoReportes)
                             {
                                 ArchivoReporteFactoria archivoReporteFactoria = new ArchivoReporteFactoria();
@@ -49,8 +47,11 @@ namespace Aufen.PortalReportes.Web.Controllers
                                     FORM.FechaDesde.Value, 
                                     FORM.FechaHasta.Value, 
                                     HttpContext.Server.MapPath("~/Content"));
-                                zipOutput.PutNextEntry(archivoReporte.GetZipArchivoReporte());
-                                zipOutput.Write(archivoReporte.GetArchivo(), 0, archivoReporte.GetArchivoLength());
+                                if (archivoReporte.GetArchivo() != null)
+                                {
+                                    zipOutput.PutNextEntry(archivoReporte.GetZipArchivoReporte());
+                                    zipOutput.Write(archivoReporte.GetArchivo(), 0, archivoReporte.GetArchivoLength());
+                                }
                             }
                         }
                     }

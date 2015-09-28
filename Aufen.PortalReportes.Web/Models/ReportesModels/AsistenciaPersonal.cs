@@ -31,88 +31,108 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            db.sp_LibroAsistencia(
                                            FechaDesde,
                                            FechaHasta,
-                                           int.Parse(empresa.Codigo).ToString(), null).ToList();
+                                           int.Parse(empresa.Codigo).ToString(), null).ToList()
+                                           .Where(x=> x.IdDepartamento == departamento.Codigo);
             IEnumerable<LibroAsistenciaDTO> libroAsistencia = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultado);
-            Configuracion();
-            Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
-            using (var ms = new MemoryStream())
+            if (libroAsistencia.Any())
             {
-                PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
-                doc.Open();
-                foreach (var reporte in libroAsistencia.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa}).Take(3))
+                Configuracion();
+                Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+                using (var ms = new MemoryStream())
                 {
-                    var empleado = db.vw_Empleados.FirstOrDefault(x=>x.IdEmpresa == reporte.Key.IdEmpresa &&
-                        x.IdUbicacion == reporte.Key.IdDepartamento);
-                    if(empleado==null)
+                    PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
+                    doc.Open();
+                    foreach (var reporte in libroAsistencia.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa }).Take(3))
                     {
-                        empleado = new vw_Empleado();
-                    }
-                    doc.AddAuthor("Aufen");
-                    doc.AddCreationDate();
-                    doc.AddCreator("Aufen");
-                    doc.AddTitle("Libro de Asistencia Personal");
+                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
+                            x.IdUbicacion == reporte.Key.IdDepartamento);
+                        if (empleado == null)
+                        {
+                            empleado = new vw_Empleado();
+                        }
+                        doc.AddAuthor("Aufen");
+                        doc.AddCreationDate();
+                        doc.AddCreator("Aufen");
+                        doc.AddTitle("Libro de Asistencia Personal");
 
-                    Paragraph parrafo = new Paragraph();
-                    parrafo.Add(new Paragraph("Libro de Asistencia Personal", Titulo) { Alignment = Element.ALIGN_CENTER });
-                    // Texto 
-                    PdfPTable tablaEncabezado = new PdfPTable(new float[] { 1,5,1,5});
+                        Paragraph parrafo = new Paragraph();
+                        parrafo.Add(new Paragraph("Libro de Asistencia Personal", Titulo) { Alignment = Element.ALIGN_CENTER });
+                        // Texto 
+                        PdfPTable tablaEncabezado = new PdfPTable(new float[] { 1, 5, 1, 5 });
 
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase("Nombre:", Chico)) { Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase((empleado.Nombre ?? String.Empty).Trim() + " " + (empleado.Apellidos ?? String.Empty).Trim(), Normal)) { Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase("Código:", Chico)) { Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.Codigo, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Nombre:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase((empleado.Nombre ?? String.Empty).Trim() + " " + (empleado.Apellidos ?? String.Empty).Trim(), Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Código:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.Codigo, Normal)) { Border = Rectangle.NO_BORDER });
 
-                    Rut rut = null;
-                    Rut.TryParse(empleado.Codigo, out rut);
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase("C.Costo:", Chico)) { Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCentro, Normal)) { Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase("Rut:", Chico)) { Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase(rut == null ? String.Empty : rut.ToStringConGuion(), Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("C.Costo:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCentro, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Rut:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(reporte.Key.Rut == null ? String.Empty : reporte.Key.Rut.ToStringConGuion(), Normal)) { Border = Rectangle.NO_BORDER });
 
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase("Area:", Chico)) { Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreUbicacion, Normal)) { Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase("Cargo:", Chico)) { Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Empty, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Area:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreUbicacion, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Cargo:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Empty, Normal)) { Border = Rectangle.NO_BORDER });
 
-                    tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Format("PERIODO: {0} a {1}",FechaDesde.ToShortDateString(), FechaHasta.ToShortDateString()), Normal)) { Colspan = 4, Border = Rectangle.NO_BORDER });
-                    tablaEncabezado.AddCell(new PdfPCell(GetNomenclatura()) { Colspan = 4 }); 
-                    doc.Add(tablaEncabezado);
-                    doc.Add(new Phrase());
-                    doc.Add(new Phrase());
-                    // tabla
-                    PdfPTable tabla = new PdfPTable(new float[] { 2,1,1,1,1,1,1,1,1,1,1,1,1,3 });
-                    
-                    // Primera lìnea cabecera
-                    tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("HI", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("HS", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("HCol", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("MI", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("MS", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("HTH", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("HTN", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("H.Extra", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("ATR", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("ADL", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Col.", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("S.Ent", Chico)));
-                    tabla.AddCell(new PdfPCell(new Phrase("Permisos", Chico)));
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Format("PERIODO: {0} a {1}", FechaDesde.ToShortDateString(), FechaHasta.ToShortDateString()), Normal)) { Colspan = 4, Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(GetNomenclatura()) { Colspan = 4 });
+                        doc.Add(tablaEncabezado);
+                        doc.Add(new Phrase());
+                        doc.Add(new Phrase());
+                        // tabla
+                        PdfPTable tabla = new PdfPTable(new float[] { 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3 });
 
-                    foreach (var atraso in reporte)
-                    {
-                        //Fecha
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                        //Hora Ingreso
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                        // Hora Salida
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                        // Colaciòn por turno
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                        // Marca de entrada
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                        // Marca de salida
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                        // Primera lìnea cabecera
+                        tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HI", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HS", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HCol", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("MI", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("MS", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HTH", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HTN", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("H.Extra", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("ATR", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("ADL", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Col.", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("S.Ent", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Permisos", Chico)));
+
+                        foreach (var atraso in reporte)
+                        {
+                            //Fecha
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            //Hora Ingreso
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            // Hora Salida
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            // Colaciòn por turno
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            // Marca de entrada
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            // Marca de salida
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            //Horas pactadas po hombre
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            //Horas realizadas
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            //Horas extra
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            // Atraso
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            // Salida adelantada
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            // Colacón
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            // S.Ent
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            // Permisos
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                        }
+                        //Subtotal
+                        tabla.AddCell(new PdfPCell(new Phrase("Sub Total", Chico)) { Colspan = 6 });
                         //Horas pactadas po hombre
                         tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                         //Horas realizadas
@@ -129,77 +149,58 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                         // Permisos
                         tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                        doc.Add(tabla);
+                        doc.Add(new Phrase());
+
+                        // Resumen
+                        PdfPTable resumen = new PdfPTable(new float[] { 2, 1, 2, 1, 2, 1, 2, 1 });
+                        //Días Trabajados
+                        resumen.AddCell(new PdfPCell(new Phrase("Días Trabajados", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Horas Pactadas", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Horas extras", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Errores de marca", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Días ausentes", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Horas Trabajadas", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Vacaciones", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        // Aquí va una tabla con el espacio para la firma
+                        resumen.AddCell(new PdfPCell(new Phrase("______________________ Firma Empleado", Chico)) { VerticalAlignment = Rectangle.ALIGN_BOTTOM, HorizontalAlignment = Rectangle.ALIGN_CENTER, Colspan = 2, Rowspan = 3, Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Días Atraso", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Total Atraso", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Licencias Médicas", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Salidas", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        //
+                        resumen.AddCell(new PdfPCell(new Phrase("Total Salidas", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        doc.Add(resumen);
+                        doc.NewPage();
                     }
-                    //Subtotal
-                    tabla.AddCell(new PdfPCell(new Phrase("Sub Total", Chico)) { Colspan = 6});
-                    //Horas pactadas po hombre
-                    tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                    //Horas realizadas
-                    tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                    //Horas extra
-                    tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                    // Atraso
-                    tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                    // Salida adelantada
-                    tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                    // Colacón
-                    tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                    // S.Ent
-                    tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                    // Permisos
-                    tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                   doc.Add(tabla);
-                   doc.Add(new Phrase());
-
-                    // Resumen
-                   PdfPTable resumen = new PdfPTable(new float[]{2,1,2,1,2,1,2,1});
-                   //Días Trabajados
-                   resumen.AddCell(new PdfPCell(new Phrase("Días Trabajados", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                   //
-                   resumen.AddCell(new PdfPCell(new Phrase("Horas Pactadas", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                   //
-                   resumen.AddCell(new PdfPCell(new Phrase("Horas extras", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                   //
-                   resumen.AddCell(new PdfPCell(new Phrase("Errores de marca", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                   //
-                   resumen.AddCell(new PdfPCell(new Phrase("Días ausentes", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                   //
-                   resumen.AddCell(new PdfPCell(new Phrase("Horas Trabajadas", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                   //
-                   resumen.AddCell(new PdfPCell(new Phrase("Vacaciones", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                   // Aquí va una tabla con el espacio para la firma
-                   resumen.AddCell(new PdfPCell(new Phrase("______________________ Firma Empleado", Chico)) {VerticalAlignment= Rectangle.ALIGN_BOTTOM, HorizontalAlignment = Rectangle.ALIGN_CENTER,  Colspan = 2, Rowspan= 3, Border = Rectangle.NO_BORDER });
-                   //
-                   resumen.AddCell(new PdfPCell(new Phrase("Días Atraso", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                    //
-                   resumen.AddCell(new PdfPCell(new Phrase("Total Atraso", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                    //
-                   resumen.AddCell(new PdfPCell(new Phrase("Licencias Médicas", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                    //
-                   resumen.AddCell(new PdfPCell(new Phrase("Salidas", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-                   //
-                   resumen.AddCell(new PdfPCell(new Phrase("Total Salidas", Chico)){ Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)){ Border = Rectangle.NO_BORDER });
-
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
-                   resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
-                   doc.Add(resumen);
-
-                   doc.NewPage();
+                    doc.Close();
+                    _Archivo = ms.ToArray();
                 }
-                doc.Close();
-                _Archivo = ms.ToArray();
             }
         }
 

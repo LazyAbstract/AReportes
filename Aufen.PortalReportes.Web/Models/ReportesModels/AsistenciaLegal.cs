@@ -28,7 +28,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            db.sp_LibroAsistencia(
                                            FechaDesde,
                                            FechaHasta,
-                                           int.Parse(empresa.Codigo).ToString(), null).ToList().Where(x=>x.IdDepartamento == departamento.Codigo);
+                                           int.Parse(empresa.Codigo).ToString(), null).ToList()
+                                           .Where(x=> x.IdDepartamento == departamento.Codigo);
              IEnumerable<LibroAsistenciaDTO> resultado = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
              IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
             string[] diasSemana = new[] { "dom", "lun", "mar", "mie", "ju", "vie", "sab" };
@@ -40,8 +41,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     x.Rut,
                     Mes = x.Fecha.Value.ToString("MMMM yyyy"),
                     x.IdEmpresa,
-                    Nombre = x.Nombres + " " + x.Apellidos
-                }).Take(3))
+                    Nombre = (x.Nombres ?? String.Empty).Trim() + " " + (x.Apellidos ?? String.Empty).Trim()
+                }))
                 {
                     using (MemoryStream ms = new MemoryStream())
                     {
