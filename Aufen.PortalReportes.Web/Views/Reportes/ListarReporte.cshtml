@@ -61,7 +61,7 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.FORM.Departamento, new { @class = "col-sm-4 control-label" })
                     <div class="col-sm-4">
-                        @Html.TextBoxFor(m => m.FORM.Departamento, new { @class = "form-control" })
+                        @Html.ListBoxFor(m => m.FORM.Departamento, Model.Departamentos, new { @class = "form-control multiple" })
                     </div>
                     <div class="col-lg-4">
                         @Html.ValidationMessageFor(m => m.FORM.Departamento)
