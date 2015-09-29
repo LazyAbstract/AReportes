@@ -29,10 +29,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             // Vamos a buscar los datos que nos permitirtán armar elreporte
             IEnumerable<sp_LibroAsistenciaResult> resultado =
                                            db.sp_LibroAsistencia(
-                                           FechaDesde,
-                                           FechaHasta,
-                                           int.Parse(empresa.Codigo).ToString(), null).ToList()
-                                           .Where(x=> x.IdDepartamento == departamento.Codigo);
+                                           FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
+                                           FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
+                                           int.Parse(empresa.Codigo).ToString(),
+                                           null,
+                                           null).ToList()
+                                            .Where(x=> x.IdDepartamento == departamento.Codigo);
             IEnumerable<LibroAsistenciaDTO> libroAsistencia = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultado);
             if (libroAsistencia.Any())

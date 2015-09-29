@@ -90,16 +90,16 @@ namespace Aufen.PortalReportes.Core
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_LibroAsistencia")]
-		public ISingleResult<sp_LibroAsistenciaResult> sp_LibroAsistencia([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> fechaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> fechaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string num, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string depa, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(9)")] string rut)
+		public ISingleResult<sp_LibroAsistenciaResult> sp_LibroAsistencia([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(8)")] string fechaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(8)")] string fechaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string num, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string depto, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(9)")] string rut)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fechaInicio, fechaFin, num, depa, rut);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fechaInicio, fechaFin, num, depto, rut);
 			return ((ISingleResult<sp_LibroAsistenciaResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_LibroInasistencia")]
-		public ISingleResult<sp_LibroInasistenciaResult> sp_LibroInasistencia([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> fechaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> fechaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string num, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string depa, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(9)")] string rut)
+		public ISingleResult<sp_LibroInasistenciaResult> sp_LibroInasistencia([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> fechaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> fechaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string num, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string depto, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(9)")] string rut)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fechaInicio, fechaFin, num, depa, rut);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fechaInicio, fechaFin, num, depto, rut);
 			return ((ISingleResult<sp_LibroInasistenciaResult>)(result.ReturnValue));
 		}
 	}
@@ -839,15 +839,21 @@ namespace Aufen.PortalReportes.Core
 		
 		private string _Fecha;
 		
+		private string _Rut;
+		
 		private string _Nombre;
 		
 		private string _Apellidos;
 		
-		private string _EntradaTeorica;
+		private string _IdEmpresa;
 		
-		private string _SalidaTeorica;
+		private string _IdDepartamento;
 		
-		private string _Autorizaciones;
+		private string _EntradaTeorica1;
+		
+		private string _SalidaTeorica1;
+		
+		private string _Observacion;
 		
 		public sp_LibroInasistenciaResult()
 		{
@@ -865,6 +871,22 @@ namespace Aufen.PortalReportes.Core
 				if ((this._Fecha != value))
 				{
 					this._Fecha = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Rut", DbType="VarChar(9) NOT NULL", CanBeNull=false)]
+		public string Rut
+		{
+			get
+			{
+				return this._Rut;
+			}
+			set
+			{
+				if ((this._Rut != value))
+				{
+					this._Rut = value;
 				}
 			}
 		}
@@ -901,50 +923,82 @@ namespace Aufen.PortalReportes.Core
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EntradaTeorica", DbType="VarChar(4) NOT NULL", CanBeNull=false)]
-		public string EntradaTeorica
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdEmpresa", DbType="VarChar(1) NOT NULL", CanBeNull=false)]
+		public string IdEmpresa
 		{
 			get
 			{
-				return this._EntradaTeorica;
+				return this._IdEmpresa;
 			}
 			set
 			{
-				if ((this._EntradaTeorica != value))
+				if ((this._IdEmpresa != value))
 				{
-					this._EntradaTeorica = value;
+					this._IdEmpresa = value;
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SalidaTeorica", DbType="VarChar(4) NOT NULL", CanBeNull=false)]
-		public string SalidaTeorica
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdDepartamento", DbType="VarChar(2) NOT NULL", CanBeNull=false)]
+		public string IdDepartamento
 		{
 			get
 			{
-				return this._SalidaTeorica;
+				return this._IdDepartamento;
 			}
 			set
 			{
-				if ((this._SalidaTeorica != value))
+				if ((this._IdDepartamento != value))
 				{
-					this._SalidaTeorica = value;
+					this._IdDepartamento = value;
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Autorizaciones", DbType="VarChar(17) NOT NULL", CanBeNull=false)]
-		public string Autorizaciones
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EntradaTeorica1", DbType="VarChar(4) NOT NULL", CanBeNull=false)]
+		public string EntradaTeorica1
 		{
 			get
 			{
-				return this._Autorizaciones;
+				return this._EntradaTeorica1;
 			}
 			set
 			{
-				if ((this._Autorizaciones != value))
+				if ((this._EntradaTeorica1 != value))
 				{
-					this._Autorizaciones = value;
+					this._EntradaTeorica1 = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SalidaTeorica1", DbType="VarChar(4) NOT NULL", CanBeNull=false)]
+		public string SalidaTeorica1
+		{
+			get
+			{
+				return this._SalidaTeorica1;
+			}
+			set
+			{
+				if ((this._SalidaTeorica1 != value))
+				{
+					this._SalidaTeorica1 = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Observacion", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string Observacion
+		{
+			get
+			{
+				return this._Observacion;
+			}
+			set
+			{
+				if ((this._Observacion != value))
+				{
+					this._Observacion = value;
 				}
 			}
 		}
