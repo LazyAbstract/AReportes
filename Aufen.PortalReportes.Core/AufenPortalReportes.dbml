@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ZkTimeEnterprise" Class="AufenPortalReportesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=XRUIZV;Initial Catalog=ZkTimeEnterprise;User ID=sa" SettingsObjectName="Aufen.PortalReportes.Core.Properties.Settings" SettingsPropertyName="ZkTimeEnterpriseConnectionString1" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.;Initial Catalog=ZkTimeEnterprise;User ID=sa" SettingsObjectName="Aufen.PortalReportes.Core.Properties.Settings" SettingsPropertyName="ZkTimeEnterpriseConnectionString2" Provider="System.Data.SqlClient" />
   <Table Name="dbo.EMPRESAS" Member="EMPRESAs">
     <Type Name="EMPRESA">
       <Column Name="Codigo" Type="System.String" DbType="Char(3) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -34,6 +34,7 @@
     <Parameter Name="fechaInicio" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="fechaFin" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="num" Type="System.String" DbType="VarChar(2)" />
+    <Parameter Name="depa" Type="System.String" DbType="VarChar(2)" />
     <Parameter Name="rut" Type="System.String" DbType="VarChar(9)" />
     <ElementType Name="sp_LibroAsistenciaResult">
       <Column Name="Fecha" Type="System.String" DbType="VarChar(8)" CanBeNull="true" />
@@ -59,6 +60,7 @@
     <Parameter Name="fechaInicio" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="fechaFin" Type="System.DateTime" DbType="DateTime" />
     <Parameter Name="num" Type="System.String" DbType="VarChar(2)" />
+    <Parameter Name="depa" Type="System.String" DbType="VarChar(2)" />
     <Parameter Name="rut" Type="System.String" DbType="VarChar(9)" />
     <ElementType Name="sp_LibroInasistenciaResult">
       <Column Name="Fecha" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
