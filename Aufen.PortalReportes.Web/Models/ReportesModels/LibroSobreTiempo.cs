@@ -25,13 +25,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             // Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/SobreTiempos.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
+            var hola = int.Parse(empresa.Codigo).ToString();
             IEnumerable<sp_LibroAsistenciaResult> resultadolibroSobretiempo =
                                            db.sp_LibroAsistencia(
                                            fechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            fechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
-                                           int.Parse(empresa.Codigo).ToString()
-                                           , null
-                                           , null).ToList()
+                                           int.Parse(empresa.Codigo).ToString(),
+                                           null,
+                                           null).ToList()
                                            .Where(x => x.IdDepartamento == departamento.Codigo); 
 
             IEnumerable<LibroAsistenciaDTO> libroSobretiempo = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
@@ -58,7 +59,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         Paragraph parrafo = new Paragraph();
                         parrafo.Add(new Paragraph("Libro de Asistencia Personal - Sobretiempos", Titulo) { Alignment = Element.ALIGN_CENTER });
                         parrafo.Add(new Paragraph(
-                            String.Format("Período: {1} al {0}",
+                            String.Format("Período: {0} al {1}",
                             fechaDesde.ToShortDateString(),
                             fechaHasta.ToShortDateString()), Normal) { Alignment = Element.ALIGN_CENTER });
                         doc.Add(parrafo);

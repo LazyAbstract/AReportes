@@ -30,6 +30,24 @@
       <Column Name="Tarjeta" Type="System.String" DbType="Char(10)" CanBeNull="true" />
     </Type>
   </Table>
+  <Function Name="dbo.sp_LibroInasistencia" Method="sp_LibroInasistencia">
+    <Parameter Name="fechaInicio" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="fechaFin" Type="System.DateTime" DbType="DateTime" />
+    <Parameter Name="num" Type="System.String" DbType="VarChar(2)" />
+    <Parameter Name="depto" Type="System.String" DbType="VarChar(2)" />
+    <Parameter Name="rut" Type="System.String" DbType="VarChar(9)" />
+    <ElementType Name="sp_LibroInasistenciaResult">
+      <Column Name="Fecha" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="Rut" Type="System.String" DbType="VarChar(9) NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="Apellidos" Type="System.String" DbType="VarChar(9) NOT NULL" CanBeNull="false" />
+      <Column Name="IdEmpresa" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="IdDepartamento" Type="System.String" DbType="VarChar(2) NOT NULL" CanBeNull="false" />
+      <Column Name="EntradaTeorica1" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="SalidaTeorica1" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="Observacion" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.sp_LibroAsistencia" Method="sp_LibroAsistencia">
     <Parameter Name="fechaInicio" Type="System.String" DbType="VarChar(8)" />
     <Parameter Name="fechaFin" Type="System.String" DbType="VarChar(8)" />
@@ -47,31 +65,13 @@
       <Column Name="IdDepartamento" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="IdCalendario" Type="System.String" DbType="Char(9)" CanBeNull="true" />
       <Column Name="Entrada" Type="System.String" DbType="Char(6)" CanBeNull="true" />
-      <Column Name="SalidaColacion" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="EntradaColacion" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SalidaColacion" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="EntradaColacion" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
       <Column Name="Salida" Type="System.String" DbType="Char(6)" CanBeNull="true" />
       <Column Name="EntradaTeorica1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
       <Column Name="SalidaTeorica1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
       <Column Name="Colacion" Type="System.Decimal" DbType="Decimal(2,1)" CanBeNull="true" />
       <Column Name="Observacion" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.sp_LibroInasistencia" Method="sp_LibroInasistencia">
-    <Parameter Name="fechaInicio" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="fechaFin" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="num" Type="System.String" DbType="VarChar(2)" />
-    <Parameter Name="depto" Type="System.String" DbType="VarChar(2)" />
-    <Parameter Name="rut" Type="System.String" DbType="VarChar(9)" />
-    <ElementType Name="sp_LibroInasistenciaResult">
-      <Column Name="Fecha" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
-      <Column Name="Rut" Type="System.String" DbType="VarChar(9) NOT NULL" CanBeNull="false" />
-      <Column Name="Nombre" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
-      <Column Name="Apellidos" Type="System.String" DbType="VarChar(9) NOT NULL" CanBeNull="false" />
-      <Column Name="IdEmpresa" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
-      <Column Name="IdDepartamento" Type="System.String" DbType="VarChar(2) NOT NULL" CanBeNull="false" />
-      <Column Name="EntradaTeorica1" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="SalidaTeorica1" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="Observacion" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>
