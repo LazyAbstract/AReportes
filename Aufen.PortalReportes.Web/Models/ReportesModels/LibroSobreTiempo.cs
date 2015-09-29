@@ -25,7 +25,6 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             // Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/SobreTiempos.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
-            var hola = int.Parse(empresa.Codigo).ToString();
             IEnumerable<sp_LibroAsistenciaResult> resultadolibroSobretiempo =
                                            db.sp_LibroAsistencia(
                                            fechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
