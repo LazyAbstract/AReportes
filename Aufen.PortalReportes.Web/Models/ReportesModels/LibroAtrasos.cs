@@ -26,11 +26,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
             IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
-                                           db.sp_LibroAsistencia(
+                                            db.sp_LibroAsistencia(
                                            FechaDesde,
                                            FechaHasta,
-                                           int.Parse(empresa.Codigo).ToString(), null).ToList()
-                                           .Where(x => x.IdDepartamento == departamento.Codigo); 
+                                           int.Parse(empresa.Codigo).ToString(),
+                                           departamento.Codigo, null)
+                                           .ToList();
             IEnumerable<LibroAsistenciaDTO> libroAtrasos = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos)
             .Where(x =>x.Entrada.HasValue && x.Salida.HasValue && x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue &&

@@ -28,8 +28,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            db.sp_LibroAsistencia(
                                            FechaDesde,
                                            FechaHasta,
-                                           int.Parse(empresa.Codigo).ToString(), null).ToList()
-                                           .Where(x=> x.IdDepartamento == departamento.Codigo);
+                                           int.Parse(empresa.Codigo).ToString(),
+                                           departamento.Codigo, null)
+                                           .ToList();
              IEnumerable<LibroAsistenciaDTO> resultado = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
              IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
             string[] diasSemana = new[] { "dom", "lun", "mar", "mie", "ju", "vie", "sab" };

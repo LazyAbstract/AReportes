@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="Rut.cs" />
     <Compile Include="TipoReporte.cs" />
+    <Compile Include="vw_Empleado.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -22,6 +22,32 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public DateTime? SalidaTeorica { get; set; }
         public TimeSpan? TiempoColacion { get; set; }
         public string Observacion { get; set; }
+
+        public TimeSpan HorasPactadas
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
+                {
+                    buffer = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value);
+                }
+                return buffer;
+            }
+        }
+
+        public TimeSpan HorasReales
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.Entrada.HasValue && this.Salida.HasValue)
+                {
+                    buffer = this.Salida.Value.Subtract(this.Entrada.Value);
+                }
+                return buffer;
+            }
+        }
     }
 
     public static class LibroAsistenciaDTOHelpers
@@ -74,5 +100,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)
                 .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks) : 0;
         }
+
+
     }
 }

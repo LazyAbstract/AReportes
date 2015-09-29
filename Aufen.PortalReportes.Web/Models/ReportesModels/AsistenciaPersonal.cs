@@ -28,11 +28,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             NombreArchivo = String.Format("{0}/{1}/AsistenciaPersonal.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
             IEnumerable<sp_LibroAsistenciaResult> resultado =
-                                           db.sp_LibroAsistencia(
+                                            db.sp_LibroAsistencia(
                                            FechaDesde,
                                            FechaHasta,
-                                           int.Parse(empresa.Codigo).ToString(), null).ToList()
-                                           .Where(x=> x.IdDepartamento == departamento.Codigo);
+                                           int.Parse(empresa.Codigo).ToString(),
+                                           departamento.Codigo, null)
+                                           .ToList();
             IEnumerable<LibroAsistenciaDTO> libroAsistencia = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultado);
             if (libroAsistencia.Any())
@@ -100,30 +101,50 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("S.Ent", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Permisos", Chico)));
 
-                        foreach (var atraso in reporte)
+                        foreach (var asistencia in reporte)
                         {
                             //Fecha
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(asistencia.Fecha.Value.ToString("ddd dd/MM"), Chico)));
                             //Hora Ingreso
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                            // Hora Salida
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                            // Colaciòn por turno
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                            // Marca de entrada
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                            // Marca de salida
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                            //Horas pactadas po hombre
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
-                            //Horas realizadas
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(asistencia.EntradaTeorica.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
+                            //Hora Salida
+                            tabla.AddCell(new PdfPCell(new Phrase(asistencia.SalidaTeorica.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
+                            //Hora C0lación
+                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(asistencia.TiempoColacion.GetValueOrDefault(new TimeSpan()).Ticks).ToString("HH:mm"), Chico)));
+                            //Marca Ingreso
+                            tabla.AddCell(new PdfPCell(new Phrase(asistencia.Entrada.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
+                            //Marca Salida
+                            tabla.AddCell(new PdfPCell(new Phrase(asistencia.Salida.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
+                            //Hora pactada por horario
+                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(asistencia.HorasPactadas.Ticks).ToString("HH:mm"), Chico)));
+                            //horas realizadas
+                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(asistencia.HorasReales.Ticks).ToString("HH:mm"), Chico)));
                             //Horas extra
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            TimeSpan sobranteSalida = new TimeSpan();
+                            if (asistencia.SalidaTeorica.HasValue && asistencia.Salida.HasValue && asistencia.Salida > asistencia.SalidaTeorica)
+                            {
+                                sobranteSalida = asistencia.Salida.Value.Subtract(asistencia.SalidaTeorica.Value);
+                            }
+                            TimeSpan sobranteIngreso = new TimeSpan();
+                            if (asistencia.EntradaTeorica.HasValue && asistencia.Entrada.HasValue && asistencia.EntradaTeorica > asistencia.Entrada)
+                            {
+                                sobranteIngreso = asistencia.EntradaTeorica.Value.Subtract(asistencia.Entrada.Value);
+                            }
+                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(sobranteSalida.Ticks + sobranteIngreso.Ticks).ToString("HH:mm"), Chico)));
                             // Atraso
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            TimeSpan faltanteSalida = new TimeSpan();
+                            if (asistencia.SalidaTeorica.HasValue && asistencia.Salida.HasValue && asistencia.Salida < asistencia.SalidaTeorica)
+                            {
+                                faltanteSalida = asistencia.SalidaTeorica.Value.Subtract(asistencia.Salida.Value);
+                            }
+                            TimeSpan faltanteIngreso = new TimeSpan();
+                            if (asistencia.EntradaTeorica.HasValue && asistencia.Entrada.HasValue && asistencia.EntradaTeorica < asistencia.Entrada)
+                            {
+                                faltanteIngreso = asistencia.Entrada.Value.Subtract(asistencia.EntradaTeorica.Value);
+                            }
+                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(faltanteIngreso.Ticks).ToString("HH:mm"), Chico)));
                             // Salida adelantada
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(faltanteSalida.Ticks).ToString("HH:mm"), Chico)));
                             // Colacón
                             tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                             // S.Ent
