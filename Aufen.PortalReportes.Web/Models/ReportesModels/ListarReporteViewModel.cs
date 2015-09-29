@@ -13,14 +13,23 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public SelectList Empresas { get; set; }
         public SelectList Departamentos { get; set; }
         public IEnumerable<TipoReporte> TipoReportes { get; set; }
+        //public IEnumerable<SelectListItemDepartamento> Departamentos { get; set; }
 
         public ListarReporteViewModel()
         {
             FORM = new ListarReporteFormModel();
             AufenPortalReportesDataContext db = new AufenPortalReportesDataContext()
-            .WithConnectionStringFromConfiguration();
+             .WithConnectionStringFromConfiguration();
             Empresas = new SelectList(db.EMPRESAs, "Codigo", "Descripcion");
             Departamentos = new SelectList(db.vw_Ubicaciones, "Codigo", "Descripcion");
+            //Departamentos = db.vw_Ubicaciones
+            //    .Select(x => new SelectListItemDepartamento()
+            //    {
+            //        Value = x.Codigo.ToString(),
+            //        Text = x.Descripcion,
+            //        OptGroup = x.IdEmpresa
+            //    });
+
             TipoReportes = ReportesHelper.GetTipoReportes();
         }
 
@@ -29,5 +38,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             FORM = form;
         }
+    }
+
+    public class SelectListItemDepartamento
+    {
+        public string Value { get; set; }
+        public string Text { get; set; }
+        public bool Selected { get; set; }
+        public string OptGroup { get; set; }
     }
 }
