@@ -28,11 +28,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             // Vamos a buscar los datos que nos permitirtán armar elreporte
             IEnumerable<sp_LibroAsistenciaResult> resultadolibroSobretiempo =
                                            db.sp_LibroAsistencia(
-                                           FechaDesde,
-                                           FechaHasta,
+                                           FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
+                                           FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
-                                           departamento.Codigo, null)
-                                           .ToList();
+                                           null,
+                                           null).ToList()
+                                                .Where(x => x.IdDepartamento == departamento.Codigo); 
             IEnumerable<LibroAsistenciaDTO> libroSobretiempo = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultadolibroSobretiempo);
             // Filtramos los casos que nos interesan
