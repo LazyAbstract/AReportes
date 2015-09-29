@@ -22,16 +22,17 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta)
         {
-            //Nombre del archivo y ubiación en el árbol de carpetas
+             //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
             IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
-                                            db.sp_LibroAsistencia(
-                                           FechaDesde,
-                                           FechaHasta,
+                                           db.sp_LibroAsistencia(
+                                           FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
+                                           FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
-                                           departamento.Codigo, null)
-                                           .ToList();
+                                           null,
+                                           null).ToList()
+                                                .Where(x => x.IdDepartamento == departamento.Codigo); 
             IEnumerable<LibroAsistenciaDTO> libroAtrasos = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos)
             .Where(x =>x.Entrada.HasValue && x.Salida.HasValue && x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue &&

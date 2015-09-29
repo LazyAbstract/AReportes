@@ -26,11 +26,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             // Vamos a buscar los datos que nos permitirtán armar elreporte
              IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
                                            db.sp_LibroAsistencia(
-                                           FechaDesde,
-                                           FechaHasta,
+                                           FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
+                                           FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
-                                           departamento.Codigo, null)
-                                           .ToList();
+                                           null,
+                                           null).ToList()
+                                           .Where(x=> x.IdDepartamento == departamento.Codigo);
              IEnumerable<LibroAsistenciaDTO> resultado = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
              IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
             string[] diasSemana = new[] { "dom", "lun", "mar", "mie", "ju", "vie", "sab" };
