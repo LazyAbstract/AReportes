@@ -261,8 +261,10 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\ReportesModels\ArchivoReporteFactoria.cs" />
     <Compile Include="Models\ReportesModels\AsistenciaLegal.cs" />
+    <Compile Include="Models\ReportesModels\Ausencia.cs" />
     <Compile Include="Models\ReportesModels\IArchivoReporte.cs" />
     <Compile Include="Models\ReportesModels\AsistenciaPersonal.cs" />
+    <Compile Include="Models\ReportesModels\LibroInasistenciaDTO.cs" />
     <Compile Include="Models\ReportesModels\LibroSobreTiempo.cs" />
     <Compile Include="Models\ReportesModels\LibroAtrasos.cs" />
     <Compile Include="Models\ReportesModels\ListarReporteFormModel.cs" />

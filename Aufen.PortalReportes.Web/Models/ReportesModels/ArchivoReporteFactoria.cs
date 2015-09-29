@@ -31,6 +31,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 case TipoReporte.AsistenciaPersonal:
                     archivoReporte = new AsistenciaPersonal(db, empresa, departamento, FechaDesde, FechaHasta);
                     break;
+                case TipoReporte.Ausencia:
+                    archivoReporte = new Ausencia(db, empresa, departamento, FechaDesde, FechaHasta);
+                    break;
             }
             return archivoReporte;
         }

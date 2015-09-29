@@ -51,7 +51,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     foreach (var reporte in libroSobretiempo.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa }))
                     {
                         var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
-                            x.IdUbicacion == reporte.Key.IdDepartamento);
+                            x.IdUbicacion == reporte.Key.IdDepartamento && 
+                            reporte.Key.Rut != null 
+                            && x.Codigo == reporte.Key.Rut.Numero.ToString("000000000"));
                         if (empleado == null)
                         {
                             empleado = new vw_Empleado();

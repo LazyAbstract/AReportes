@@ -22,7 +22,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta)
         {
-             //Nombre del archivo y ubiación en el árbol de carpetas
+            //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
             IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
