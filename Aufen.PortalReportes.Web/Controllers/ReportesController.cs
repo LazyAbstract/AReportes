@@ -34,7 +34,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                     foreach (var tipoEmpresa in FORM.Empresa)
                     {
                         var empresa = db.EMPRESAs.SingleOrDefault(x => x.Codigo == tipoEmpresa);
-                        foreach(var departamento in db.vw_Ubicaciones.Where(x =>  x.IdEmpresa == tipoEmpresa))
+                        foreach(var departamento in db.vw_Ubicaciones.Where(x => x.IdEmpresa == tipoEmpresa))
                         {
                             foreach (var tipoReporte in FORM.IdTipoReportes)
                             {
