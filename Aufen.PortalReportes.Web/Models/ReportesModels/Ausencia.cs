@@ -25,7 +25,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/PersonalAusente.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
-            IEnumerable<sp_LibroInasistenciaResult> resultado = db.sp_LibroInasistencia(FechaDesde, FechaHasta, int.Parse(empresa.Codigo).ToString(), departamento.Codigo, rut != null ? rut.ToString() : String.Empty).ToList();
+            string buff = null;
+            if (rut != null)
+            {
+                buff = rut.ToString();
+            }
+            IEnumerable<sp_LibroInasistenciaResult> resultado = db.sp_LibroInasistencia(FechaDesde, FechaHasta, int.Parse(empresa.Codigo).ToString(), departamento.Codigo, buff).ToList();
             IEnumerable<LibroInasistenciaDTO> inasistencias =
                 Mapper.Map<IEnumerable<sp_LibroInasistenciaResult>, IEnumerable<LibroInasistenciaDTO>>(resultado);
             if (inasistencias.Any())
@@ -64,9 +69,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Sal.", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Chico)));
-                        vw_Empleado empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
+
+                        string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
+                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                             x.IdUbicacion == reporte.Key.IdDepartamento &&
-                            x.Codigo == reporte.Key.Numero.ToString("000000000"));
+                                 x.Codigo == codigoEmpleado);
                         foreach(var ausencia in reporte)
                         {
                             //Fecha

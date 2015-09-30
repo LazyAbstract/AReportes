@@ -24,13 +24,16 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             // Nombre del archivo y ubiación en el árbol de carpetas
              NombreArchivo = String.Format("{0}/{1}/AsistenciaLegal.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
+            string buff = null;
+            if(rut != null)
+                 buff = rut.ToString();
              IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
                                            db.sp_LibroAsistencia(
                                            FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
                                            departamento.Codigo,
-                                            rut != null ? rut.ToString() : String.Empty).ToList();
+                                           buff).ToList();
              IEnumerable<LibroAsistenciaDTO> resultado = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
              IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
              if (resultadoLibroAtrasos.Any())
@@ -48,9 +51,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                          Anio = x.Fecha.Value.Year
                      }))
                      {
-                         vw_Empleado empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
-                                 x.IdUbicacion == reporte.Key.IdDepartamento &&
-                                 x.Codigo == reporte.Key.Numero.ToString("000000000"));
+                         string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
+                         var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
+                             x.IdUbicacion == reporte.Key.IdDepartamento &&
+                                  x.Codigo == codigoEmpleado);
                          using (MemoryStream ms = new MemoryStream())
                          {
                              using (PdfReader pdfReader = new PdfReader(path + @"\ReporteAsistenciaLegal.pdf"))
@@ -59,6 +63,17 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                  DateTime primerDiaMes = new DateTime(fechaReferencia.Year, fechaReferencia.Month, 1);
                                  DateTime ultimoDiaMes = primerDiaMes.AddMonths(1).AddSeconds(-1);
                                  PdfStamper pdfStamper = new PdfStamper(pdfReader, ms);
+                                 
+                                 int PageCount = pdfReader.NumberOfPages;
+                                 for (int x = 1; x <= PageCount; x++)
+                                 {
+                                     PdfContentByte cb = pdfStamper.GetOverContent(x);
+                                     Image imagen = Image.GetInstance(String.Format(@"{0}\imagenes\LogosEmpresas\logo{1}.jpg", path, empresa.Codigo.Trim()));
+                                     imagen.ScaleToFit(100,200);
+                                     imagen.SetAbsolutePosition(450, 750);
+                                     cb.AddImage(imagen);
+                                 }
+
                                  pdfStamper.AcroFields.SetField("Mes", new DateTime(reporte.Key.Anio, reporte.Key.Mes, 1).ToString("yyyy MMM"));
                                  pdfStamper.AcroFields.SetField("Nombre", empleado != null ? empleado.NombreCompleto : String.Empty);
                                  pdfStamper.AcroFields.SetField("Rut", new Rut(reporte.Key.Numero).ToStringConGuion());

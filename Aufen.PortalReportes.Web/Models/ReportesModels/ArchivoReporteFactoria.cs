@@ -29,7 +29,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     archivoReporte = new LibroSobreTiempo(db, empresa, departamento, FechaDesde, FechaHasta, path, rut);
                     break;
                 case TipoReporte.AsistenciaPersonal:
-                    archivoReporte = new AsistenciaPersonal(db, empresa, departamento, FechaDesde, FechaHasta, rut);
+                    archivoReporte = new AsistenciaPersonal(db, empresa, departamento, FechaDesde, FechaHasta, path, rut);
                     break;
                 case TipoReporte.Ausencia:
                     archivoReporte = new Ausencia(db, empresa, departamento, FechaDesde, FechaHasta, path, rut);
