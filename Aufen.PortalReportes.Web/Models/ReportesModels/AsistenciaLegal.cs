@@ -41,11 +41,16 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 foreach (var reporte in resultado.GroupBy(x => new
                 {
                     x.Rut,
-                    Mes = x.Fecha.Value.ToString("MMMM yyyy"),
-                    x.IdEmpresa,
-                    Nombre = (x.Nombres ?? String.Empty).Trim() + " " + (x.Apellidos ?? String.Empty).Trim()
+                    x.IdEmpresa, 
+                    x.IdDepartamento, 
+                    Mes = x.Fecha.Value.Month, 
+                    Anio = x.Fecha.Value.Year
                 }))
                 {
+                    vw_Empleado empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
+                            x.IdUbicacion == reporte.Key.IdDepartamento &&
+                            reporte.Key.Rut != null
+                            && x.Codigo == reporte.Key.Rut.Numero.ToString("000000000"));
                     using (MemoryStream ms = new MemoryStream())
                     {
                         using (PdfReader pdfReader = new PdfReader(path + @"\ReporteAsistenciaLegal.pdf"))
@@ -54,8 +59,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             DateTime primerDiaMes = new DateTime(fechaReferencia.Year, fechaReferencia.Month, 1);
                             DateTime ultimoDiaMes = primerDiaMes.AddMonths(1).AddSeconds(-1);
                             PdfStamper pdfStamper = new PdfStamper(pdfReader, ms);
-                            pdfStamper.AcroFields.SetField("Mes", reporte.Key.Mes);
-                            pdfStamper.AcroFields.SetField("Nombre", reporte.Key.Nombre);
+                            pdfStamper.AcroFields.SetField("Mes", new DateTime(reporte.Key.Anio, reporte.Key.Mes, 1).ToString("yyyy MMM"));
+                            pdfStamper.AcroFields.SetField("Nombre", empleado!=null ? empleado.NombreCompleto : String.Empty);
                             pdfStamper.AcroFields.SetField("Rut", reporte.Key.Rut.ToStringConGuion());
                             pdfStamper.AcroFields.SetField("Fecha", String.Format("{0} - {1}", primerDiaMes.ToShortDateString(), ultimoDiaMes.ToShortDateString()));
                             pdfStamper.AcroFields.SetField("ImpresoPagina1", DateTime.Now.ToShortDateString());

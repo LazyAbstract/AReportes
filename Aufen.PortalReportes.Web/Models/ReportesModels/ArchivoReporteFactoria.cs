@@ -19,14 +19,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 case TipoReporte.LibroAtrasos:
                     archivoReporte =
-                        new LibroAtrasos(db, empresa, departamento, FechaDesde, FechaHasta);
+                        new LibroAtrasos(db, empresa, departamento, FechaDesde, FechaHasta, path);
                     break;
                 case TipoReporte.AsistenciaLegal:
 
                     archivoReporte = new AsistenciaLegal(db, empresa, departamento, FechaDesde, FechaHasta, path);
                     break;
                 case TipoReporte.LibroSobreTiempo:
-                    archivoReporte = new LibroSobreTiempo(db, empresa, departamento, FechaDesde, FechaHasta);
+                    archivoReporte = new LibroSobreTiempo(db, empresa, departamento, FechaDesde, FechaHasta, path);
                     break;
                 case TipoReporte.AsistenciaPersonal:
                     archivoReporte = new AsistenciaPersonal(db, empresa, departamento, FechaDesde, FechaHasta);
