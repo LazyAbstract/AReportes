@@ -32,9 +32,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
-                                           null,
-                                           "153125163").ToList()
-                                            .Where(x=> x.IdDepartamento == departamento.Codigo);
+                                           departamento.Codigo,
+                                           null).ToList();
             IEnumerable<LibroAsistenciaDTO> libroAsistencia = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultado);
             if (libroAsistencia.Any())
@@ -45,7 +44,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 {
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                     doc.Open();
-                    foreach (var reporte in libroAsistencia.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa }).Take(3))
+                    foreach (var reporte in libroAsistencia.Where(x => x.Rut != null).GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }))
                     {
                         var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
                             x.IdUbicacion == reporte.Key.IdDepartamento);
@@ -71,7 +70,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("C.Costo:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCentro, Normal)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Rut:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(reporte.Key.Rut == null ? String.Empty : reporte.Key.Rut.ToStringConGuion(), Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(new Rut(reporte.Key.Numero).ToStringConGuion(), Normal)) { Border = Rectangle.NO_BORDER });
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Area:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreUbicacion, Normal)) { Border = Rectangle.NO_BORDER });

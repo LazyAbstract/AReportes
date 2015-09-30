@@ -21,7 +21,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font NormalNegrita { set; get; }
         private Font Chico { set; get; }
 
-        public LibroSobreTiempo(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta)
+        public LibroSobreTiempo(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path)
         {
             // Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/SobreTiempos.pdf", empresa.Descripcion, departamento.Descripcion);
@@ -31,9 +31,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
-                                           departamento.Codigo,
-                                           "153125163")
-                                           .ToList();
+                                           null,
+                                           null).ToList()
+                                                .Where(x => x.IdDepartamento == departamento.Codigo); 
             IEnumerable<LibroAsistenciaDTO> libroSobretiempo = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultadolibroSobretiempo);
             // Filtramos los casos que nos interesan
@@ -44,18 +44,18 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             if (libroSobretiempo.Any())
             {
                 Configuracion();
-                Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+                Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 50, 35);
                 using (var ms = new MemoryStream())
                 {
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
+                    pdfWriter.PageEvent = new Header(empresa, path); 
                     doc.Open();
                     foreach (var reporte in libroSobretiempo.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa }))
                     {
-                        var empleado = db.vw_Empleados.FirstOrDefault(x =>
-                            //x.IdEmpresa == reporte.Key.IdEmpresa &&
-                            //x.IdUbicacion == reporte.Key.IdDepartamento && 
-                            reporte.Key.Rut != null && 
-                            x.Codigo == reporte.Key.Rut.Numero.ToString("000000000"));
+                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
+                            x.IdUbicacion == reporte.Key.IdDepartamento && 
+                            reporte.Key.Rut != null 
+                            && x.Codigo == reporte.Key.Rut.Numero.ToString("000000000"));
                         if (empleado == null)
                         {
                             empleado = new vw_Empleado();

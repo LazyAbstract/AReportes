@@ -20,7 +20,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Normal { set; get; }
         private Font Chico { set; get; }
 
-        public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta)
+        public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path)
         {
              //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
@@ -41,10 +41,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             if (libroAtrasos.Any())
             {
                 Configuracion();
-                Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+                Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 50, 35);
                 using (var ms = new MemoryStream())
                 {
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
+                    pdfWriter.PageEvent = new Header(empresa, path); 
                     doc.Open();
                     foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
                     {
