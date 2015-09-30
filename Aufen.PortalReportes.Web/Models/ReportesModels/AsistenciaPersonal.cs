@@ -140,15 +140,15 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         //Horas realizadas
                         tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAsistencia(reporte), Chico)));
                         //Horas extra
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));//LibroAsistenciaDTOHelpers.CalculaHorasExtra(reporte), Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaHorasExtra(reporte), Chico)));
                         // Atraso
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAtrasoEntrada(reporte), Chico)));
                         // Salida adelantada
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSalidaAdelantada(reporte), Chico)));
                         // Colacón
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaColacion(reporte), Chico)));
                         // S.Ent
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSobreEntrada(reporte), Chico)));
                         // Permisos
                         tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                         doc.Add(tabla);
@@ -158,22 +158,22 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         PdfPTable resumen = new PdfPTable(new float[] { 2, 1, 2, 1, 2, 1, 2, 1 });
                         //Días Trabajados
                         resumen.AddCell(new PdfPCell(new Phrase("Días Trabajados", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaDiasTrabajdos(reporte), Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Horas Pactadas", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAsistencia(reporte), Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Horas extras", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaHorasExtra(reporte), Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Errores de marca", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaErroresMarcaje(reporte), Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Días ausentes", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaDiasInasistencias(reporte), Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Horas Trabajadas", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAsistencia(reporte), Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Vacaciones", Chico)) { Border = Rectangle.NO_BORDER });
                         resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
@@ -181,19 +181,19 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         resumen.AddCell(new PdfPCell(new Phrase("______________________ Firma Empleado", Chico)) { VerticalAlignment = Rectangle.ALIGN_BOTTOM, HorizontalAlignment = Rectangle.ALIGN_CENTER, Colspan = 2, Rowspan = 3, Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Días Atraso", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaDiasAtraso(reporte), Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Total Atraso", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAtrasoEntrada(reporte), Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Licencias Médicas", Chico)) { Border = Rectangle.NO_BORDER });
                         resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Salidas", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaDiasSalidaAdelantada(reporte), Chico)) { Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Total Salidas", Chico)) { Border = Rectangle.NO_BORDER });
-                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSalidaAdelantada(reporte), Chico)) { Border = Rectangle.NO_BORDER });
 
                         resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
                         resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });

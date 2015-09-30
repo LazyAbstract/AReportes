@@ -39,6 +39,18 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return output;
             }
         }
+        public TimeSpan? HorasPactadas
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
+                {
+                    buffer = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value).Subtract(this.TiempoColacion.Value);
+                }
+                return buffer;
+            }
+        }
 
         public string printHorasReales
         {
@@ -76,6 +88,40 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return output;
             }
         }
+        public TimeSpan? HorasReales
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.Entrada.HasValue && this.Salida.HasValue)
+                {
+                    TimeSpan buffer2 = new TimeSpan();
+                    buffer = this.Salida.Value.Subtract(this.Entrada.Value);
+                    if (this.SalidaColacion.HasValue && this.EntradaColacion.HasValue)
+                    {
+                        if (this.SalidaColacion.Value < this.EntradaColacion.Value)
+                        {
+                            buffer2 = this.EntradaColacion.Value.Subtract(this.SalidaColacion.Value);
+                            buffer = buffer.Subtract(buffer2);
+                        }
+                        else
+                        {
+                            buffer.Subtract(TiempoColacion.Value);
+                        }
+                    }
+                    if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
+                    {
+                        buffer2 = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value).Subtract(this.TiempoColacion.Value);
+                        if (buffer > buffer2)
+                        {
+                            buffer = buffer2;
+                        }
+
+                    }
+                }
+                return buffer;
+            }
+        }
 
         public string printHorasExtra
         {
@@ -97,6 +143,21 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return output;
             }
         }
+        public TimeSpan HorasExtra
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue)
+                {
+                    if (this.HorasReales > this.HorasPactadas)
+                    {
+                        buffer = this.Salida.Value.Subtract(this.Entrada.Value) - this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value);
+                    }
+                }
+                return buffer;
+            }
+        }
 
         public string printAtraso
         {
@@ -113,6 +174,21 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     }
                 }
                 return output;
+            }
+        }
+        public TimeSpan Atraso
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.Entrada.HasValue && this.EntradaTeorica.HasValue)
+                {
+                    if (this.Entrada.Value > this.EntradaTeorica.Value)
+                    {
+                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
+                    }
+                }
+                return buffer;
             }
         }
 
@@ -133,6 +209,21 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return output;
             }
         }
+        public TimeSpan SalidaAdelantada
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.Salida.HasValue && this.SalidaTeorica.HasValue)
+                {
+                    if (this.Salida.Value < this.SalidaTeorica.Value)
+                    {
+                        buffer = this.SalidaTeorica.Value.Subtract(this.Salida.Value);
+                    }
+                }
+                return buffer;
+            }
+        }
 
         public string printTiempoColacionReal
         {
@@ -151,6 +242,23 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return output;
             }
         }
+        public TimeSpan TiempoColacionReal
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.SalidaColacion.HasValue && this.EntradaColacion.HasValue)
+                {
+                    if (this.SalidaColacion.Value < this.EntradaColacion.Value)
+                    {
+                        buffer = this.EntradaColacion.Value.Subtract(this.SalidaColacion.Value);                        
+                    }
+                    else { buffer = this.TiempoColacion.Value; }
+                }
+                else { buffer = this.TiempoColacion.Value; }
+                return buffer;
+            }
+        }
 
         public string printSobreEntrada
         {
@@ -167,6 +275,21 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     }
                 }
                 return output;
+            }
+        }
+        public TimeSpan SobreEntrada
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.Entrada.HasValue && this.EntradaTeorica.HasValue)
+                {
+                    if (this.Entrada.Value < this.EntradaTeorica.Value)
+                    {
+                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
+                    }
+                }
+                return buffer;
             }
         }
     }
@@ -203,11 +326,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// </summary>
         /// <param name="lista">Enumeración de sp_LibroAtrasosResultDTO para hacer el calculo</param>
         /// <returns>Ticks correspondientes al cálculo de los atrasos/returns>
-        public static long CalculaAtrasoEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
+        public static string CalculaAtrasoEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             return lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica) ?
                 lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica)
-                .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks) : 0;
+                .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks).ToString("HH:mm") : String.Empty;
         }
 
         /// <summary>
@@ -215,11 +338,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// </summary>
         /// <param name="lista">Enumeración de sp_LibroAtrasosResultDTO para hacer el calculo</param>
         /// <returns>Ticks correspondientes al cálculo de los atrasos</returns>
-        public static long CalculaAtrasoSalida(this IEnumerable<LibroAsistenciaDTO> lista)
+        public static string CalculaSalidaAdelantada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             return lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica) ?
                 lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)
-                .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks) : 0;
+                .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks).ToString("HH:mm") : String.Empty;
         }
 
         /// <summary>
@@ -228,12 +351,63 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// </summary>
         /// <param name="lista">Enumeración de sp_LibroAtrasosResultDTO para hacer el calculo</param>
         /// <returns>Ticks correspondientes al cálculo de las horas extra</returns>
-        //public static long CalculaHorasExtra(this IEnumerable<LibroAsistenciaDTO> lista)
-        //{
-        //    return lista.Any(x => x.HorasReales && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales) ?
-        //        lista.Where(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales)
-        //        .Sum(x => x.HorasReales.Value.Subtract(x.HorasPactadas.Value).Ticks) : 0;
-        //}
+        public static string CalculaHorasExtra(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            return lista.Any(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales) ?
+                lista.Where(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales)
+                .Sum(x => x.HorasReales.Value.Subtract(x.HorasPactadas.Value).Ticks).ToString("HH:mm") : String.Empty;
+        }
+
+        public static string CalculaColacion(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            return lista.Any(x => x.TiempoColacionReal != TimeSpan.Zero) ?
+               lista.Where(x => x.TiempoColacionReal != TimeSpan.Zero)
+               .Sum(x => x.TiempoColacionReal.Ticks).ToString("HH:mm") : String.Empty;
+        }
+
+        public static string CalculaSobreEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            return lista.Any(x => x.SobreEntrada != TimeSpan.Zero) ?
+               lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
+               .Sum(x => x.SobreEntrada.Ticks).ToString("HH:mm") : String.Empty;
+        }
+
+        public static string CalculaDiasTrabajdos(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            return lista.Any(x => !String.IsNullOrWhiteSpace(x.IdHorario)) ?
+               lista.Where(x => !String.IsNullOrWhiteSpace(x.IdHorario))
+               .Count().ToString() : String.Empty;
+        }
+
+        public static string CalculaDiasInasistencias(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            return lista.Any(x => String.IsNullOrWhiteSpace(x.IdHorario)) ?
+               lista.Where(x => String.IsNullOrWhiteSpace(x.IdHorario))
+               .Count().ToString() : String.Empty;
+        }
+
+        public static string CalculaErroresMarcaje(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            return lista.Any(x => x.Observacion == "Fichajes no cuadran") ?
+               lista.Where(x => x.Observacion == "Fichajes no cuadran")
+               .Count().ToString() : String.Empty;
+        }
+
+        public static string CalculaDiasAtraso(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            return lista.Any(x => x.Atraso != TimeSpan.Zero) ?
+               lista.Where(x => x.Atraso != TimeSpan.Zero)
+               .Count().ToString() : String.Empty;
+        }
+
+        public static string CalculaDiasSalidaAdelantada(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            return lista.Any(x => x.SalidaAdelantada != TimeSpan.Zero) ?
+               lista.Where(x => x.SalidaAdelantada != TimeSpan.Zero)
+               .Count().ToString() : String.Empty;
+        }
+
+
 
 
     }

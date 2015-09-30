@@ -81,7 +81,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}Asistencia", i), semana.CalculaAsistencia());
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}Salidas", i), "");
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}Ausencias", i), "");
-                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}AtrasosSalidas", i), new DateTime(semana.CalculaAtrasoEntrada() + semana.CalculaAtrasoSalida()).ToString("HH:mm"));
+                                pdfStamper.AcroFields.SetField(String.Format("Semana{0}AtrasosSalidas", i), semana.CalculaSalidaAdelantada());
                                 pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroAtrasos", i),
                                     (semana.Count(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica) +
                                     semana.Count(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)).ToString("N0"));
@@ -94,7 +94,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             pdfStamper.AcroFields.SetField("ResumenAsistencia", reporte.CalculaAsistencia());
                             pdfStamper.AcroFields.SetField("ResumenSalidas", "");
                             pdfStamper.AcroFields.SetField("ResumenAusencias", "");
-                            pdfStamper.AcroFields.SetField("ResumenAtrasosSalidas", new DateTime(reporte.CalculaAtrasoEntrada() + reporte.CalculaAtrasoSalida()).ToString("HH:mm"));
+                            pdfStamper.AcroFields.SetField("ResumenAtrasosSalidas", reporte.CalculaSalidaAdelantada());
                             pdfStamper.AcroFields.SetField("ResumenNumeroAtrasos", 
                                 (reporte.Count(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica) +
                                 reporte.Count(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)).ToString("N0"));
