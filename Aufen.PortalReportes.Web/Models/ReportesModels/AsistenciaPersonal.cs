@@ -117,19 +117,19 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             // Marca de salida
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Salida.HasValue ? atraso.Salida.Value.ToShortTimeString() : null, Chico)));
                             //Horas pactadas po hombre
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.HorasPactadas, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.printHorasPactadas, Chico)));
                             //Horas realizadas
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.HorasReales.ToString(), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.printHorasReales.ToString(), Chico)));
                             //Horas extra
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.HorasExtra, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.printHorasExtra, Chico)));
                             // Atraso
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Atraso, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.printAtraso, Chico)));
                             // Salida adelantada
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.SalidaAdelantada, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.printSalidaAdelantada, Chico)));
                             // Colación
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.TiempoColacionReal, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.printTiempoColacionReal, Chico)));
                             // S.Ent
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.SobreEntrada, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.printSobreEntrada, Chico)));
                             // Permisos
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Observacion, Chico)));
                         }

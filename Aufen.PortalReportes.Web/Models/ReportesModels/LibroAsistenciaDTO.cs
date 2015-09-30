@@ -25,7 +25,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public TimeSpan? TiempoColacion { get; set; }
         public string Observacion { get; set; }
 
-        public string HorasPactadas
+        public string printHorasPactadas
         {
             get
             {
@@ -40,7 +40,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             }
         }
 
-        public string HorasReales
+        public string printHorasReales
         {
             get
             {
@@ -48,14 +48,36 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 string output = String.Empty;
                 if (this.Entrada.HasValue && this.Salida.HasValue)
                 {
+                    TimeSpan buffer2 = new TimeSpan();
                     buffer = this.Salida.Value.Subtract(this.Entrada.Value);
+                    if (this.SalidaColacion.HasValue && this.EntradaColacion.HasValue)
+                    {
+                        if (this.SalidaColacion.Value < this.EntradaColacion.Value)
+                        {
+                            buffer2 = this.EntradaColacion.Value.Subtract(this.SalidaColacion.Value);
+                            buffer = buffer.Subtract(buffer2);
+                        }
+                        else
+                        {
+                            buffer.Subtract(TiempoColacion.Value);
+                        }
+                    }
+                    if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
+                    {
+                        buffer2 = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value).Subtract(this.TiempoColacion.Value);
+                        if(buffer > buffer2)
+                        {
+                            buffer = buffer2;
+                        }
+
+                    }
                     output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
                 }
                 return output;
             }
         }
 
-        public string HorasExtra
+        public string printHorasExtra
         {
             get
             {
@@ -76,7 +98,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             }
         }
 
-        public string Atraso
+        public string printAtraso
         {
             get 
             {
@@ -94,7 +116,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             }
         }
 
-        public string SalidaAdelantada
+        public string printSalidaAdelantada
         {
             get
             {
@@ -112,7 +134,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             }
         }
 
-        public string TiempoColacionReal
+        public string printTiempoColacionReal
         {
             get
             {
@@ -130,7 +152,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             }
         }
 
-        public string SobreEntrada
+        public string printSobreEntrada
         {
             get
             {
