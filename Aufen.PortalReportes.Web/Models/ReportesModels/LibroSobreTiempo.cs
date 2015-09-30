@@ -28,10 +28,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             // Vamos a buscar los datos que nos permitirtán armar elreporte
             IEnumerable<sp_LibroAsistenciaResult> resultadolibroSobretiempo =
                                            db.sp_LibroAsistencia(
-                                           FechaDesde,
-                                           FechaHasta,
+                                           FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
+                                           FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
-                                           departamento.Codigo, null)
+                                           departamento.Codigo,
+                                           "153125163")
                                            .ToList();
             IEnumerable<LibroAsistenciaDTO> libroSobretiempo = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultadolibroSobretiempo);
@@ -50,10 +51,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     doc.Open();
                     foreach (var reporte in libroSobretiempo.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa }))
                     {
-                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
-                            x.IdUbicacion == reporte.Key.IdDepartamento && 
-                            reporte.Key.Rut != null 
-                            && x.Codigo == reporte.Key.Rut.Numero.ToString("000000000"));
+                        var empleado = db.vw_Empleados.FirstOrDefault(x =>
+                            //x.IdEmpresa == reporte.Key.IdEmpresa &&
+                            //x.IdUbicacion == reporte.Key.IdDepartamento && 
+                            reporte.Key.Rut != null && 
+                            x.Codigo == reporte.Key.Rut.Numero.ToString("000000000"));
                         if (empleado == null)
                         {
                             empleado = new vw_Empleado();
@@ -120,9 +122,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             //Marca Salida
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Salida.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
                             //Hora pactada por horario
-                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(sobretiempo.HorasPactadas.Ticks).ToString("HH:mm"), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.HorasPactadas, Chico)));
                             //horas realizadas
-                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(sobretiempo.HorasReales.Ticks).ToString("HH:mm"), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.HorasReales, Chico)));
                             //Sobrante Salida
                             TimeSpan sobranteSalida = new TimeSpan();
                             if (sobretiempo.SalidaTeorica.HasValue && sobretiempo.Salida.HasValue && sobretiempo.Salida > sobretiempo.SalidaTeorica)

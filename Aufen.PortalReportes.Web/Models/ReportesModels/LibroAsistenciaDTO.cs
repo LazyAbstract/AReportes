@@ -20,32 +20,113 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public DateTime? Salida { get; set; }
         public DateTime? EntradaTeorica { get; set; }
         public DateTime? SalidaTeorica { get; set; }
+        public DateTime? SalidaColacion { get; set; }
+        public DateTime? EntradaColacion { get; set; }
         public TimeSpan? TiempoColacion { get; set; }
         public string Observacion { get; set; }
 
-        public TimeSpan HorasPactadas
+        public string HorasPactadas
         {
             get
             {
                 TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
                 if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
                 {
                     buffer = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value);
+                    output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
                 }
-                return buffer;
+                return output;
             }
         }
 
-        public TimeSpan HorasReales
+        public string HorasReales
         {
             get
             {
                 TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
                 if (this.Entrada.HasValue && this.Salida.HasValue)
                 {
                     buffer = this.Salida.Value.Subtract(this.Entrada.Value);
+                    output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
                 }
-                return buffer;
+                return output;
+            }
+        }
+
+        public string HorasExtra
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
+                if (this.EntradaTeorica.HasValue
+                    && this.Entrada.HasValue
+                    && this.SalidaTeorica.HasValue
+                    && this.Salida.HasValue
+                    && TimeSpan.Compare(this.Salida.Value.Subtract(this.Entrada.Value), this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value)) == 1
+                    )
+                {
+
+                    buffer = this.Salida.Value.Subtract(this.Entrada.Value) - this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value);
+                    output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
+                }
+                return output;
+            }
+        }
+
+        public string Atraso
+        {
+            get 
+            {
+                TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
+                if(this.Entrada.HasValue && this.EntradaTeorica.HasValue)
+                {
+                    if (this.Entrada.Value > this.EntradaTeorica.Value)
+                    {
+                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
+                        output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
+                    }
+                }
+                return output;
+            }
+        }
+
+        public string SalidaAdelantada
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
+                if (this.Salida.HasValue && this.SalidaTeorica.HasValue)
+                {
+                    if (this.Salida.Value < this.SalidaTeorica.Value)
+                    {
+                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
+                        output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
+                    }
+                }
+                return output;
+            }
+        }
+
+        public string TiempoColacionReal
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
+                if (this.SalidaColacion.HasValue && this.EntradaColacion.HasValue)
+                {
+                    if (this.SalidaColacion.Value < this.EntradaColacion.Value)
+                    {
+                        buffer = this.EntradaColacion.Value.Subtract(this.SalidaColacion.Value);
+                        output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
+                    }
+                }
+                return output;
             }
         }
     }
@@ -100,6 +181,19 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)
                 .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks) : 0;
         }
+
+        /// <summary>
+        ///     A partir de un DTO de resultado del SP calcula las horas para filas que tengan valores para la Entrada real
+        ///     , entrada teorica, Salida real y Salida teórica
+        /// </summary>
+        /// <param name="lista">Enumeración de sp_LibroAtrasosResultDTO para hacer el calculo</param>
+        /// <returns>Ticks correspondientes al cálculo de las horas extra</returns>
+        //public static long CalculaHorasExtra(this IEnumerable<LibroAsistenciaDTO> lista)
+        //{
+        //    return lista.Any(x => x.HorasReales && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales) ?
+        //        lista.Where(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales)
+        //        .Sum(x => x.HorasReales.Value.Subtract(x.HorasPactadas.Value).Ticks) : 0;
+        //}
 
 
     }

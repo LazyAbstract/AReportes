@@ -60,7 +60,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                     memOutput.Seek(0, SeekOrigin.Begin);
                     memOutput.Read(newBytes, 0, newBytes.Length);
                     zipOutput.Close();
-                    return File(newBytes, "application/zip", "reportes - " + FORM.FechaDesde.ToString() + " - " + FORM.FechaHasta.ToString() + ".zip");
+                    return File(newBytes, "application/zip", "Reportes -" + FORM.FechaDesde.Value.ToShortDateString() + " - " + FORM.FechaHasta.Value.ToShortDateString() + ".zip");
                 }
             }
             return View(model);
