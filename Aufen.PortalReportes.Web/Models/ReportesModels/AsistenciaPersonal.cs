@@ -22,7 +22,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Chico { set; get; }
         private Font MuyChico { set; get; }
 
-        public AsistenciaPersonal(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta)
+        public AsistenciaPersonal(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, Rut rut)
         {
             //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/AsistenciaPersonal.pdf", empresa.Descripcion, departamento.Descripcion);
@@ -33,7 +33,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
                                            departamento.Codigo,
-                                           null).ToList();
+                                            rut != null ? rut.ToString() : String.Empty).ToList();
             IEnumerable<LibroAsistenciaDTO> libroAsistencia = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultado);
             if (libroAsistencia.Any())

@@ -20,12 +20,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Normal { set; get; }
         private Font Chico { set; get; }
 
-        public Ausencia(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path)
+        public Ausencia(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, Rut rut)
         {
             //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/PersonalAusente.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
-            IEnumerable<sp_LibroInasistenciaResult> resultado = db.sp_LibroInasistencia(FechaDesde, FechaHasta, empresa.Codigo, departamento.Codigo, "").ToList();
+            IEnumerable<sp_LibroInasistenciaResult> resultado = db.sp_LibroInasistencia(FechaDesde, FechaHasta, int.Parse(empresa.Codigo).ToString(), departamento.Codigo, rut != null ? rut.ToString() : String.Empty).ToList();
             IEnumerable<LibroInasistenciaDTO> inasistencias =
                 Mapper.Map<IEnumerable<sp_LibroInasistenciaResult>, IEnumerable<LibroInasistenciaDTO>>(resultado);
             if (inasistencias.Any())
@@ -37,7 +37,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                     pdfWriter.PageEvent = new Header(empresa, path);                    
                     doc.Open();
-                    foreach (var reporte in inasistencias.Where(xx=>xx.Rut!=null).GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
+                    foreach (var reporte in inasistencias.Where(x=>x.Rut!=null).GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
                     {
                         doc.AddAuthor("Aufen");
                         doc.AddCreationDate();

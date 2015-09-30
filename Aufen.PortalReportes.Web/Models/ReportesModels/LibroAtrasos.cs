@@ -20,7 +20,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Normal { set; get; }
         private Font Chico { set; get; }
 
-        public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path)
+        public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, Rut rut)
         {
              //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
@@ -31,7 +31,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
                                            departamento.Codigo,
-                                           null).ToList(); 
+                                            rut != null ? rut.ToString() : String.Empty).ToList(); 
             IEnumerable<LibroAsistenciaDTO> libroAtrasos = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos)
             .Where(x =>x.Entrada.HasValue && x.Salida.HasValue && x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue &&
@@ -46,7 +46,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                     pdfWriter.PageEvent = new Header(empresa, path); 
                     doc.Open();
-                    foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
+                    foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }))
                     {
                         doc.AddAuthor("Aufen");
                         doc.AddCreationDate();
