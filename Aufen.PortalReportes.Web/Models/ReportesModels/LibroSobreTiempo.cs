@@ -50,12 +50,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                     pdfWriter.PageEvent = new Header(empresa, path); 
                     doc.Open();
-                    foreach (var reporte in libroSobretiempo.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa }))
+                    foreach (var reporte in libroSobretiempo.Where(x=>x.Rut!=null)
+                        .GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }))
                     {
                         var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
-                            x.IdUbicacion == reporte.Key.IdDepartamento && 
-                            reporte.Key.Rut != null 
-                            && x.Codigo == reporte.Key.Rut.Numero.ToString("000000000"));
+                            x.IdUbicacion == reporte.Key.IdDepartamento 
+                            && x.Codigo == reporte.Key.Numero.ToString("000000000"));
                         if (empleado == null)
                         {
                             empleado = new vw_Empleado();
@@ -80,7 +80,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("C.Costo:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCentro, Normal)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Rut:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(reporte.Key.Rut == null ? String.Empty : reporte.Key.Rut.ToStringConGuion(), Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(new Rut(reporte.Key.Numero).ToStringConGuion(), Normal)) { Border = Rectangle.NO_BORDER });
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Area:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreUbicacion, Normal)) { Border = Rectangle.NO_BORDER });

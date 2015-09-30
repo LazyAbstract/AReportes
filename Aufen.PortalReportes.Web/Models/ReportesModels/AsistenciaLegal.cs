@@ -29,18 +29,17 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
-                                           null,
-                                           null).ToList()
-                                           .Where(x=> x.IdDepartamento == departamento.Codigo);
+                                           departamento.Codigo,
+                                           null).ToList();
              IEnumerable<LibroAsistenciaDTO> resultado = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
              IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
             string[] diasSemana = new[] { "dom", "lun", "mar", "mie", "ju", "vie", "sab" };
             using (MemoryStream finalStream = new MemoryStream())
             {
                 PdfCopyFields copy = new PdfCopyFields(finalStream);
-                foreach (var reporte in resultado.GroupBy(x => new
+                foreach (var reporte in resultado.Where(x=>x.Rut!=null).GroupBy(x => new
                 {
-                    x.Rut,
+                    x.Rut.Numero,
                     x.IdEmpresa, 
                     x.IdDepartamento, 
                     Mes = x.Fecha.Value.Month, 
@@ -49,8 +48,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 {
                     vw_Empleado empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
                             x.IdUbicacion == reporte.Key.IdDepartamento &&
-                            reporte.Key.Rut != null
-                            && x.Codigo == reporte.Key.Rut.Numero.ToString("000000000"));
+                            x.Codigo == reporte.Key.Numero.ToString("000000000"));
                     using (MemoryStream ms = new MemoryStream())
                     {
                         using (PdfReader pdfReader = new PdfReader(path + @"\ReporteAsistenciaLegal.pdf"))
@@ -61,7 +59,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             PdfStamper pdfStamper = new PdfStamper(pdfReader, ms);
                             pdfStamper.AcroFields.SetField("Mes", new DateTime(reporte.Key.Anio, reporte.Key.Mes, 1).ToString("yyyy MMM"));
                             pdfStamper.AcroFields.SetField("Nombre", empleado!=null ? empleado.NombreCompleto : String.Empty);
-                            pdfStamper.AcroFields.SetField("Rut", reporte.Key.Rut.ToStringConGuion());
+                            pdfStamper.AcroFields.SetField("Rut", new Rut(reporte.Key.Numero).ToStringConGuion());
                             pdfStamper.AcroFields.SetField("Fecha", String.Format("{0} - {1}", primerDiaMes.ToShortDateString(), ultimoDiaMes.ToShortDateString()));
                             pdfStamper.AcroFields.SetField("ImpresoPagina1", DateTime.Now.ToShortDateString());
                             pdfStamper.AcroFields.SetField("ImpresoPagina2", DateTime.Now.ToShortDateString());
@@ -74,7 +72,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                 var semana = reporte.Where(x => x.NumSemana == i);
                                 for (int j = 0; j <= 6; j++)
                                 {
-                                    var dia = reporte.SingleOrDefault(x => x.NumSemana == i && (int)x.Fecha.Value.DayOfWeek == j);
+                                    var dia = reporte.FirstOrDefault(x => x.NumSemana == i && (int)x.Fecha.Value.DayOfWeek == j);
                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Tipo{1}", i, j), dia != null ? dia.Observacion : String.Empty);
                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Dia{1}", i, j), String.Format("{0} {1}", dia != null ? dia.Fecha.Value.ToString("dd/MM") : string.Empty, diasSemana[j]));
                                 }

@@ -37,7 +37,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                     pdfWriter.PageEvent = new Header(empresa, path);                    
                     doc.Open();
-                    foreach (var reporte in inasistencias.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa }).Take(3))
+                    foreach (var reporte in inasistencias.Where(xx=>xx.Rut!=null).GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
                     {
                         doc.AddAuthor("Aufen");
                         doc.AddCreationDate();
@@ -66,8 +66,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Chico)));
                         vw_Empleado empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
                             x.IdUbicacion == reporte.Key.IdDepartamento &&
-                            reporte.Key.Rut != null
-                            && x.Codigo == reporte.Key.Rut.Numero.ToString("000000000"));
+                            x.Codigo == reporte.Key.Numero.ToString("000000000"));
                         foreach(var ausencia in reporte)
                         {
                             //Fecha
