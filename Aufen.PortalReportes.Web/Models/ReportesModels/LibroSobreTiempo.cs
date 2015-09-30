@@ -122,9 +122,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             //Marca Salida
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Salida.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
                             //Hora pactada por horario
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.HorasPactadas, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasPactadas, Chico)));
                             //horas realizadas
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.HorasReales, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasReales, Chico)));
                             //Sobrante Salida
                             TimeSpan sobranteSalida = new TimeSpan();
                             if (sobretiempo.SalidaTeorica.HasValue && sobretiempo.Salida.HasValue && sobretiempo.Salida > sobretiempo.SalidaTeorica)
