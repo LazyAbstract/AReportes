@@ -32,7 +32,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     archivoReporte = new AsistenciaPersonal(db, empresa, departamento, FechaDesde, FechaHasta);
                     break;
                 case TipoReporte.Ausencia:
-                    archivoReporte = new Ausencia(db, empresa, departamento, FechaDesde, FechaHasta);
+                    archivoReporte = new Ausencia(db, empresa, departamento, FechaDesde, FechaHasta, path);
                     break;
             }
             return archivoReporte;

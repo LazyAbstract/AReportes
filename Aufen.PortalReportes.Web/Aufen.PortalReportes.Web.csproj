@@ -256,6 +256,7 @@
     </Compile>
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
+    <Compile Include="Helpers\ImageHelpers.cs" />
     <Compile Include="MapperProfile\DefaultProfileMapper.cs" />
     <Compile Include="MapperProfile\ReportesMappers\sp_LibroAtrasosResultsp_LibroInasistenciasDTO.cs" />
     <Compile Include="MapperProfile\ReportesMappers\sp_LibroAtrasosResultsp_LibroAtrasosResultDTO.cs" />
@@ -263,6 +264,7 @@
     <Compile Include="Models\ReportesModels\ArchivoReporteFactoria.cs" />
     <Compile Include="Models\ReportesModels\AsistenciaLegal.cs" />
     <Compile Include="Models\ReportesModels\Ausencia.cs" />
+    <Compile Include="Models\ReportesModels\Header.cs" />
     <Compile Include="Models\ReportesModels\IArchivoReporte.cs" />
     <Compile Include="Models\ReportesModels\AsistenciaPersonal.cs" />
     <Compile Include="Models\ReportesModels\LibroInasistenciaDTO.cs" />
@@ -281,9 +283,9 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\imagenes\logoAufen.png" />
-    <Content Include="Content\imagenes\Logos Empresas\logo01.jpg" />
-    <Content Include="Content\imagenes\Logos Empresas\logo02.jpg" />
-    <Content Include="Content\imagenes\Logos Empresas\logo03.jpg" />
+    <Content Include="Content\imagenes\LogosEmpresas\logo01.jpg" />
+    <Content Include="Content\imagenes\LogosEmpresas\logo02.jpg" />
+    <Content Include="Content\imagenes\LogosEmpresas\logo03.jpg" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
