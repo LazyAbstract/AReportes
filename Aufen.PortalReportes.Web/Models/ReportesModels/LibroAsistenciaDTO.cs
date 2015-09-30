@@ -33,7 +33,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 string output = String.Empty;
                 if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
                 {
-                    buffer = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value);
+                    buffer = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value).Subtract(this.TiempoColacion.Value);
                     output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
                 }
                 return output;
@@ -104,7 +104,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 {
                     if (this.Salida.Value < this.SalidaTeorica.Value)
                     {
-                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
+                        buffer = this.SalidaTeorica.Value.Subtract(this.Salida.Value);
                         output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
                     }
                 }
@@ -123,6 +123,24 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     if (this.SalidaColacion.Value < this.EntradaColacion.Value)
                     {
                         buffer = this.EntradaColacion.Value.Subtract(this.SalidaColacion.Value);
+                        output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
+                    }
+                }
+                return output;
+            }
+        }
+
+        public string SobreEntrada
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
+                if (this.Entrada.HasValue && this.EntradaTeorica.HasValue)
+                {
+                    if (this.Entrada.Value < this.EntradaTeorica.Value)
+                    {
+                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
                         output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
                     }
                 }

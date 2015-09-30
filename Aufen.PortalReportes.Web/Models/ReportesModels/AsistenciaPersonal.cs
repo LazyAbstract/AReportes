@@ -79,6 +79,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Empty, Normal)) { Border = Rectangle.NO_BORDER });
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Format("PERIODO: {0} a {1}", FechaDesde.ToShortDateString(), FechaHasta.ToShortDateString()), Normal)) { Colspan = 4, Border = Rectangle.NO_BORDER });
+                        doc.Add(new Paragraph(" "));
                         tablaEncabezado.AddCell(new PdfPCell(GetNomenclatura()) { Colspan = 4 });
                         doc.Add(tablaEncabezado);
                         doc.Add(new Phrase());
@@ -129,7 +130,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             // Colación
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.TiempoColacionReal, Chico)));
                             // S.Ent
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.SobreEntrada, Chico)));
                             // Permisos
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Observacion, Chico)));
                         }
