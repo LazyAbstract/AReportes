@@ -25,7 +25,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
              NombreArchivo = String.Format("{0}/{1}/AsistenciaLegal.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
             string buff = null;
-            if(rut != null)
+            if (rut != null)
                  buff = rut.ToString();
              IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
                                            db.sp_LibroAsistencia(
@@ -43,17 +43,17 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                  {
                      PdfCopyFields copy = new PdfCopyFields(finalStream);
                      foreach (var reporte in resultado.Where(x => x.Rut != null).GroupBy(x => new
-                {
-                    x.Rut.Numero,
-                    x.IdEmpresa,
-                    x.IdDepartamento,
-                    Mes = x.Fecha.Value.Month,
-                    Anio = x.Fecha.Value.Year
-                }))
+                     {
+                         x.Rut.Numero,
+                         x.IdEmpresa,
+                         x.IdDepartamento,
+                         Mes = x.Fecha.Value.Month,
+                         Anio = x.Fecha.Value.Year
+                     }))
                      {
                          string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
                          var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
-                            x.IdUbicacion == reporte.Key.IdDepartamento &&
+                             x.IdUbicacion == reporte.Key.IdDepartamento &&
                                   x.Codigo == codigoEmpleado);
                          using (MemoryStream ms = new MemoryStream())
                          {
@@ -63,13 +63,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                  DateTime primerDiaMes = new DateTime(fechaReferencia.Year, fechaReferencia.Month, 1);
                                  DateTime ultimoDiaMes = primerDiaMes.AddMonths(1).AddSeconds(-1);
                                  PdfStamper pdfStamper = new PdfStamper(pdfReader, ms);
-
+                                 
                                  int PageCount = pdfReader.NumberOfPages;
                                  for (int x = 1; x <= PageCount; x++)
                                  {
                                      PdfContentByte cb = pdfStamper.GetOverContent(x);
                                      Image imagen = Image.GetInstance(String.Format(@"{0}\imagenes\LogosEmpresas\logo{1}.jpg", path, empresa.Codigo.Trim()));
-                                     imagen.ScaleToFit(100, 200);
+                                    imagen.ScaleToFit(100, 200);
                                      imagen.SetAbsolutePosition(450, 750);
                                      cb.AddImage(imagen);
                                  }
@@ -89,9 +89,21 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                      var semana = reporte.Where(x => x.NumSemana == i);
                                      for (int j = 0; j <= 6; j++)
                                      {
+                                        // Si se elimina esto el domingo va aquedar al final
+                                        int correccionDia = j;//j == 6 ? 0 : j + 1;
                                          var dia = reporte.FirstOrDefault(x => x.NumSemana == i && (int)x.Fecha.Value.DayOfWeek == j);
-                                         pdfStamper.AcroFields.SetField(String.Format("Semana{0}Tipo{1}", i, j), dia != null ? dia.Observacion : String.Empty);
-                                         pdfStamper.AcroFields.SetField(String.Format("Semana{0}Dia{1}", i, j), String.Format("{0} {1}", dia != null ? dia.Fecha.Value.ToString("dd/MM") : string.Empty, diasSemana[j]));
+                                        if (dia!=null && !String.IsNullOrEmpty(dia.Observacion))
+                                        {
+                                            pdfStamper.AcroFields.SetField(String.Format("Semana{0}Tipo{1}", i, correccionDia), dia != null ? dia.Observacion : String.Empty);
+                                        }
+                                        else if(dia!=null)
+                                        {
+                                            pdfStamper.AcroFields.SetField(String.Format("Semana{0}Tipo{1}", i, correccionDia), 
+                                                String.Format("{0}-{1}", dia.Entrada.HasValue ? dia.Entrada.Value.ToString("HH:mm") : String.Empty
+                                                , dia.Salida.HasValue ? dia.Salida.Value.ToString("HH:mm") : String.Empty
+                                                ));
+                                        }
+                                        pdfStamper.AcroFields.SetField(String.Format("Semana{0}Dia{1}", i, correccionDia), String.Format("{0} {1}", dia != null ? dia.Fecha.Value.ToString("dd/MM") : string.Empty, diasSemana[j]));
                                      }
                                      // Semana a semana
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}Jornada", i), semana.CalculaJornada());

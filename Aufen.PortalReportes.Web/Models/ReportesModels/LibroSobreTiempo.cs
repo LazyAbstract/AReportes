@@ -74,6 +74,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         Paragraph parrafo = new Paragraph();
                         parrafo.Add(new Paragraph("Libro de Asistencia Personal", Titulo) { Alignment = Element.ALIGN_CENTER });
                         parrafo.Add(new Paragraph("Sobretiempos", Titulo) { Alignment = Element.ALIGN_CENTER });
+                        doc.Add(parrafo);
+                        doc.Add(new Phrase());
 
                         PdfPTable tablaEncabezado = new PdfPTable(new float[] { 1, 5, 1, 5 });
 
