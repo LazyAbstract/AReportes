@@ -22,32 +22,40 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Chico { set; get; }
         private Font MuyChico { set; get; }
 
-        public AsistenciaPersonal(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta)
+        public AsistenciaPersonal(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, Rut rut)
         {
             //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/AsistenciaPersonal.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
+            string buff = null;
+            if(rut != null)
+            {
+                buff = rut.ToString();
+            }
             IEnumerable<sp_LibroAsistenciaResult> resultado =
                                            db.sp_LibroAsistencia(
                                            FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
                                            departamento.Codigo,
-                                           null).ToList();
+                                           buff).ToList();
             IEnumerable<LibroAsistenciaDTO> libroAsistencia = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultado);
             if (libroAsistencia.Any())
             {
                 Configuracion();
-                Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+                Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 50, 35);
                 using (var ms = new MemoryStream())
                 {
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
+                    pdfWriter.PageEvent = new Header(empresa, path);
                     doc.Open();
                     foreach (var reporte in libroAsistencia.Where(x => x.Rut != null).GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }))
                     {
-                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
-                            x.IdUbicacion == reporte.Key.IdDepartamento);
+                        string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
+                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
+                            x.IdUbicacion == reporte.Key.IdDepartamento &&
+                                 x.Codigo == codigoEmpleado);
                         if (empleado == null)
                         {
                             empleado = new vw_Empleado();

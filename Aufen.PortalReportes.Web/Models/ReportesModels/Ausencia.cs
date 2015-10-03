@@ -20,12 +20,17 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Normal { set; get; }
         private Font Chico { set; get; }
 
-        public Ausencia(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path)
+        public Ausencia(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, Rut rut)
         {
             //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/PersonalAusente.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
-            IEnumerable<sp_LibroInasistenciaResult> resultado = db.sp_LibroInasistencia(FechaDesde, FechaHasta, empresa.Codigo, departamento.Codigo, "").ToList();
+            string buff = null;
+            if (rut != null)
+            {
+                buff = rut.ToString();
+            }
+            IEnumerable<sp_LibroInasistenciaResult> resultado = db.sp_LibroInasistencia(FechaDesde, FechaHasta, int.Parse(empresa.Codigo).ToString(), departamento.Codigo, buff).ToList();
             IEnumerable<LibroInasistenciaDTO> inasistencias =
                 Mapper.Map<IEnumerable<sp_LibroInasistenciaResult>, IEnumerable<LibroInasistenciaDTO>>(resultado);
             if (inasistencias.Any())
@@ -37,7 +42,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                     pdfWriter.PageEvent = new Header(empresa, path);                    
                     doc.Open();
-                    foreach (var reporte in inasistencias.Where(xx=>xx.Rut!=null).GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
+                    foreach (var reporte in inasistencias.Where(x=>x.Rut!=null).GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
                     {
                         doc.AddAuthor("Aufen");
                         doc.AddCreationDate();
@@ -64,9 +69,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Sal.", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Chico)));
-                        vw_Empleado empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
+
+                        string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
+                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                             x.IdUbicacion == reporte.Key.IdDepartamento &&
-                            x.Codigo == reporte.Key.Numero.ToString("000000000"));
+                                 x.Codigo == codigoEmpleado);
                         foreach(var ausencia in reporte)
                         {
                             //Fecha

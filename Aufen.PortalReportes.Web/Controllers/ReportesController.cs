@@ -46,7 +46,8 @@ namespace Aufen.PortalReportes.Web.Controllers
                                     departamento, 
                                     FORM.FechaDesde.Value, 
                                     FORM.FechaHasta.Value, 
-                                    HttpContext.Server.MapPath("~/Content"));
+                                    HttpContext.Server.MapPath("~/Content")
+                                    , FORM.Rut);
                                 if (archivoReporte.GetArchivo() != null)
                                 {
                                     zipOutput.PutNextEntry(archivoReporte.GetZipArchivoReporte());

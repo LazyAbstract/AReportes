@@ -21,19 +21,23 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font NormalNegrita { set; get; }
         private Font Chico { set; get; }
 
-        public LibroSobreTiempo(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path)
+        public LibroSobreTiempo(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, Rut rut)
         {
             // Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/SobreTiempos.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
+            string buff = null;
+            if (rut != null)
+            {
+                buff = rut.ToString();
+            }
             IEnumerable<sp_LibroAsistenciaResult> resultadolibroSobretiempo =
                                            db.sp_LibroAsistencia(
                                            FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
-                                           null,
-                                           null).ToList()
-                                                .Where(x => x.IdDepartamento == departamento.Codigo); 
+                                           departamento.Codigo,
+                                           buff).ToList(); 
             IEnumerable<LibroAsistenciaDTO> libroSobretiempo = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultadolibroSobretiempo);
             // Filtramos los casos que nos interesan
@@ -53,9 +57,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     foreach (var reporte in libroSobretiempo.Where(x=>x.Rut!=null)
                         .GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }))
                     {
-                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == reporte.Key.IdEmpresa &&
-                            x.IdUbicacion == reporte.Key.IdDepartamento 
-                            && x.Codigo == reporte.Key.Numero.ToString("000000000"));
+                        string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
+                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
+                            x.IdUbicacion == reporte.Key.IdDepartamento &&
+                                 x.Codigo == codigoEmpleado);
                         if (empleado == null)
                         {
                             empleado = new vw_Empleado();
