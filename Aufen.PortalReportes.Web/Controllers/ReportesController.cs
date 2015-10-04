@@ -14,6 +14,7 @@ namespace Aufen.PortalReportes.Web.Controllers
 {
     public class ReportesController : BaseController
     {
+        //[Authorize(Roles = "Admin")]
         public ActionResult ListarReporte(ListarReporteFormModel FORM)
         {
             ListarReporteViewModel model = new ListarReporteViewModel(FORM);
