@@ -27,6 +27,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             string buff = null;
             if (rut != null)
                  buff = rut.ToString();
+            //Resultado de marcas
              IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
                                            db.sp_LibroAsistencia(
                                            FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
@@ -36,6 +37,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            buff).ToList();
              IEnumerable<LibroAsistenciaDTO> resultado = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
              IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
+            // Resumen de inasistencias
+             IEnumerable<sp_LibroInasistenciaResult> resultadoLibroInasistencias =
+                 db.sp_LibroInasistencia(FechaDesde, FechaHasta, int.Parse(empresa.Codigo).ToString(),
+                                            departamento.Codigo,
+                                            buff);
+             IEnumerable<LibroInasistenciaDTO> resultadoInasistencia = Mapper.Map<IEnumerable<sp_LibroInasistenciaResult>,
+                 IEnumerable<LibroInasistenciaDTO>>(resultadoLibroInasistencias);
              if (resultadoLibroAtrasos.Any())
              {
                  string[] diasSemana = new[] { "dom", "lun", "mar", "mie", "ju", "vie", "sab" };
@@ -51,6 +59,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                          Anio = x.Fecha.Value.Year
                      }))
                      {
+                         var inasistencias = resultadoInasistencia.Where(x => x.Rut!= null &&
+                             x.Rut.Numero == reporte.Key.Numero &&
+                             x.IdEmpresa == reporte.Key.IdEmpresa &&
+                             x.IdDepartamento == reporte.Key.IdDepartamento &&
+                            reporte.Key.Mes == x.Fecha.Value.Month &&
+                            reporte.Key.Anio == x.Fecha.Value.Year);
                          string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
                          var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                              x.IdUbicacion == reporte.Key.IdDepartamento &&
@@ -108,26 +122,26 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                      // Semana a semana
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}Jornada", i), semana.CalculaJornada());
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}Asistencia", i), semana.CalculaAsistencia());
-                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Salidas", i), "");
+                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Salidas", i), semana.CalculaDiasSalidaAdelantada());
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}Ausencias", i), "");
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}AtrasosSalidas", i), semana.CalculaSalidaAdelantada());
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroAtrasos", i),
-                                         (semana.Count(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica) +
-                                         semana.Count(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)).ToString("N0"));
-                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroSalidas", i), "");
+                                         semana.Count(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica).ToString("N0"));
+                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroSalidas", i),
+                                         semana.Count(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica).ToString("N0"));
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}ExtraConTurno", i), "");
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}ExtraSinTurno", i), "");
                                  }
                                  // Resumen de todas las semanas
                                  pdfStamper.AcroFields.SetField("ResumenJornada", reporte.CalculaJornada());
                                  pdfStamper.AcroFields.SetField("ResumenAsistencia", reporte.CalculaAsistencia());
-                                 pdfStamper.AcroFields.SetField("ResumenSalidas", "");
+                                 pdfStamper.AcroFields.SetField("ResumenSalidas", reporte.CalculaSalidaAdelantada());
                                  pdfStamper.AcroFields.SetField("ResumenAusencias", "");
                                  pdfStamper.AcroFields.SetField("ResumenAtrasosSalidas", reporte.CalculaSalidaAdelantada());
                                  pdfStamper.AcroFields.SetField("ResumenNumeroAtrasos",
-                                     (reporte.Count(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica) +
-                                     reporte.Count(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)).ToString("N0"));
-                                 pdfStamper.AcroFields.SetField("ResumenNumeroSalidas", "");
+                                     reporte.Count(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica).ToString("N0"));
+                                 pdfStamper.AcroFields.SetField("ResumenNumeroSalidas",
+                                     reporte.Count(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica).ToString("N0"));
                                  pdfStamper.AcroFields.SetField("ResumenExtraConTurno", "");
                                  pdfStamper.AcroFields.SetField("ResumenExtraSinTurno", "");
                                  pdfStamper.Writer.CloseStream = false;
