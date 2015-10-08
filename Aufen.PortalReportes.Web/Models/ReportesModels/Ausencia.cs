@@ -30,7 +30,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 buff = rut.ToString();
             }
-            IEnumerable<sp_LibroInasistenciaResult> resultado = db.sp_LibroInasistencia(FechaDesde, FechaHasta, int.Parse(empresa.Codigo).ToString(), departamento.Codigo, buff).ToList();
+            IEnumerable<sp_LibroInasistenciaResult> resultado = db.sp_LibroInasistencia(
+                FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
+                , FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
+                , int.Parse(empresa.Codigo).ToString()
+                , departamento.Codigo
+                , buff).ToList();
             IEnumerable<LibroInasistenciaDTO> inasistencias =
                 Mapper.Map<IEnumerable<sp_LibroInasistenciaResult>, IEnumerable<LibroInasistenciaDTO>>(resultado);
             if (inasistencias.Any())

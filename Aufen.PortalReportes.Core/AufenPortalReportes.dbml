@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="ZkTimeEnterprise" Class="AufenPortalReportesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=.;Initial Catalog=ZkTimeEnterprise;User ID=sa" SettingsObjectName="Aufen.PortalReportes.Core.Properties.Settings" SettingsPropertyName="ZkTimeEnterpriseConnectionString2" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.;Initial Catalog=ZkTimeEnterprise;User ID=sa" SettingsObjectName="Aufen.PortalReportes.Core.Properties.Settings" SettingsPropertyName="ZkTimeEnterpriseConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.vw_Ubicaciones" Member="vw_Ubicaciones">
     <Type Name="vw_Ubicacione">
       <Column Name="Codigo" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
@@ -33,24 +33,6 @@
       <Column Name="Fax" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
     </Type>
   </Table>
-  <Function Name="dbo.sp_LibroInasistencia" Method="sp_LibroInasistencia">
-    <Parameter Name="fechaInicio" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="fechaFin" Type="System.DateTime" DbType="DateTime" />
-    <Parameter Name="num" Type="System.String" DbType="VarChar(2)" />
-    <Parameter Name="depto" Type="System.String" DbType="VarChar(2)" />
-    <Parameter Name="rut" Type="System.String" DbType="VarChar(9)" />
-    <ElementType Name="sp_LibroInasistenciaResult">
-      <Column Name="Fecha" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
-      <Column Name="Rut" Type="System.String" DbType="VarChar(9) NOT NULL" CanBeNull="false" />
-      <Column Name="Nombre" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
-      <Column Name="Apellidos" Type="System.String" DbType="VarChar(9) NOT NULL" CanBeNull="false" />
-      <Column Name="IdEmpresa" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
-      <Column Name="IdDepartamento" Type="System.String" DbType="VarChar(2) NOT NULL" CanBeNull="false" />
-      <Column Name="EntradaTeorica1" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="SalidaTeorica1" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
-      <Column Name="Observacion" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.sp_LibroAsistencia" Method="sp_LibroAsistencia">
     <Parameter Name="fechaInicio" Type="System.String" DbType="VarChar(8)" />
     <Parameter Name="fechaFin" Type="System.String" DbType="VarChar(8)" />
@@ -75,6 +57,24 @@
       <Column Name="SalidaTeorica1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
       <Column Name="Colacion" Type="System.Decimal" DbType="Decimal(2,1)" CanBeNull="true" />
       <Column Name="Observacion" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_LibroInasistencia" Method="sp_LibroInasistencia">
+    <Parameter Name="fechaInicio" Type="System.String" DbType="VarChar(9)" />
+    <Parameter Name="fechaFin" Type="System.String" DbType="VarChar(9)" />
+    <Parameter Name="num" Type="System.String" DbType="VarChar(2)" />
+    <Parameter Name="depto" Type="System.String" DbType="VarChar(2)" />
+    <Parameter Name="rut" Type="System.String" DbType="VarChar(9)" />
+    <ElementType Name="sp_LibroInasistenciaResult">
+      <Column Name="Fecha" Type="System.String" DbType="VarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="Rut" Type="System.String" DbType="VarChar(9) NOT NULL" CanBeNull="false" />
+      <Column Name="Nombre" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="Apellidos" Type="System.String" DbType="VarChar(9) NOT NULL" CanBeNull="false" />
+      <Column Name="IdEmpresa" Type="System.String" DbType="VarChar(1) NOT NULL" CanBeNull="false" />
+      <Column Name="IdDepartamento" Type="System.String" DbType="VarChar(2) NOT NULL" CanBeNull="false" />
+      <Column Name="EntradaTeorica1" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="SalidaTeorica1" Type="System.String" DbType="VarChar(4) NOT NULL" CanBeNull="false" />
+      <Column Name="Observacion" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
 </Database>
