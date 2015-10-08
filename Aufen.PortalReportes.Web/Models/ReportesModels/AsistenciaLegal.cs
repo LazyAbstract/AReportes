@@ -91,6 +91,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                  pdfStamper.AcroFields.SetField("Mes", new DateTime(reporte.Key.Anio, reporte.Key.Mes, 1).ToString("yyyy MMM"));
                                  pdfStamper.AcroFields.SetField("Nombre", empleado != null ? empleado.NombreCompleto : String.Empty);
                                  pdfStamper.AcroFields.SetField("Rut", new Rut(reporte.Key.Numero).ToStringConGuion());
+                                 pdfStamper.AcroFields.SetField("Departamento", String.Format("{0} ({1})",departamento!= null ? departamento.Descripcion.Trim() : String.Empty, empresa!=null ? empresa.Descripcion.Trim() : String.Empty));
                                  pdfStamper.AcroFields.SetField("Fecha", String.Format("{0} - {1}", primerDiaMes.ToShortDateString(), ultimoDiaMes.ToShortDateString()));
                                  pdfStamper.AcroFields.SetField("ImpresoPagina1", DateTime.Now.ToShortDateString());
                                  pdfStamper.AcroFields.SetField("ImpresoPagina2", DateTime.Now.ToShortDateString());
@@ -122,13 +123,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                      // Semana a semana
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}Jornada", i), semana.CalculaJornada());
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}Asistencia", i), semana.CalculaAsistencia());
-                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Salidas", i), semana.CalculaDiasSalidaAdelantada());
-                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Ausencias", i), "");
-                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}AtrasosSalidas", i), semana.CalculaSalidaAdelantada());
-                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroAtrasos", i),
-                                         semana.Count(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica).ToString("N0"));
-                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroSalidas", i),
-                                         semana.Count(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica).ToString("N0"));
+                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Salidas", i), semana.CalculaSalidaAdelantada());
+                                     
+                                     var inasistenciaSemanal = inasistencias.Where(x => x.Fecha.HasValue && x.Fecha.Value.Day >= (i - 1) * 7 && x.Fecha.Value.Day <= i * 7);
+                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}Ausencias", i), inasistenciaSemanal.CalculaJornada());
+                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}AtrasosSalidas", i), semana.CalculaDiasSalidaAdelantada());
+                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroAtrasos", i), reporte.CalculaDiasAtraso());
+                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroSalidas", i), reporte.CalculaSalidaAdelantada());
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}ExtraConTurno", i), "");
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}ExtraSinTurno", i), "");
                                  }
@@ -136,12 +137,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                  pdfStamper.AcroFields.SetField("ResumenJornada", reporte.CalculaJornada());
                                  pdfStamper.AcroFields.SetField("ResumenAsistencia", reporte.CalculaAsistencia());
                                  pdfStamper.AcroFields.SetField("ResumenSalidas", reporte.CalculaSalidaAdelantada());
-                                 pdfStamper.AcroFields.SetField("ResumenAusencias", "");
+                                 pdfStamper.AcroFields.SetField("ResumenAusencias", inasistencias.CalculaJornada());
                                  pdfStamper.AcroFields.SetField("ResumenAtrasosSalidas", reporte.CalculaSalidaAdelantada());
-                                 pdfStamper.AcroFields.SetField("ResumenNumeroAtrasos",
-                                     reporte.Count(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica).ToString("N0"));
-                                 pdfStamper.AcroFields.SetField("ResumenNumeroSalidas",
-                                     reporte.Count(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica).ToString("N0"));
+                                 pdfStamper.AcroFields.SetField("ResumenNumeroAtrasos", reporte.CalculaDiasAtraso());
+                                 pdfStamper.AcroFields.SetField("ResumenNumeroSalidas", reporte.CalculaDiasSalidaAdelantada());
                                  pdfStamper.AcroFields.SetField("ResumenExtraConTurno", "");
                                  pdfStamper.AcroFields.SetField("ResumenExtraSinTurno", "");
                                  pdfStamper.Writer.CloseStream = false;

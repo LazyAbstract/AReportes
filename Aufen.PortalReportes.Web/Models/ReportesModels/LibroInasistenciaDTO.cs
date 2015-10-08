@@ -41,10 +41,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// <returns>Las Horas y minutos correspondientes al cálculo de la hora jornada teórica en formato de texto HH:mm</returns>
         public static string CalculaJornada(this IEnumerable<LibroInasistenciaDTO> lista)
         {
+            if (lista == null)
+                return "00:00";
             return lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue) ?
                         new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
                         .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Ticks))
-                            .ToString("HH:mm") : String.Empty;
+                            .ToString("HH:mm") : "00:00";
         }
     }
 }

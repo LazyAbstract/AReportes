@@ -67,8 +67,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         doc.Add(parrafo);
                         doc.Add(new Phrase());
                         // tabla
-                        PdfPTable tabla = new PdfPTable(new float[] { 3, 3, 3, 1, 1, 1, 1, 1, 1, 4 });
+                        PdfPTable tabla = new PdfPTable(new float[] {2, 3, 3, 3, 2, 2, 2, 2, 2, 2, 4 });
                         // Primera lìnea cabecera
+                        tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)) { Rowspan = 2 });
                         tabla.AddCell(new PdfPCell(new Phrase("Empleado", Chico)) { Colspan = 3 });
                         tabla.AddCell(new PdfPCell(new Phrase("Horario", Chico)) { Colspan = 2 });
                         tabla.AddCell(new PdfPCell(new Phrase("Marcas", Chico)) { Colspan = 2 });
@@ -104,7 +105,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                 Math.Floor(tiempoAtraso.TotalMinutes / 60.0).ToString("00"),
                                 (tiempoAtraso.TotalMinutes - Math.Floor(tiempoAtraso.TotalMinutes / 60.0) * 60).ToString("00")
                                 ), Chico)));
-                            //tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Observacion, Chico)));
                         }
                         doc.Add(tabla);
