@@ -80,9 +80,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         PdfPTable tablaEncabezado = new PdfPTable(new float[] { 1, 5, 1, 5 });
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Nombre:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, Normal)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Código:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.Codigo, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, Normal)) { Border = Rectangle.NO_BORDER, Colspan = 3 });
+                        //tablaEncabezado.AddCell(new PdfPCell(new Phrase("Código:", Chico)) { Border = Rectangle.NO_BORDER });
+                        //tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.Codigo, Normal)) { Border = Rectangle.NO_BORDER });
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("C.Costo:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCentro, Normal)) { Border = Rectangle.NO_BORDER });

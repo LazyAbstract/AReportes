@@ -285,6 +285,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\imagenes\logoCoagra.jpg" />
     <Content Include="Content\imagenes\logoAufen.png" />
     <Content Include="Content\imagenes\LogosEmpresas\logo01.jpg" />
     <Content Include="Content\imagenes\LogosEmpresas\logo02.jpg" />

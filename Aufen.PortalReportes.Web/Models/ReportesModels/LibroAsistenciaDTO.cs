@@ -303,10 +303,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// <returns>Las Horas y minutos correspondientes al cálculo de la hora jornada teórica en formato de texto HH:mm</returns>
         public static string CalculaJornada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
+            if (lista == null)
+                return "00:00";
             return lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue) ?
                         new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
                         .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Ticks))
-                            .ToString("HH:mm") : String.Empty;
+                            .ToString("HH:mm") : "00:00";
         }
 
         /// <summary>
@@ -316,9 +318,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// <returns>Las Horas y minutos correspondientes al cálculo de la hora jornada  realen formato de texto HH:mm</returns>
         public static string CalculaAsistencia(this IEnumerable<LibroAsistenciaDTO> lista)
         {
+            if (lista == null)
+                return "00:00";
             return lista.Any(x => x.Salida.HasValue && x.Entrada.HasValue) ?
                 new DateTime(lista.Where(x => x.Salida.HasValue && x.Entrada.HasValue)
-                .Sum(x => x.Salida.Value.Subtract(x.Entrada.Value).Ticks)).ToString("HH:mm") : String.Empty;
+                .Sum(x => x.Salida.Value.Subtract(x.Entrada.Value).Ticks)).ToString("HH:mm") : "00:00";
         }
 
         /// <summary>
@@ -340,9 +344,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// <returns>Ticks correspondientes al cálculo de los atrasos</returns>
         public static string CalculaSalidaAdelantada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
+            if (lista == null)
+                return "00:00";
             return lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica) ?
                 lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)
-                .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks).ToString("HH:mm") : String.Empty;
+                .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks).ToString("HH:mm") : "00:00";
         }
 
         /// <summary>
@@ -376,14 +382,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             return lista.Any(x => !String.IsNullOrWhiteSpace(x.IdHorario)) ?
                lista.Where(x => !String.IsNullOrWhiteSpace(x.IdHorario))
-               .Count().ToString() : String.Empty;
+               .Count().ToString() : "0";
         }
 
         public static string CalculaDiasInasistencias(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             return lista.Any(x => String.IsNullOrWhiteSpace(x.IdHorario)) ?
                lista.Where(x => String.IsNullOrWhiteSpace(x.IdHorario))
-               .Count().ToString() : String.Empty;
+               .Count().ToString() : "0";
         }
 
         public static string CalculaErroresMarcaje(this IEnumerable<LibroAsistenciaDTO> lista)
@@ -397,14 +403,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             return lista.Any(x => x.Atraso != TimeSpan.Zero) ?
                lista.Where(x => x.Atraso != TimeSpan.Zero)
-               .Count().ToString() : String.Empty;
+               .Count().ToString() : "0";
         }
 
         public static string CalculaDiasSalidaAdelantada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             return lista.Any(x => x.SalidaAdelantada != TimeSpan.Zero) ?
                lista.Where(x => x.SalidaAdelantada != TimeSpan.Zero)
-               .Count().ToString() : String.Empty;
+               .Count().ToString() : "0";
         }
 
 

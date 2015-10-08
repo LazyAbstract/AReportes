@@ -15,8 +15,8 @@
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/modernizr")
-        @Scripts.Render("~/bundles/myScripts")
-        <script src="@Url.Content("~/Scripts/globalize/globalize.js")"></script>
+    @Scripts.Render("~/bundles/myScripts")
+    <script src="@Url.Content("~/Scripts/globalize/globalize.js")"></script>
     <script src="@Url.Content("~/Scripts/globalize/cultures/globalize.culture.es-CL.js")"></script>
     <script type="text/javascript">
         jQuery.browser = {};
@@ -28,10 +28,10 @@
                 jQuery.browser.version = RegExp.$1;
             }
         })();
-        $(document).ready(function () { 
-            // use the language provided from server… 
-            var lang = $("html").attr("lang");  
-            if (typeof Globalize != 'undefined') 
+        $(document).ready(function () {
+            // use the language provided from server…
+            var lang = $("html").attr("lang");
+            if (typeof Globalize != 'undefined')
                 Globalize.culture('es-CL');
         });
         // replace methods in jquery.validate.js ($.validator.methods) as necessary for localized validation:
@@ -75,12 +75,24 @@
     <div id="body">
         <div id="main" class="container">
             <div class="row">
+                <div class="col-lg-6">
+                    <div class="">
+                        <img height="50px" src="@Url.Content("~/Content/imagenes/LogoCoagra.jpg")" alt="Coagra" />
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-right">
+                        <img height="50px" src="@Url.Content("~/Content/imagenes/LogoAufen.png")" alt="Aufen" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <nav class="navbar navbar-default">
                     <div class="collapse navbar-collapse">
                         <ul class=" nav navbar-nav navbar-right">
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                   Reportes<span class="caret"></span>
+                                    Reportes<span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>@Html.ActionLink("Reportes Asistencia", "ListarReporte", "Reportes")</li>
