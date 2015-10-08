@@ -35,7 +35,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 , FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
                 , int.Parse(empresa.Codigo).ToString()
                 , departamento.Codigo
-                , buff).ToList();
+                , buff).OrderBy(x => x.Fecha).ToList();
             IEnumerable<LibroInasistenciaDTO> inasistencias =
                 Mapper.Map<IEnumerable<sp_LibroInasistenciaResult>, IEnumerable<LibroInasistenciaDTO>>(resultado);
             if (inasistencias.Any())

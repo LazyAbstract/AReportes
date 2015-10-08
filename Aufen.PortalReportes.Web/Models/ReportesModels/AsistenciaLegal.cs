@@ -39,9 +39,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
              IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
             // Resumen de inasistencias
              IEnumerable<sp_LibroInasistenciaResult> resultadoLibroInasistencias =
-                 db.sp_LibroInasistencia(FechaDesde, FechaHasta, int.Parse(empresa.Codigo).ToString(),
-                                            departamento.Codigo,
-                                            buff);
+                 db.sp_LibroInasistencia(FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
+                    , FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
+                    , int.Parse(empresa.Codigo).ToString()
+                    , departamento.Codigo
+                    , buff);
              IEnumerable<LibroInasistenciaDTO> resultadoInasistencia = Mapper.Map<IEnumerable<sp_LibroInasistenciaResult>,
                  IEnumerable<LibroInasistenciaDTO>>(resultadoLibroInasistencias);
              if (resultadoLibroAtrasos.Any())
