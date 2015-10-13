@@ -52,10 +52,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     doc.Open();
                     foreach (var reporte in libroAsistencia.Where(x => x.Rut != null).GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }))
                     {
-                        string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
+                        
                         var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                             x.IdUbicacion == reporte.Key.IdDepartamento &&
-                                 x.Codigo == codigoEmpleado);
+                                 x.Codigo.HasValue && x.Codigo.Value == reporte.Key.Numero);
                         if (empleado == null)
                         {
                             empleado = new vw_Empleado();
@@ -71,9 +71,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         PdfPTable tablaEncabezado = new PdfPTable(new float[] { 1, 5, 1, 5 });
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Nombre:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase((empleado.Nombre ?? String.Empty).Trim() + " " + (empleado.Apellidos ?? String.Empty).Trim(), Normal)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Código:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.Codigo, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, Normal)) { Border = Rectangle.NO_BORDER, Colspan=3 });
+
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("C.Costo:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCentro, Normal)) { Border = Rectangle.NO_BORDER });
