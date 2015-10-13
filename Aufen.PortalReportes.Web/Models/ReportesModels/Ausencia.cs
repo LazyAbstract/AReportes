@@ -61,14 +61,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         doc.Add(parrafo);
                         doc.Add(new Phrase());
 
-                        PdfPTable tabla = new PdfPTable(new float[] {2, 1, 2, 2, 1, 1, 4 });
+                        PdfPTable tabla = new PdfPTable(new float[] {2, 2, 2, 2, 1, 1, 4 });
                         // Encabezado
                         tabla.AddCell(new PdfPCell(new Phrase("Empleado", Normal)) { Colspan = 4});
                         tabla.AddCell(new PdfPCell(new Phrase("Horario", Normal)) { Colspan = 2 });
                         tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Normal)));
                         // 2 encabezado
                         tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("Código", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Rut", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Apellidos", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Nombres", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
@@ -83,7 +83,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             //Fecha
                             tabla.AddCell(new PdfPCell(new Phrase(ausencia.Fecha.HasValue ? ausencia.Fecha.Value.ToString("ddd dd/MM") : String.Empty, Chico)));
                             //Código
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(new Rut(reporte.Key.Numero).ToStringConGuion(), Chico)));
                             //Apellidos
                             tabla.AddCell(new PdfPCell(new Phrase((ausencia.Apellidos ?? string.Empty).Trim(), Chico)));
                             //Nombres

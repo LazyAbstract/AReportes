@@ -47,7 +47,7 @@
             changeMonth: true,
             yearRange: '-5:+1',
             defaultDate: '-0y',
-            maxDate: '+1y'
+            maxDate: '+0y'
         }).focus();
     });
     $('.fadeout-5').fadeTo(5000, 1).fadeOut('slow');
