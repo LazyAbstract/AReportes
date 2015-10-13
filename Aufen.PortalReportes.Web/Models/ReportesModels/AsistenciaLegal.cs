@@ -67,10 +67,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                              x.IdDepartamento == reporte.Key.IdDepartamento &&
                             reporte.Key.Mes == x.Fecha.Value.Month &&
                             reporte.Key.Anio == x.Fecha.Value.Year);
-                         string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
                          var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                              x.IdUbicacion == reporte.Key.IdDepartamento &&
-                                  x.Codigo == codigoEmpleado);
+                                  x.Codigo.HasValue && x.Codigo.Value == reporte.Key.Numero);
                          using (MemoryStream ms = new MemoryStream())
                          {
                              using (PdfReader pdfReader = new PdfReader(path + @"\ReporteAsistenciaLegal.pdf"))

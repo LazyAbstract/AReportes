@@ -75,10 +75,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("Sal.", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Chico)));
 
-                        string codigoEmpleado = reporte.Key.Numero.ToString("00000000") + new Rut(reporte.Key.Numero).DV;
                         var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                             x.IdUbicacion == reporte.Key.IdDepartamento &&
-                                 x.Codigo == codigoEmpleado);
+                                 x.Codigo.HasValue && x.Codigo.Value == reporte.Key.Numero);
                         foreach(var ausencia in reporte)
                         {
                             //Fecha
