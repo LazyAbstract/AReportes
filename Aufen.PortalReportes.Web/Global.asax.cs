@@ -28,6 +28,7 @@ namespace Aufen.PortalReportes.Web
             ModelBinders.Binders.Add(typeof(Rut), new RutModelBinder());
             ModelBinders.Binders.Add(typeof(DateTime?), new CurrentCultureDateTimeBinder());
             ModelBinders.Binders.Add(typeof(DateTime), new CurrentCultureDateTimeBinder());
+
             IList<IConfigurable> configurations = new List<IConfigurable>();
             configurations.Add(new MapperConfiguration());
             foreach (var configuration in configurations)
