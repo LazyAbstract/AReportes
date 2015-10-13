@@ -347,8 +347,21 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             if (lista == null)
                 return "00:00";
             return lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica) ?
+                new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)
+                .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks)).ToString("HH:mm") : "00:00";
+        }
+
+        public static string CalculaAtrasoSalida(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            if (lista == null)
+                return "00:00";
+            long salida = lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica) ?
                 lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)
-                .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks).ToString("HH:mm") : "00:00";
+                .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks) : 0;
+            long atraso = lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica) ?
+                lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica)
+                .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks) : 0;
+            return new DateTime(salida+atraso).ToString("HH:mm");
         }
 
         /// <summary>

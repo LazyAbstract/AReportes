@@ -46,7 +46,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             return lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue) ?
                         new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
                         .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Ticks))
-                            .ToString("HH:mm") : "00:00";
+                            .ToString("dd:HH:mm") : "00:00";
         }
     }
 }

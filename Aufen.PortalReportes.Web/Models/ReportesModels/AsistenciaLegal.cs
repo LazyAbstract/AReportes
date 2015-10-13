@@ -128,9 +128,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                      
                                      var inasistenciaSemanal = inasistencias.Where(x => x.Fecha.HasValue && x.Fecha.Value.Day >= (i - 1) * 7 && x.Fecha.Value.Day <= i * 7);
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}Ausencias", i), inasistenciaSemanal.CalculaJornada());
-                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}AtrasosSalidas", i), semana.CalculaDiasSalidaAdelantada());
+                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}AtrasosSalidas", i), semana.CalculaAtrasoSalida());
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroAtrasos", i), reporte.CalculaDiasAtraso());
-                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroSalidas", i), reporte.CalculaSalidaAdelantada());
+                                     pdfStamper.AcroFields.SetField(String.Format("Semana{0}NumeroSalidas", i), reporte.CalculaDiasSalidaAdelantada());
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}ExtraConTurno", i), "");
                                      pdfStamper.AcroFields.SetField(String.Format("Semana{0}ExtraSinTurno", i), "");
                                  }
@@ -139,7 +139,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                  pdfStamper.AcroFields.SetField("ResumenAsistencia", reporte.CalculaAsistencia());
                                  pdfStamper.AcroFields.SetField("ResumenSalidas", reporte.CalculaSalidaAdelantada());
                                  pdfStamper.AcroFields.SetField("ResumenAusencias", inasistencias.CalculaJornada());
-                                 pdfStamper.AcroFields.SetField("ResumenAtrasosSalidas", reporte.CalculaSalidaAdelantada());
+                                 pdfStamper.AcroFields.SetField("ResumenAtrasosSalidas", reporte.CalculaAtrasoSalida());
                                  pdfStamper.AcroFields.SetField("ResumenNumeroAtrasos", reporte.CalculaDiasAtraso());
                                  pdfStamper.AcroFields.SetField("ResumenNumeroSalidas", reporte.CalculaDiasSalidaAdelantada());
                                  pdfStamper.AcroFields.SetField("ResumenExtraConTurno", "");
