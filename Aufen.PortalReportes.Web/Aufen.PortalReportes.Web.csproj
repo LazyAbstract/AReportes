@@ -267,6 +267,7 @@
     <Compile Include="Models\ReportesModels\ArchivoReporteFactoria.cs" />
     <Compile Include="Models\ReportesModels\AsistenciaLegal.cs" />
     <Compile Include="Models\ReportesModels\Ausencia.cs" />
+    <Compile Include="Models\ReportesModels\GetDepartamentosViewModel.cs" />
     <Compile Include="Models\ReportesModels\Header.cs" />
     <Compile Include="Models\ReportesModels\IArchivoReporte.cs" />
     <Compile Include="Models\ReportesModels\AsistenciaPersonal.cs" />
@@ -789,6 +790,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Reportes\ListarReporte.cshtml" />
+    <Content Include="Views\Reportes\GetDepartamentos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

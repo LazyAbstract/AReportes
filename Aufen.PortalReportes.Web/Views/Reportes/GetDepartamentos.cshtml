@@ -1,0 +1,24 @@
+﻿@model Aufen.PortalReportes.Web.Models.ReportesModels.GetDepartamentosViewModel
+
+<select id="FORM_Departamento" name="FORM.Departamento" multiple="multiple" class="multiple">
+    @foreach (var item in Model.Empresas)
+    {
+        <optgroup label="@item.Codigo.Trim()">@((item.Descripcion ?? String.Empty).Trim())</optgroup>
+        foreach (var subItem in Model.Vw_Ubicaciones.Where(x => item.Codigo.Trim() == x.IdEmpresa.Trim()))
+        {
+            string codigoEmpresaDepartamento = String.Format("{0}{1}", item.Codigo.Trim(), subItem.Codigo.Trim());
+            if (Model.CodigoDepartamentos.Any(x => x == codigoEmpresaDepartamento))
+            {
+                <option value="@codigoEmpresaDepartamento" selected="selected">
+                    @subItem.Descripcion.Trim()
+                </option>
+            }
+            else
+            {
+                <option value="@codigoEmpresaDepartamento">
+                    @subItem.Descripcion.Trim()
+                </option>
+            }
+        }
+    }
+</select>

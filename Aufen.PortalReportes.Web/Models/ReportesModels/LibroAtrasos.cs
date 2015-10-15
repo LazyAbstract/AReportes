@@ -53,6 +53,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     doc.Open();
                     foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }))
                     {
+                        var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
+                            x.IdUbicacion == reporte.Key.IdDepartamento &&
+                                 x.Codigo.HasValue && x.Codigo.Value == reporte.Key.Numero);
+                        if (empleado == null)
+                        {
+                            empleado = new vw_Empleado();
+                        }
+
                         doc.AddAuthor("Aufen");
                         doc.AddCreationDate();
                         doc.AddCreator("Aufen");
@@ -66,19 +74,29 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         parrafo.Add(new Paragraph("Informe de Atrasos por Área", Titulo) { Alignment = Element.ALIGN_CENTER });
                         doc.Add(parrafo);
                         doc.Add(new Phrase());
+                        doc.Add(new Phrase());
+
+                        PdfPTable informacionPersonal = new PdfPTable(new float[] { 1,5});
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase("Rut:", Normal)));
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase(new Rut(reporte.Key.Numero).ToStringSinFormato(), Normal)));
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase("Nombre:", Normal)));
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, Normal)));
+                        doc.Add(new Phrase());
+
+                        doc.Add(informacionPersonal);
                         // tabla
-                        PdfPTable tabla = new PdfPTable(new float[] {2, 3, 3, 3, 2, 2, 2, 2, 2, 2, 4 });
+                        PdfPTable tabla = new PdfPTable(new float[] {2, 2, 2, 2, 2, 2, 2, 4 });
                         // Primera lìnea cabecera
                         tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)) { Rowspan = 2 });
-                        tabla.AddCell(new PdfPCell(new Phrase("Empleado", Chico)) { Colspan = 3 });
+                        //tabla.AddCell(new PdfPCell(new Phrase("Empleado", Chico)) { Colspan = 3 });
                         tabla.AddCell(new PdfPCell(new Phrase("Horario", Chico)) { Colspan = 2 });
                         tabla.AddCell(new PdfPCell(new Phrase("Marcas", Chico)) { Colspan = 2 });
                         tabla.AddCell(new PdfPCell(new Phrase("Horas Trabajadas", Chico)) { Colspan = 2 });
                         tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Chico)));
                         // Segunda lìnea cabecera
-                        tabla.AddCell(new PdfPCell(new Phrase("Rut", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("Apellidos", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("Nombres", Chico)));
+                        //tabla.AddCell(new PdfPCell(new Phrase("Rut", Chico)));
+                        //tabla.AddCell(new PdfPCell(new Phrase("Apellidos", Chico)));
+                        //tabla.AddCell(new PdfPCell(new Phrase("Nombres", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Sal.", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
@@ -94,9 +112,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                 (atraso.SalidaTeorica.HasValue && atraso.EntradaTeorica.HasValue ? atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value) : new TimeSpan(0));
                             TimeSpan tiempoNormal = atraso.SalidaTeorica.HasValue && atraso.EntradaTeorica.HasValue ? atraso.SalidaTeorica.Value.Subtract(atraso.EntradaTeorica.Value) : new TimeSpan(0);
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Fecha.Value.ToString("ddd dd/MM"), Chico)) { HorizontalAlignment = Element.ALIGN_LEFT });
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Rut.ToStringConGuion(), Chico)));
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Apellidos, Chico)));
-                            tabla.AddCell(new PdfPCell(new Phrase(atraso.Nombres, Chico)));
+                            //tabla.AddCell(new PdfPCell(new Phrase(atraso.Rut.ToStringConGuion(), Chico)));
+                            //tabla.AddCell(new PdfPCell(new Phrase(atraso.Apellidos, Chico)));
+                            //tabla.AddCell(new PdfPCell(new Phrase(atraso.Nombres, Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Entrada.HasValue ? atraso.Entrada.Value.ToString("HH:mm") : String.Empty, Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Salida.HasValue ? atraso.Salida.Value.ToString("HH:mm") : String.Empty, Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.EntradaTeorica.HasValue ? atraso.EntradaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));

@@ -35,8 +35,11 @@ namespace Aufen.PortalReportes.Web.Controllers
                     foreach (var tipoEmpresa in FORM.Empresa)
                     {
                         var empresa = db.EMPRESAs.SingleOrDefault(x => x.Codigo == tipoEmpresa);
-                        foreach(var departamento in db.vw_Ubicaciones.Where(x => x.IdEmpresa == tipoEmpresa))
+                        IEnumerable<string> tipoDepartamentos = FORM.Departamento.Where(x=> x.Substring(0,2).Trim() == tipoEmpresa.Trim());
+                        foreach(var tipoDepartamento in tipoDepartamentos)
                         {
+                            string codigoDepartamento = tipoDepartamento.Substring(2,2).Trim();
+                            var departamento = db.vw_Ubicaciones.FirstOrDefault(x => x.IdEmpresa == tipoEmpresa && x.Codigo.Trim() == codigoDepartamento);
                             foreach (var tipoReporte in FORM.IdTipoReportes)
                             {
                                 ArchivoReporteFactoria archivoReporteFactoria = new ArchivoReporteFactoria();
@@ -66,6 +69,11 @@ namespace Aufen.PortalReportes.Web.Controllers
                 }
             }
             return View(model);
+        }
+        public PartialViewResult GetDepartamentos(ListarReporteFormModel FORM)
+        {
+            GetDepartamentosViewModel model = new GetDepartamentosViewModel(FORM.Empresa, FORM.Departamento);
+            return PartialView(model);
         }
     }
 }

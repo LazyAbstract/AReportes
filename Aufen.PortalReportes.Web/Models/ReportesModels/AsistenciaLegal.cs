@@ -91,7 +91,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                                  pdfStamper.AcroFields.SetField("Mes", new DateTime(reporte.Key.Anio, reporte.Key.Mes, 1).ToString("yyyy MMM"));
                                  pdfStamper.AcroFields.SetField("Nombre", empleado != null ? empleado.NombreCompleto : String.Empty);
-                                 pdfStamper.AcroFields.SetField("Rut", new Rut(reporte.Key.Numero).ToStringConGuion());
+                                 pdfStamper.AcroFields.SetField("Rut", new Rut(reporte.Key.Numero).ToStringSinFormato());
                                  pdfStamper.AcroFields.SetField("Departamento", String.Format("{0} ({1})",departamento!= null ? departamento.Descripcion.Trim() : String.Empty, empresa!=null ? empresa.Descripcion.Trim() : String.Empty));
                                  pdfStamper.AcroFields.SetField("Fecha", String.Format("{0} - {1}", primerDiaMes.ToShortDateString(), ultimoDiaMes.ToShortDateString()));
                                  pdfStamper.AcroFields.SetField("ImpresoPagina1", DateTime.Now.ToShortDateString());

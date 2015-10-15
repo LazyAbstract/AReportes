@@ -58,6 +58,12 @@ namespace Aufen.PortalReportes.Core
             return String.Format("{0}{1}", Numero, DV);
         }
 
+        public string ToStringSinFormato()
+        {
+            if (!EsValido) return String.Empty;
+            return String.Format("{0}{1}", Numero.ToString(), DV);
+        }
+
         public string ToStringConGuion()
         {
             if (!EsValido) return String.Empty;
