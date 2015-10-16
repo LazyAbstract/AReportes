@@ -394,15 +394,15 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public static string CalculaDiasTrabajdos(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => !String.IsNullOrWhiteSpace(x.IdHorario)) ?
-               lista.Where(x => !String.IsNullOrWhiteSpace(x.IdHorario))
+            return lista.Any(x => x.Entrada.HasValue && x.Salida.HasValue) ?
+               lista.Where(x => x.Entrada.HasValue && x.Salida.HasValue)
                .Count().ToString() : "0";
         }
 
         public static string CalculaDiasInasistencias(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => String.IsNullOrWhiteSpace(x.IdHorario)) ?
-               lista.Where(x => String.IsNullOrWhiteSpace(x.IdHorario))
+            return lista.Any(x => !x.Entrada.HasValue && !x.Salida.HasValue) ?
+               lista.Where(x => !x.Entrada.HasValue || !x.Salida.HasValue)
                .Count().ToString() : "0";
         }
 
