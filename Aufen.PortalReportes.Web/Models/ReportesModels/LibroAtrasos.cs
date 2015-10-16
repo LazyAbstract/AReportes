@@ -114,10 +114,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Salida.HasValue ? atraso.Salida.Value.ToString("HH:mm") : String.Empty, Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.EntradaTeorica.HasValue ? atraso.EntradaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.SalidaTeorica.HasValue ? atraso.SalidaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
-                            tabla.AddCell(new PdfPCell(new Phrase(String.Format("{0}:{1}",
-                                Math.Floor(tiempoAtraso.TotalMinutes / 60.0).ToString("00"),
-                                (tiempoAtraso.TotalMinutes - Math.Floor(tiempoAtraso.TotalMinutes / 60.0) * 60).ToString("00")
-                                ), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(atraso.printAtraso, Chico)));
+                            //tabla.AddCell(new PdfPCell(new Phrase(String.Format("{0}:{1}",
+                            //    Math.Floor(tiempoAtraso.TotalMinutes / 60.0).ToString("00"),
+                            //    (tiempoAtraso.TotalMinutes - Math.Floor(tiempoAtraso.TotalMinutes / 60.0) * 60).ToString("00")
+                            //    ), Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Observacion, Chico)));
                         }
