@@ -24,6 +24,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public DateTime? EntradaColacion { get; set; }
         public TimeSpan? TiempoColacion { get; set; }
         public string Observacion { get; set; }
+        public bool EsPermiso { get; set; }
 
         public string printHorasPactadas
         {
@@ -167,7 +168,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 string output = String.Empty;
                 if(this.Entrada.HasValue && this.EntradaTeorica.HasValue)
                 {
-                    if (this.Entrada.Value > this.EntradaTeorica.Value)
+                    if (this.Entrada.Value > this.EntradaTeorica.Value && !this.EsPermiso)
                     {
                         buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
                         output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
@@ -183,7 +184,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 TimeSpan buffer = new TimeSpan();
                 if (this.Entrada.HasValue && this.EntradaTeorica.HasValue)
                 {
-                    if (this.Entrada.Value > this.EntradaTeorica.Value)
+                    if (this.Entrada.Value > this.EntradaTeorica.Value && !this.EsPermiso)
                     {
                         buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
                     }
@@ -198,7 +199,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 TimeSpan buffer = new TimeSpan();
                 string output = String.Empty;
-                if (this.Salida.HasValue && this.SalidaTeorica.HasValue)
+                if (this.Salida.HasValue && this.SalidaTeorica.HasValue && !this.EsPermiso)
                 {
                     if (this.Salida.Value < this.SalidaTeorica.Value)
                     {
@@ -214,7 +215,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             get
             {
                 TimeSpan buffer = new TimeSpan();
-                if (this.Salida.HasValue && this.SalidaTeorica.HasValue)
+                if (this.Salida.HasValue && this.SalidaTeorica.HasValue && !this.EsPermiso)
                 {
                     if (this.Salida.Value < this.SalidaTeorica.Value)
                     {
@@ -332,8 +333,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// <returns>Ticks correspondientes al cálculo de los atrasos/returns>
         public static string CalculaAtrasoEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica) ?
-                lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica)
+            return lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && !x.EsPermiso) ?
+                lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && !x.EsPermiso)
                 .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks).ToString("HH:mm") : String.Empty;
         }
 
@@ -346,8 +347,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             if (lista == null)
                 return "00:00";
-            return lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica) ?
-                new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)
+            return lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && !x.EsPermiso) ?
+                new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && !x.EsPermiso)
                 .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks)).ToString("HH:mm") : "00:00";
         }
 
@@ -355,11 +356,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             if (lista == null)
                 return "00:00";
-            long salida = lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica) ?
-                lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica)
+            long salida = lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && !x.EsPermiso) ?
+                lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && !x.EsPermiso)
                 .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks) : 0;
-            long atraso = lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica) ?
-                lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica)
+            long atraso = lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && !x.EsPermiso) ?
+                lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && !x.EsPermiso)
                 .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks) : 0;
             return new DateTime(salida+atraso).ToString("HH:mm");
         }
