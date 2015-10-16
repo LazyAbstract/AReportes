@@ -35,7 +35,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             IEnumerable<LibroAsistenciaDTO> libroAtrasos = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
                 IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos)
             .Where(x =>x.Entrada.HasValue && x.Salida.HasValue && x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue &&
-                x.Salida.Value.Subtract(x.Entrada.Value) < x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value));
+                x.Entrada > x.EntradaTeorica);
             // Comenzaremos a crear el reporte
             if (libroAtrasos.Any())
             {
