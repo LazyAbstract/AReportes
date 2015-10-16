@@ -10,14 +10,14 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.multiple').multiselect();
+            $('.multiple').multiselect({ includeSelectAllOption: true, maxHeight: 200 });
             $('#FORM_Empresa').change(function () {
-                    $.ajax({
-                        url: '@Url.Action("GetDepartamentos", "Reportes")?' + $('#forma').serialize()
-                    }).done(function (data) {
-                        $('#departamentos').html(data);
-                        $('#FORM_Departamento').multiselect();
-                    });
+                $.ajax({
+                    url: '@Url.Action("GetDepartamentos", "Reportes")?' + $('#forma').serialize()
+                }).done(function (data) {
+                    $('#departamentos').html(data);
+                    $('#FORM_Departamento').multiselect({ includeSelectAllOption: true, maxHeight: 200 });
+                });
             });
         });
 
@@ -29,7 +29,7 @@
             <p>Filtros</p>
         </div>
         <div class="panel-body">
-            @using (Html.BeginForm(null, null, FormMethod.Get, new { @class = "form form-horizontal" ,id="forma" }))
+            @using (Html.BeginForm(null, null, FormMethod.Get, new { @class = "form form-horizontal", id = "forma" }))
             {
                 <div class="form-group">
                     @Html.LabelFor(m => m.FORM.Rut, new { @class = "col-sm-4 control-label" })
@@ -38,6 +38,28 @@
                     </div>
                     <div class="col-lg-4">
                         @Html.ValidationMessageFor(m => m.FORM.Rut)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FORM.Empresa, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-4">
+                        @Html.ListBoxFor(m => m.FORM.Empresa, Model.Empresas, new { @class = "form-control multiple" })
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.ValidationMessageFor(m => m.FORM.Empresa)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FORM.Departamento, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-4" id="departamentos">
+                        @*@Html.ListBoxFor(m => m.FORM.Departamento, Model.Departamentos, new { @class = "form-control multiple" })*@
+                        @{
+                Html.RenderAction("GetDepartamentos", new { codigoEmpresas = Model.FORM.Empresa, codigoDepartamentos = Model.FORM.Departamento });
+                        }
+                    </div>
+                    <div class="col-lg-4">
+                        @Html.ValidationMessageFor(m => m.FORM.Departamento)
                     </div>
                 </div>
                 <div class="form-group">
@@ -56,27 +78,6 @@
                     </div>
                     <div class="col-lg-4">
                         @Html.ValidationMessageFor(m => m.FORM.FechaHasta)
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.FORM.Empresa, new { @class = "col-sm-4 control-label" })
-                    <div class="col-sm-4">
-                        @Html.ListBoxFor(m => m.FORM.Empresa, Model.Empresas, new { @class = "form-control multiple" })
-                    </div>
-                    <div class="col-lg-4">
-                        @Html.ValidationMessageFor(m => m.FORM.Empresa)
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.FORM.Departamento, new { @class = "col-sm-4 control-label" })
-                    <div class="col-sm-4" id="departamentos">
-                        @*@Html.ListBoxFor(m => m.FORM.Departamento, Model.Departamentos, new { @class = "form-control multiple" })*@
-                        @{
-                Html.RenderAction("GetDepartamentos", new { codigoEmpresas = Model.FORM.Empresa, codigoDepartamentos = Model.FORM.Departamento });
-                                }
-                    </div>
-                    <div class="col-lg-4">
-                        @Html.ValidationMessageFor(m => m.FORM.Departamento)
                     </div>
                 </div>
                 foreach (var item in Model.TipoReportes)

@@ -20,22 +20,17 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Normal { set; get; }
         private Font Chico { set; get; }
 
-        public Ausencia(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, Rut rut)
+        public Ausencia(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, string rut)
         {
             //Nombre del archivo y ubiación en el árbol de carpetas
             NombreArchivo = String.Format("{0}/{1}/PersonalAusente.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
-            string buff = null;
-            if (rut != null)
-            {
-                buff = rut.ToString();
-            }
             IEnumerable<sp_LibroInasistenciaResult> resultado = db.sp_LibroInasistencia(
                 FechaDesde.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
                 , FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
                 , int.Parse(empresa.Codigo).ToString()
                 , departamento.Codigo
-                , buff).OrderBy(x => x.Fecha).ToList();
+                , rut).OrderBy(x => x.Fecha).ToList();
             IEnumerable<LibroInasistenciaDTO> inasistencias =
                 Mapper.Map<IEnumerable<sp_LibroInasistenciaResult>, IEnumerable<LibroInasistenciaDTO>>(resultado);
             if (inasistencias.Any())

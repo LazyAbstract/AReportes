@@ -19,14 +19,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Titulo { set; get; }
         private Font Normal { set; get; }
 
-        public AsistenciaLegal(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, Rut rut)
+        public AsistenciaLegal(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, string rut)
         {
             // Nombre del archivo y ubiación en el árbol de carpetas
              NombreArchivo = String.Format("{0}/{1}/AsistenciaLegal.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
-            string buff = null;
-            if (rut != null)
-                 buff = rut.ToString();
             //Resultado de marcas
              IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
                                            db.sp_LibroAsistencia(
@@ -34,7 +31,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                            FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture),
                                            int.Parse(empresa.Codigo).ToString(),
                                            departamento.Codigo,
-                                           buff).ToList();
+                                           rut).ToList();
              IEnumerable<LibroAsistenciaDTO> resultado = Mapper.Map<IEnumerable<sp_LibroAsistenciaResult>,
              IEnumerable<LibroAsistenciaDTO>>(resultadoLibroAtrasos);
             // Resumen de inasistencias
@@ -43,7 +40,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     , FechaHasta.ToString("yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture)
                     , int.Parse(empresa.Codigo).ToString()
                     , departamento.Codigo
-                    , buff);
+                    , rut);
              IEnumerable<LibroInasistenciaDTO> resultadoInasistencia = Mapper.Map<IEnumerable<sp_LibroInasistenciaResult>,
                  IEnumerable<LibroInasistenciaDTO>>(resultadoLibroInasistencias);
              if (resultadoLibroAtrasos.Any())

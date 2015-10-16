@@ -10,7 +10,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 {
     public class ListarReporteFormModel
     {
-        public Rut Rut { get; set; }
+        public string Rut { get; set; }
 
         [DisplayName("Fecha Desde")]
         [Required]
