@@ -108,17 +108,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                         // Si se elimina esto el domingo va aquedar al final
                                         int correccionDia = j;//j == 6 ? 0 : j + 1;
                                          var dia = reporte.FirstOrDefault(x => x.NumSemana == i && (int)x.Fecha.Value.DayOfWeek == j);
-                                        if (dia!=null && !String.IsNullOrEmpty(dia.Observacion))
-                                        {
-                                            pdfStamper.AcroFields.SetField(String.Format("Semana{0}Tipo{1}", i, correccionDia), dia != null ? dia.Observacion : String.Empty);
-                                        }
-                                        else if(dia!=null)
-                                        {
-                                            pdfStamper.AcroFields.SetField(String.Format("Semana{0}Tipo{1}", i, correccionDia), 
-                                                String.Format("{0}-{1}", dia.Entrada.HasValue ? dia.Entrada.Value.ToString("HH:mm") : String.Empty
-                                                , dia.Salida.HasValue ? dia.Salida.Value.ToString("HH:mm") : String.Empty
-                                                ));
-                                        }
+                                         //
+                                         pdfStamper.AcroFields.SetField(String.Format("Semana{0}Tipo{1}", i, correccionDia),
+                                             String.Format("{0}\n{1}", 
+                                                String.Format("{0}-{1}", dia!= null && dia.Entrada.HasValue ? dia.Entrada.Value.ToString("HH:mm") : String.Empty
+                                                    , dia!=null && dia.Salida.HasValue ? dia.Salida.Value.ToString("HH:mm") : String.Empty),
+                                                dia != null ? dia.Observacion : String.Empty));
                                         pdfStamper.AcroFields.SetField(String.Format("Semana{0}Dia{1}", i, correccionDia), String.Format("{0} {1}", dia != null ? dia.Fecha.Value.ToString("dd/MM") : string.Empty, diasSemana[j]));
                                      }
                                      // Semana a semana
