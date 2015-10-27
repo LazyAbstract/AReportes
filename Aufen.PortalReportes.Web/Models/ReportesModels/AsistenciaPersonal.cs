@@ -19,6 +19,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Titulo { set; get; }
         private Font Normal { set; get; }
         private Font NormalNegrita { set; get; }
+        private Font ChicoNegrita { set; get; }
         private Font Chico { set; get; }
         private Font MuyChico { set; get; }
 
@@ -75,8 +76,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Rut:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(reporte.Key.Numero.ToString(), Normal)) { Border = Rectangle.NO_BORDER });
 
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Area:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreUbicacion, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Sucursal o Planta:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.SucursalPlanta, Normal)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Cargo:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Empty, Normal)) { Border = Rectangle.NO_BORDER });
 
@@ -87,7 +88,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         doc.Add(new Phrase());
                         doc.Add(new Phrase());
                         // tabla
-                        PdfPTable tabla = new PdfPTable(new float[] { 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3 });
+                        PdfPTable tabla = new PdfPTable(new float[] { 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4 });
 
                         // Primera lìnea cabecera
                         tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)));
@@ -139,19 +140,19 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         //Subtotal
                         tabla.AddCell(new PdfPCell(new Phrase("Sub Total", Chico)) { Colspan = 6 });
                         //Horas pactadas po hombre
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaJornada(reporte), Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaJornada(reporte), ChicoNegrita)));
                         //Horas realizadas
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAsistencia(reporte), Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAsistencia(reporte), ChicoNegrita)));
                         //Horas extra
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaHorasExtra(reporte), Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaHorasExtra(reporte), ChicoNegrita)));
                         // Atraso
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAtrasoEntrada(reporte), Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAtrasoEntrada(reporte), ChicoNegrita)));
                         // Salida adelantada
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSalidaAdelantada(reporte), Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSalidaAdelantada(reporte), ChicoNegrita)));
                         // Colacón
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaColacion(reporte), Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaColacion(reporte), ChicoNegrita)));
                         // S.Ent
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSobreEntrada(reporte), Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSobreEntrada(reporte), ChicoNegrita)));
                         // Permisos
                         tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                         doc.Add(tabla);
@@ -236,6 +237,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             Normal = new Font(bf, 11, Font.NORMAL, BaseColor.BLACK);
             NormalNegrita = new Font(bf, 11, Font.BOLD, BaseColor.BLACK);
             Chico = new Font(bf, 9, Font.NORMAL, BaseColor.BLACK);
+            ChicoNegrita = new Font(bf, 9, Font.BOLD, BaseColor.BLACK);
             MuyChico = new Font(bf, 7, Font.NORMAL, BaseColor.BLACK);
 
         }

@@ -78,7 +78,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             //Fecha
                             tabla.AddCell(new PdfPCell(new Phrase(ausencia.Fecha.HasValue ? ausencia.Fecha.Value.ToString("ddd dd/MM") : String.Empty, Chico)));
                             //Código
-                            tabla.AddCell(new PdfPCell(new Phrase(new Rut(reporte.Key.Numero).ToStringSinFormato(), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(reporte.Key.Numero.ToString(), Chico)));
                             //Apellidos
                             tabla.AddCell(new PdfPCell(new Phrase((ausencia.Apellidos ?? string.Empty).Trim(), Chico)));
                             //Nombres
