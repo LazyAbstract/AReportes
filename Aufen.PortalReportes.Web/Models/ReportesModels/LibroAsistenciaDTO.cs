@@ -130,17 +130,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 TimeSpan buffer = new TimeSpan();
                 string output = String.Empty;
-                if (this.EntradaTeorica.HasValue
-                    && this.Entrada.HasValue
-                    && this.SalidaTeorica.HasValue
-                    && this.Salida.HasValue
-                    && TimeSpan.Compare(this.Salida.Value.Subtract(this.Entrada.Value), this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value)) == 1
-                    )
+                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue)
                 {
-
-                    buffer = this.Salida.Value.Subtract(this.Entrada.Value) - this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value);
-                    output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
-                }
+                    if (this.HorasReales > this.HorasPactadas)
+                    {
+                        buffer = this.Salida.Value.Subtract(this.Entrada.Value) - this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value);
+                        output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
+                    }
+                }           
                 return output;
             }
         }
