@@ -61,7 +61,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         doc.AddTitle("Libro de Asistencia Personal");
 
                         Paragraph parrafo = new Paragraph();
-                        parrafo.Add(new Paragraph("Libro de Asistencia Personal", Titulo) { Alignment = Element.ALIGN_CENTER });
+                        parrafo.Add(new Paragraph("Asistencia Personal", Titulo) { Alignment = Element.ALIGN_CENTER });
+                        doc.Add(parrafo);
                         // Texto 
                         PdfPTable tablaEncabezado = new PdfPTable(new float[] { 1, 5, 1, 5 });
 
@@ -69,10 +70,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, Normal)) { Border = Rectangle.NO_BORDER, Colspan=3 });
 
 
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("C.Costo:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCentro, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Empresa:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empresa != null ? empresa.Descripcion.Trim() : String.Empty, Normal)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Rut:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(new Rut(reporte.Key.Numero).ToStringSinFormato(), Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(reporte.Key.Numero.ToString(), Normal)) { Border = Rectangle.NO_BORDER });
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Area:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreUbicacion, Normal)) { Border = Rectangle.NO_BORDER });

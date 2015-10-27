@@ -78,13 +78,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         //tablaEncabezado.AddCell(new PdfPCell(new Phrase("Código:", Chico)) { Border = Rectangle.NO_BORDER });
                         //tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.Codigo, Normal)) { Border = Rectangle.NO_BORDER });
 
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("C.Costo:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreCentro, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Empresa:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase((empresa.Descripcion ?? String.Empty).Trim(), Normal)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Rut:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(new Rut(reporte.Key.Numero).ToStringSinFormato(), Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(reporte.Key.Numero.ToString(), Normal)) { Border = Rectangle.NO_BORDER });
 
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Area:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.NombreUbicacion, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase("Sucursal o Planta:", Chico)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.SucursalPlanta, Normal)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Cargo:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Empty, Normal)) { Border = Rectangle.NO_BORDER });
 
@@ -147,6 +147,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             //Motivo
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Observacion, Chico)));
                         }
+
+
+                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 8});
+                        // Total SobreSalida
+                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 1 });
+                        // Total Sobre Entrada
+                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 1 });
+                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 3, Border = Rectangle.NO_BORDER });
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 13, Border = Rectangle.NO_BORDER });
                         tabla.AddCell(new PdfPCell(GetFirma()) { Colspan=13});
                         doc.Add(tabla);
