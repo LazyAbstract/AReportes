@@ -290,6 +290,39 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return buffer;
             }
         }
+
+        public string printSobreSalida
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
+                if (this.Salida.HasValue && this.SalidaTeorica.HasValue)
+                {
+                    if (this.Salida.Value > this.SalidaTeorica.Value)
+                    {
+                        buffer = this.Salida.Value.Subtract(this.SalidaTeorica.Value);
+                        output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
+                    }
+                }
+                return output;
+            }
+        }
+        public TimeSpan SobreSalida
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                if (this.Salida.HasValue && this.SalidaTeorica.HasValue)
+                {
+                    if (this.Salida.Value > this.SalidaTeorica.Value)
+                    {
+                        buffer = this.Salida.Value.Subtract(this.SalidaTeorica.Value);
+                    }
+                }
+                return buffer;
+            }
+        }
     }
 
     public static class LibroAsistenciaDTOHelpers
@@ -385,6 +418,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public static string CalculaSobreEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             return lista.Any(x => x.SobreEntrada != TimeSpan.Zero) ?
+               lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
+               .Sum(x => x.SobreEntrada.Ticks).ToString("HH:mm") : String.Empty;
+        }
+
+        public static string CalculaSobreSalida(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            return lista.Any(x => x.sob != TimeSpan.Zero) ?
                lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
                .Sum(x => x.SobreEntrada.Ticks).ToString("HH:mm") : String.Empty;
         }

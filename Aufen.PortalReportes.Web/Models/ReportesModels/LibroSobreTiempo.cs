@@ -127,21 +127,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             //horas realizadas
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasReales, Chico)));
                             //Sobrante Salida
-                            TimeSpan sobranteSalida = new TimeSpan();
-                            if (sobretiempo.SalidaTeorica.HasValue && sobretiempo.Salida.HasValue && sobretiempo.Salida > sobretiempo.SalidaTeorica)
-                            {
-                                sobranteSalida = sobretiempo.Salida.Value.Subtract(sobretiempo.SalidaTeorica.Value);
-                            }
-                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(sobranteSalida.Ticks).ToString("HH:mm"), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreSalida, Chico)));
                             //Sobraante Ingreso
-                            TimeSpan sobranteIngreso = new TimeSpan();
-                            if (sobretiempo.EntradaTeorica.HasValue && sobretiempo.Entrada.HasValue && sobretiempo.EntradaTeorica > sobretiempo.Entrada)
-                            {
-                                sobranteIngreso = sobretiempo.EntradaTeorica.Value.Subtract(sobretiempo.Entrada.Value);
-                            }
-                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(sobranteIngreso.Ticks).ToString("HH:mm"), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreEntrada, Chico)));
                             //P.Todo
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(, Chico)));
                             //Cantidad
                             tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                             //Motivo
