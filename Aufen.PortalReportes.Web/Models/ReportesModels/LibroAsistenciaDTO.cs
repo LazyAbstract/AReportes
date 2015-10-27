@@ -412,15 +412,15 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public static string CalculaDiasAtraso(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.Atraso != TimeSpan.Zero) ?
-               lista.Where(x => x.Atraso != TimeSpan.Zero)
+            return lista.Any(x => x.Atraso != TimeSpan.Zero && !x.EsPermiso) ?
+               lista.Where(x => x.Atraso != TimeSpan.Zero && !x.EsPermiso)
                .Count().ToString() : "0";
         }
 
         public static string CalculaDiasSalidaAdelantada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.SalidaAdelantada != TimeSpan.Zero) ?
-               lista.Where(x => x.SalidaAdelantada != TimeSpan.Zero)
+            return lista.Any(x => x.SalidaAdelantada != TimeSpan.Zero && !x.EsPermiso) ?
+               lista.Where(x => x.SalidaAdelantada != TimeSpan.Zero && !x.EsPermiso)
                .Count().ToString() : "0";
         }
 

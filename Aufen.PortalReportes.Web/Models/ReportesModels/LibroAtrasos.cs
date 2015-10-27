@@ -18,6 +18,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private string NombreArchivo { get; set; }
         private Font Titulo { set; get; }
         private Font Normal { set; get; }
+        private Font NormalNegrita { set; get; }
         private Font Chico { set; get; }
 
         public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, string rut)
@@ -65,7 +66,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         parrafo.Add(new Paragraph(
                             String.Format("Departamento: {1}, Fecha de Reporte: {0}",
                             DateTime.Now.ToShortDateString(),
-                            departamento != null ? departamento.Descripcion : "Sin Información"), Normal) { Alignment = Element.ALIGN_CENTER });
+                            departamento.SucursalPlanta), Normal) { Alignment = Element.ALIGN_CENTER });
                         parrafo.Add(new Paragraph("Informe de Atrasos por Área", Titulo) { Alignment = Element.ALIGN_CENTER });
                         doc.Add(parrafo);
                         doc.Add(new Phrase());
@@ -73,9 +74,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                         PdfPTable informacionPersonal = new PdfPTable(new float[] { 1,5});
                         informacionPersonal.AddCell(new PdfPCell(new Phrase("Rut:", Normal)));
-                        informacionPersonal.AddCell(new PdfPCell(new Phrase(new Rut(reporte.Key.Numero).ToStringSinFormato(), Normal)));
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase(reporte.Key.Numero.ToString(), NormalNegrita)));
                         informacionPersonal.AddCell(new PdfPCell(new Phrase("Nombre:", Normal)));
-                        informacionPersonal.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, Normal)));
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, NormalNegrita)));
                         doc.Add(new Phrase());
 
                         doc.Add(informacionPersonal);
@@ -136,6 +137,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             BaseFont bf = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, false);
             Titulo = new Font(bf, 18, Font.UNDERLINE, BaseColor.BLACK);
             Normal = new Font(bf, 11, Font.NORMAL, BaseColor.BLACK);
+            Normal = new Font(bf, 11, Font.BOLD, BaseColor.BLACK);
             Chico = new Font(bf, 9, Font.NORMAL, BaseColor.BLACK);
 
         }

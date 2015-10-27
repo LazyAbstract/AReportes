@@ -5,26 +5,17 @@ using System.Text;
 
 namespace Aufen.PortalReportes.Core
 {
-    public partial class vw_Empleado
+    public partial class vw_Ubicacione
     {
-        public string NombreCompleto
-        {
-            get
-            {
-                return (Nombre ?? String.Empty).Trim() + " " + (Apellidos ?? String.Empty).Trim();
-            }
-        }
-
         public string SucursalPlanta
         {
             get
             {
-                string buffer = (NombreUbicacion ?? String.Empty).Trim();
+                string buffer = (Descripcion ?? String.Empty).Trim();
                 if (buffer == "MOSTAZAL")
                     return "Casa Matriz";
                 return buffer;
             }
         }
-
     }
 }
