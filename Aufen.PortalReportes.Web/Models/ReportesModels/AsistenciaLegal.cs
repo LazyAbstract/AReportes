@@ -51,7 +51,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                      PdfCopyFields copy = new PdfCopyFields(finalStream);
                      foreach (var reporte in resultado.Where(x => x.Rut != null).GroupBy(x => new
                      {
-                         x.Rut.Numero,
+                         x.Rut,
                          x.IdEmpresa,
                          x.IdDepartamento,
                          Mes = x.Fecha.Value.Month,
@@ -59,14 +59,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                      }))
                      {
                          var inasistencias = resultadoInasistencia.Where(x => x.Rut!= null &&
-                             x.Rut.Numero == reporte.Key.Numero &&
+                             x.Rut == reporte.Key.Rut &&
                              x.IdEmpresa == reporte.Key.IdEmpresa &&
                              x.IdDepartamento == reporte.Key.IdDepartamento &&
                             reporte.Key.Mes == x.Fecha.Value.Month &&
                             reporte.Key.Anio == x.Fecha.Value.Year);
                          var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                              x.IdUbicacion == reporte.Key.IdDepartamento &&
-                                  x.Codigo.HasValue && x.Codigo.Value == reporte.Key.Numero);
+                                  x.Codigo == reporte.Key.Rut);
                          using (MemoryStream ms = new MemoryStream())
                          {
                              using (PdfReader pdfReader = new PdfReader(path + @"\ReporteAsistenciaLegal.pdf"))
@@ -88,7 +88,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                                  pdfStamper.AcroFields.SetField("Mes", new DateTime(reporte.Key.Anio, reporte.Key.Mes, 1).ToString("yyyy MMM"));
                                  pdfStamper.AcroFields.SetField("Nombre", empleado != null ? empleado.NombreCompleto : String.Empty);
-                                 pdfStamper.AcroFields.SetField("Rut", reporte.Key.Numero.ToString());
+                                 pdfStamper.AcroFields.SetField("Rut", reporte.Key.Rut);
                                  pdfStamper.AcroFields.SetField("Departamento", String.Format("{0} ({1})",departamento!= null ? departamento.SucursalPlanta : String.Empty, empresa!=null ? empresa.Descripcion.Trim() : String.Empty));
                                  pdfStamper.AcroFields.SetField("Fecha", String.Format("{0} - {1}", primerDiaMes.ToShortDateString(), ultimoDiaMes.ToShortDateString()));
                                  pdfStamper.AcroFields.SetField("ImpresoPagina1", DateTime.Now.ToShortDateString());

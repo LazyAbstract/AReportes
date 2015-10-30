@@ -47,11 +47,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                     pdfWriter.PageEvent = new Header(empresa, path); 
                     doc.Open();
-                    foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }))
+                    foreach (var reporte in libroAtrasos.GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa }))
                     {
                         var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                             x.IdUbicacion == reporte.Key.IdDepartamento &&
-                                 x.Codigo.HasValue && x.Codigo.Value == reporte.Key.Numero);
+                                  x.Codigo == reporte.Key.Rut);
                         if (empleado == null)
                         {
                             empleado = new vw_Empleado();
@@ -74,7 +74,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                         PdfPTable informacionPersonal = new PdfPTable(new float[] { 1,5});
                         informacionPersonal.AddCell(new PdfPCell(new Phrase("Rut:", Normal)));
-                        informacionPersonal.AddCell(new PdfPCell(new Phrase(reporte.Key.Numero.ToString(), NormalNegrita)));
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase(reporte.Key.Rut, NormalNegrita)));
                         informacionPersonal.AddCell(new PdfPCell(new Phrase("Nombre:", Normal)));
                         informacionPersonal.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, NormalNegrita)));
                         doc.Add(new Phrase());
@@ -137,7 +137,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             BaseFont bf = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, false);
             Titulo = new Font(bf, 18, Font.UNDERLINE, BaseColor.BLACK);
             Normal = new Font(bf, 11, Font.NORMAL, BaseColor.BLACK);
-            Normal = new Font(bf, 11, Font.BOLD, BaseColor.BLACK);
+            NormalNegrita = new Font(bf, 11, Font.BOLD, BaseColor.BLACK);
             Chico = new Font(bf, 9, Font.NORMAL, BaseColor.BLACK);
 
         }

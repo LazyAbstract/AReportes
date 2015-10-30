@@ -9,7 +9,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
     public class LibroInasistenciaDTO
     {
         public DateTime? Fecha { get; set; }
-        public Rut Rut { get; set; }
+        public string Rut { get; set; }
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string IdEmpresa { get; set; }

@@ -24,7 +24,7 @@ namespace Aufen.PortalReportes.Web.MapperProfile.ReportesMappers
                 .ForMember(x => x.Fecha, prop=> prop.MapFrom(x => x.Fecha != null ? DateTime.ParseExact(x.Fecha,"yyyyMMdd", CultureInfo.CurrentCulture) : DateTime.Now))
                 .ForMember(x => x.EntradaTeorica, prop => prop.MapFrom(x => !String.IsNullOrEmpty(x.EntradaTeorica1) && !String.IsNullOrWhiteSpace(x.EntradaTeorica1) ? DateTime.ParseExact(x.Fecha + x.EntradaTeorica1, "yyyyMMddHHmm", CultureInfo.CurrentCulture) : nulo))
                 .ForMember(x => x.SalidaTeorica, prop => prop.MapFrom(x => !String.IsNullOrEmpty(x.SalidaTeorica1) && !String.IsNullOrWhiteSpace(x.SalidaTeorica1) ? DateTime.ParseExact(x.Fecha + x.SalidaTeorica1, "yyyyMMddHHmm", CultureInfo.CurrentCulture) : nulo))
-                .ForMember(x => x.Rut, prop=> prop.MapFrom(x =>!String.IsNullOrEmpty(x.Rut) ? new Rut(x.Rut): null))
+                .ForMember(x => x.Rut, prop=> prop.MapFrom(x => x.Rut))
                 .ForMember(x => x.Nombres, prop => prop.MapFrom(x => x.Nombre))
                 ;
         }

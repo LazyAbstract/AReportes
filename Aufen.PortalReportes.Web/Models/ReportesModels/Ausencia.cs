@@ -42,7 +42,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     PdfWriter pdfWriter = PdfWriter.GetInstance(doc, ms);
                     pdfWriter.PageEvent = new Header(empresa, path);                    
                     doc.Open();
-                    foreach (var reporte in inasistencias.Where(x=>x.Rut!=null).GroupBy(x => new { x.Rut.Numero, x.IdDepartamento, x.IdEmpresa }).Take(3))
+                    foreach (var reporte in inasistencias.Where(x=>x.Rut!=null).GroupBy(x => new { x.Rut, x.IdDepartamento, x.IdEmpresa }).Take(3))
                     {
                         doc.AddAuthor("Aufen");
                         doc.AddCreationDate();
@@ -71,14 +71,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Chico)));
 
                         var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
-                            x.IdUbicacion == reporte.Key.IdDepartamento &&
-                                 x.Codigo.HasValue && x.Codigo.Value == reporte.Key.Numero);
+                            x.IdUbicacion == reporte.Key.IdDepartamento &&  x.Codigo == reporte.Key.Rut);
                         foreach(var ausencia in reporte)
                         {
                             //Fecha
                             tabla.AddCell(new PdfPCell(new Phrase(ausencia.Fecha.HasValue ? ausencia.Fecha.Value.ToString("ddd dd/MM") : String.Empty, Chico)));
                             //Código
-                            tabla.AddCell(new PdfPCell(new Phrase(reporte.Key.Numero.ToString(), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(reporte.Key.Rut, Chico)));
                             //Apellidos
                             tabla.AddCell(new PdfPCell(new Phrase((ausencia.Apellidos ?? string.Empty).Trim(), Chico)));
                             //Nombres

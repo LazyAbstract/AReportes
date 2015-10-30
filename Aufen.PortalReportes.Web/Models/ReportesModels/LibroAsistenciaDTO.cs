@@ -10,7 +10,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
     {
         public DateTime? Fecha { get; set; }
         public int? NumSemana { get; set; }
-        public Rut Rut { get; set; }
+        public String Rut { get; set; }
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string IdHorario { get; set; }
@@ -78,11 +78,6 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
                     {
                         buffer2 = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value).Subtract(this.TiempoColacion.Value);
-                        //if(buffer > buffer2)
-                        //{
-                        //    buffer = buffer2;
-                        //}
-
                     }
                     output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
                 }
@@ -113,11 +108,6 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
                     {
                         buffer2 = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value).Subtract(this.TiempoColacion.Value);
-                        //if (buffer > buffer2)
-                        //{
-                        //    buffer = buffer2;
-                        //}
-
                     }
                 }
                 return buffer;
@@ -323,27 +313,6 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return buffer;
             }
         }
-
-        //public string printHorasExtraDia
-        //{
-        //    get 
-        //    {
-        //        TimeSpan buffer = new TimeSpan();
-        //        string output = String.Empty;
-        //        buffer = this.SobreEntrada + this.SobreSalida;
-        //        output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
-        //        return output;
-        //    }
-        //}
-        //public TimeSpan HorasExtraDia
-        //{
-        //    get 
-        //    {
-        //        TimeSpan buffer = new TimeSpan();
-        //        buffer = this.SobreEntrada + this.SobreSalida;
-        //        return buffer;
-        //    }
-        //}
     }
 
     public static class LibroAsistenciaDTOHelpers
@@ -424,9 +393,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// <returns>Ticks correspondientes al cálculo de las horas extra</returns>
         public static string CalculaHorasExtra(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales) ?
+            if (lista == null) return "00:00";
+            long horas = lista.Any(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales) ?
                 lista.Where(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales)
-                .Sum(x => x.HorasReales.Value.Subtract(x.HorasPactadas.Value).Ticks).ToString("HH:mm") : String.Empty;
+                .Sum(x => x.HorasReales.Value.Subtract(x.HorasPactadas.Value).Ticks) : 0;
+            return new DateTime(horas).ToString("HH:mm");
         }
 
         public static string CalculaColacion(this IEnumerable<LibroAsistenciaDTO> lista)
@@ -438,16 +409,18 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public static string CalculaSobreEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.SobreEntrada != TimeSpan.Zero) ?
-               lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
-               .Sum(x => x.SobreEntrada.Ticks).ToString("HH:mm") : String.Empty;
+            if (lista == null) return "00:00";
+            long salida = lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
+               .Sum(x => x.SobreEntrada.Ticks);
+            return new DateTime(salida).ToString("HH:mm");
         }
 
         public static string CalculaSobreSalida(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.SobreSalida != TimeSpan.Zero) ?
-               lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
-               .Sum(x => x.SobreEntrada.Ticks).ToString("HH:mm") : String.Empty;
+            if (lista == null) return "00:00";
+            long entrada = lista.Where(x => x.SobreSalida != TimeSpan.Zero)
+               .Sum(x => x.SobreSalida.Ticks);
+            return new DateTime(entrada).ToString("HH:mm");
         }
 
         public static string CalculaDiasTrabajdos(this IEnumerable<LibroAsistenciaDTO> lista)
