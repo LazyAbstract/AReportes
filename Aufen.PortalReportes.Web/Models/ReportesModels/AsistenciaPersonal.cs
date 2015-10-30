@@ -73,7 +73,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Empresa:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empresa != null ? empresa.Descripcion.Trim() : String.Empty, Normal)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Rut:", Chico)) { Border = Rectangle.NO_BORDER });
-                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(reporte.Key.Rut, Normal)) { Border = Rectangle.NO_BORDER });
+                        tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.RutAufen, Normal)) { Border = Rectangle.NO_BORDER });
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Sucursal o Planta:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.SucursalPlanta, Normal)) { Border = Rectangle.NO_BORDER });

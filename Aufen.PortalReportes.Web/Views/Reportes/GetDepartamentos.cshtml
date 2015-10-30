@@ -3,7 +3,7 @@
 <select id="FORM_Departamento" name="FORM.Departamento" multiple="multiple" class="multiple">
     @foreach (var item in Model.Empresas)
     {
-        <optgroup label="@item.Codigo.Trim()">@((item.Descripcion ?? String.Empty).Trim())</optgroup>
+        <optgroup label="@item.Descripcion.Trim()">@((item.Descripcion ?? String.Empty).Trim())</optgroup>
         foreach (var subItem in Model.Vw_Ubicaciones.Where(x => item.Codigo.Trim() == x.IdEmpresa.Trim()))
         {
             string codigoEmpresaDepartamento = String.Format("{0}{1}", item.Codigo.Trim(), subItem.Codigo.Trim());

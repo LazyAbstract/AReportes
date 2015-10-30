@@ -74,7 +74,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                         PdfPTable informacionPersonal = new PdfPTable(new float[] { 1,5});
                         informacionPersonal.AddCell(new PdfPCell(new Phrase("Rut:", Normal)));
-                        informacionPersonal.AddCell(new PdfPCell(new Phrase(reporte.Key.Rut, NormalNegrita)));
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase(empleado.RutAufen, NormalNegrita)));
                         informacionPersonal.AddCell(new PdfPCell(new Phrase("Nombre:", Normal)));
                         informacionPersonal.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, NormalNegrita)));
                         doc.Add(new Phrase());

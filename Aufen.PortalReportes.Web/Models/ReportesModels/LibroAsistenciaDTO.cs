@@ -120,7 +120,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 TimeSpan buffer = new TimeSpan();
                 string output = String.Empty;
-                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue)
+                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue && this.SalidaTeorica.HasValue && this.EntradaTeorica.HasValue)
                 {
                     if (this.HorasReales > this.HorasPactadas)
                     {
