@@ -78,6 +78,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Sucursal o Planta:", Chico)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.SucursalPlanta, Normal)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase("Cargo:", Chico)) { Border = Rectangle.NO_BORDER });
+                        //tablaEncabezado.AddCell(new PdfPCell(new Phrase(empleado.Cargo, Normal)) { Border = Rectangle.NO_BORDER });
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Empty, Normal)) { Border = Rectangle.NO_BORDER });
 
                         tablaEncabezado.AddCell(new PdfPCell(new Phrase(String.Format("PERIODO: {0} a {1}", FechaDesde.ToShortDateString(), FechaHasta.ToShortDateString()), Normal)) { Colspan = 4, Border = Rectangle.NO_BORDER });

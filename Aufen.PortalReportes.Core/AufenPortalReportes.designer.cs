@@ -443,6 +443,8 @@ namespace Aufen.PortalReportes.Core
 		
 		private string _Tarjeta;
 		
+		private string _Cargo;
+		
 		public vw_Empleado()
 		{
 		}
@@ -587,6 +589,22 @@ namespace Aufen.PortalReportes.Core
 				if ((this._Tarjeta != value))
 				{
 					this._Tarjeta = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Descripcion", Storage="_Cargo", DbType="Char(50)")]
+		public string Cargo
+		{
+			get
+			{
+				return this._Cargo;
+			}
+			set
+			{
+				if ((this._Cargo != value))
+				{
+					this._Cargo = value;
 				}
 			}
 		}

@@ -31,6 +31,7 @@
       <Column Name="IdUbicacion" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
       <Column Name="NombreUbicacion" Type="System.String" DbType="Char(50)" CanBeNull="true" />
       <Column Name="Tarjeta" Type="System.String" DbType="Char(10)" CanBeNull="true" />
+      <Column Name="Descripcion" Member="Cargo" Type="System.String" DbType="Char(50)" CanBeNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.sp_LibroInasistencia" Method="sp_LibroInasistencia">
