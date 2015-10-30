@@ -126,12 +126,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasPactadas, Chico)));
                             //horas realizadas
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasReales, Chico)));
-                            //Sobrante Salida
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreSalida, Chico)));
                             //Sobraante Ingreso
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreEntrada, Chico)));
+                            //Sobrante Salida
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreSalida, Chico)));
                             //P.Todo
-                            tabla.AddCell(new PdfPCell(new Phrase(, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasExtra, Chico)));
                             //Cantidad
                             tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                             //Motivo
@@ -141,10 +141,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 8});
                         // Total SobreSalida
-                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 1 });
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreEntrada(), Normal)) { Colspan = 1 });
                         // Total Sobre Entrada
-                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 1 });
-                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 3, Border = Rectangle.NO_BORDER });
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreSalida(), Normal)) { Colspan = 1 });
+                        // Total Horas Extra
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaHorasExtra(), Normal)) { Colspan = 1 });
+                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 2, Border = Rectangle.NO_BORDER });
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 13, Border = Rectangle.NO_BORDER });
                         tabla.AddCell(new PdfPCell(GetFirma()) { Colspan=13});
                         doc.Add(tabla);

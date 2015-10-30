@@ -78,10 +78,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
                     {
                         buffer2 = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value).Subtract(this.TiempoColacion.Value);
-                        if(buffer > buffer2)
-                        {
-                            buffer = buffer2;
-                        }
+                        //if(buffer > buffer2)
+                        //{
+                        //    buffer = buffer2;
+                        //}
 
                     }
                     output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
@@ -113,10 +113,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                     if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
                     {
                         buffer2 = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value).Subtract(this.TiempoColacion.Value);
-                        if (buffer > buffer2)
-                        {
-                            buffer = buffer2;
-                        }
+                        //if (buffer > buffer2)
+                        //{
+                        //    buffer = buffer2;
+                        //}
 
                     }
                 }
@@ -323,6 +323,27 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return buffer;
             }
         }
+
+        //public string printHorasExtraDia
+        //{
+        //    get 
+        //    {
+        //        TimeSpan buffer = new TimeSpan();
+        //        string output = String.Empty;
+        //        buffer = this.SobreEntrada + this.SobreSalida;
+        //        output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
+        //        return output;
+        //    }
+        //}
+        //public TimeSpan HorasExtraDia
+        //{
+        //    get 
+        //    {
+        //        TimeSpan buffer = new TimeSpan();
+        //        buffer = this.SobreEntrada + this.SobreSalida;
+        //        return buffer;
+        //    }
+        //}
     }
 
     public static class LibroAsistenciaDTOHelpers
@@ -424,7 +445,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public static string CalculaSobreSalida(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.sob != TimeSpan.Zero) ?
+            return lista.Any(x => x.SobreSalida != TimeSpan.Zero) ?
                lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
                .Sum(x => x.SobreEntrada.Ticks).ToString("HH:mm") : String.Empty;
         }
