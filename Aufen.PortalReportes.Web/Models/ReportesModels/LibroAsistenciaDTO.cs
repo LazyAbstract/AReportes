@@ -75,6 +75,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             buffer.Subtract(TiempoColacion.Value);
                         }
                     }
+                    else
+                    {
+                        buffer.Subtract(TiempoColacion.Value);
+                    }
                     if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
                     {
                         buffer2 = this.SalidaTeorica.Value.Subtract(this.EntradaTeorica.Value).Subtract(this.TiempoColacion.Value);
@@ -104,6 +108,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         {
                             buffer.Subtract(TiempoColacion.Value);
                         }
+                    }
+                    else
+                    {
+                        buffer.Subtract(TiempoColacion.Value);
                     }
                     if (this.EntradaTeorica.HasValue && this.SalidaTeorica.HasValue)
                     {
@@ -328,7 +336,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return "00:00";
             return lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue) ?
                         new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
-                        .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Ticks))
+                        .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacion.GetValueOrDefault()).Ticks))
                             .ToString("HH:mm") : "00:00";
         }
 
@@ -343,7 +351,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return "00:00";
             return lista.Any(x => x.Salida.HasValue && x.Entrada.HasValue) ?
                 new DateTime(lista.Where(x => x.Salida.HasValue && x.Entrada.HasValue && x.Salida > x.Entrada)
-                .Sum(x => x.Salida.Value.Subtract(x.Entrada.Value).Ticks)).ToString("HH:mm") : "00:00";
+                .Sum(x => x.Salida.Value.Subtract(x.Entrada.Value).Subtract(x.TiempoColacionReal).Ticks)).ToString("HH:mm") : "00:00";
         }
 
         /// <summary>
