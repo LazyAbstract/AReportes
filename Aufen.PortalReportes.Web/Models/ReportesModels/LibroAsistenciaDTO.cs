@@ -334,10 +334,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             if (lista == null)
                 return "00:00";
-            return lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue) ?
-                        new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
-                        .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacion.GetValueOrDefault()).Ticks))
-                            .ToString("HH:mm") : "00:00";
+            if (lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue))
+            {
+                long ticks = lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
+                    .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacion.GetValueOrDefault()).Ticks);
+                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString()+"00").Substring(0, 2));
+            }
+            else return "00:00";
+            
         }
 
         /// <summary>
@@ -349,9 +353,13 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             if (lista == null)
                 return "00:00";
-            return lista.Any(x => x.Salida.HasValue && x.Entrada.HasValue) ?
-                new DateTime(lista.Where(x => x.Salida.HasValue && x.Entrada.HasValue && x.Salida > x.Entrada)
-                .Sum(x => x.Salida.Value.Subtract(x.Entrada.Value).Subtract(x.TiempoColacionReal).Ticks)).ToString("HH:mm") : "00:00";
+            if(lista.Any(x => x.Salida.HasValue && x.Entrada.HasValue))
+            {
+                long ticks = lista.Where(x => x.Salida.HasValue && x.Entrada.HasValue && x.Salida > x.Entrada)
+                    .Sum(x => x.Salida.Value.Subtract(x.Entrada.Value).Subtract(x.TiempoColacionReal).Ticks);
+                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString()+"00").Substring(0, 2));
+            }
+            else return "00:00";            
         }
 
         /// <summary>
