@@ -20,6 +20,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         private Font Normal { set; get; }
         private Font NormalNegrita { set; get; }
         private Font Chico { set; get; }
+        private Font ChicoNegrita { set; get; }
 
         public LibroAtrasos(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, string rut)
         {
@@ -116,13 +117,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.EntradaTeorica.HasValue ? atraso.EntradaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.SalidaTeorica.HasValue ? atraso.SalidaTeorica.Value.ToString("HH:mm") : String.Empty, Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.printAtraso, Chico)));
-                            //tabla.AddCell(new PdfPCell(new Phrase(String.Format("{0}:{1}",
-                            //    Math.Floor(tiempoAtraso.TotalMinutes / 60.0).ToString("00"),
-                            //    (tiempoAtraso.TotalMinutes - Math.Floor(tiempoAtraso.TotalMinutes / 60.0) * 60).ToString("00")
-                            //    ), Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                             tabla.AddCell(new PdfPCell(new Phrase(atraso.Observacion, Chico)));
                         }
+                        tabla.AddCell(new PdfPCell(new Phrase("Total", ChicoNegrita)) { Colspan=5 });
+                        //TODO: aqí va la suma de astrasos
+                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                        //TODO: aqí va la suma de H.T.N.
+                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                         doc.Add(tabla);
                         doc.NewPage();
                     }
@@ -137,8 +139,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             BaseFont bf = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, false);
             Titulo = new Font(bf, 18, Font.UNDERLINE, BaseColor.BLACK);
             Normal = new Font(bf, 11, Font.NORMAL, BaseColor.BLACK);
-            NormalNegrita = new Font(bf, 11, Font.BOLD, BaseColor.BLACK);
+            NormalNegrita = new Font(bf, 11, Font.BOLD, BaseColor.BLACK); 
             Chico = new Font(bf, 9, Font.NORMAL, BaseColor.BLACK);
+            ChicoNegrita = new Font(bf, 9, Font.NORMAL, BaseColor.BLACK);
 
         }
 
