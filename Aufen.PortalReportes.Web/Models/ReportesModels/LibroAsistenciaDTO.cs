@@ -163,7 +163,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 string output = String.Empty;
                 if(this.Entrada.HasValue && this.EntradaTeorica.HasValue)
                 {
-                    if (this.Entrada.Value > this.EntradaTeorica.Value && !this.EsPermiso)
+                    if (this.Entrada.Value > this.EntradaTeorica.Value && String.IsNullOrWhiteSpace(this.Observacion))
                     {
                         buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
                         output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
@@ -179,7 +179,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 TimeSpan buffer = new TimeSpan();
                 if (this.Entrada.HasValue && this.EntradaTeorica.HasValue)
                 {
-                    if (this.Entrada.Value > this.EntradaTeorica.Value && !this.EsPermiso)
+                    if (this.Entrada.Value > this.EntradaTeorica.Value && String.IsNullOrWhiteSpace(this.Observacion))
                     {
                         buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
                     }
@@ -194,7 +194,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 TimeSpan buffer = new TimeSpan();
                 string output = String.Empty;
-                if (this.Salida.HasValue && this.SalidaTeorica.HasValue && !this.EsPermiso)
+                if (this.Salida.HasValue && this.SalidaTeorica.HasValue && String.IsNullOrWhiteSpace(this.Observacion))
                 {
                     if (this.Salida.Value < this.SalidaTeorica.Value)
                     {
@@ -210,7 +210,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             get
             {
                 TimeSpan buffer = new TimeSpan();
-                if (this.Salida.HasValue && this.SalidaTeorica.HasValue && !this.EsPermiso)
+                if (this.Salida.HasValue && this.SalidaTeorica.HasValue && String.IsNullOrWhiteSpace(this.Observacion))
                 {
                     if (this.Salida.Value < this.SalidaTeorica.Value)
                     {
@@ -337,7 +337,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             if (lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue))
             {
                 long ticks = lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
-                    .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacion.GetValueOrDefault()).Ticks);
+                    .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacionReal).Ticks);
                 return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString()+"00").Substring(0, 2));
             }
             else return "00:00";
@@ -369,8 +369,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// <returns>Ticks correspondientes al cálculo de los atrasos/returns>
         public static string CalculaAtrasoEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && !x.EsPermiso) ?
-                lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && !x.EsPermiso)
+            return lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion)) ?
+                lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion))
                 .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks).ToString("HH:mm") : String.Empty;
         }
 
@@ -383,8 +383,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             if (lista == null)
                 return "00:00";
-            return lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && !x.EsPermiso) ?
-                new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && !x.EsPermiso)
+            return lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && String.IsNullOrWhiteSpace(x.Observacion)) ?
+                new DateTime(lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && String.IsNullOrWhiteSpace(x.Observacion))
                 .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks)).ToString("HH:mm") : "00:00";
         }
 
@@ -392,11 +392,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             if (lista == null)
                 return "00:00";
-            long salida = lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && !x.EsPermiso) ?
-                lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && !x.EsPermiso)
+            long salida = lista.Any(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && String.IsNullOrWhiteSpace(x.Observacion)) ?
+                lista.Where(x => x.SalidaTeorica.HasValue && x.Salida.HasValue && x.Salida < x.SalidaTeorica && String.IsNullOrWhiteSpace(x.Observacion))
                 .Sum(x => x.SalidaTeorica.Value.Subtract(x.Salida.Value).Ticks) : 0;
-            long atraso = lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && !x.EsPermiso) ?
-                lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && !x.EsPermiso)
+            long atraso = lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion)) ?
+                lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion))
                 .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks) : 0;
             return new DateTime(salida+atraso).ToString("HH:mm");
         }
@@ -462,20 +462,61 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public static string CalculaDiasAtraso(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.Atraso != TimeSpan.Zero && !x.EsPermiso) ?
-               lista.Where(x => x.Atraso != TimeSpan.Zero && !x.EsPermiso)
+            return lista.Any(x => x.Atraso != TimeSpan.Zero && String.IsNullOrWhiteSpace(x.Observacion)) ?
+               lista.Where(x => x.Atraso != TimeSpan.Zero && String.IsNullOrWhiteSpace(x.Observacion))
                .Count().ToString() : "0";
         }
 
         public static string CalculaDiasSalidaAdelantada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.SalidaAdelantada != TimeSpan.Zero && !x.EsPermiso) ?
-               lista.Where(x => x.SalidaAdelantada != TimeSpan.Zero && !x.EsPermiso)
+            return lista.Any(x => x.SalidaAdelantada != TimeSpan.Zero && String.IsNullOrWhiteSpace(x.Observacion)) ?
+               lista.Where(x => x.SalidaAdelantada != TimeSpan.Zero && String.IsNullOrWhiteSpace(x.Observacion))
                .Count().ToString() : "0";
         }
 
+        // T. de Salida para asistencia legal - Justificado
+        public static string CalculaInasistenciaJustificadaLegal(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            if (lista == null)
+                return "00:00";
+            if (lista.Any(x => x.Observacion != "Inasistencia Injustificada" && x.Observacion != "Festivo" && !String.IsNullOrWhiteSpace(x.Observacion) 
+                && x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue))
+            {
+                lista = lista.Where(x => x.Observacion != "Inasistencia Injustificada" && x.Observacion != "Festivo" && !String.IsNullOrWhiteSpace(x.Observacion)
+                && x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue);
+                long ticks = 0;
+                long tiempoTrabajdo = 0;
+                long tiempoInasistencia = 0;
+                if (lista.Any(x => x.Entrada.HasValue && x.Salida.HasValue && x.Observacion != "Inasistencia Injustificada" && x.Observacion != "Festivo" && !String.IsNullOrWhiteSpace(x.Observacion)))
+                {
+                    tiempoTrabajdo = lista.Where(x => x.Entrada.HasValue && x.Salida.HasValue && x.Observacion != "Inasistencia Injustificada" && x.Observacion != "Festivo" && !String.IsNullOrWhiteSpace(x.Observacion)).Sum(x => x.Salida.Value.Subtract(x.Entrada.Value).Ticks);
+                }
 
+                tiempoInasistencia = lista.Where(x => x.Observacion != "Inasistencia Injustificada" && x.Observacion != "Festivo" && !String.IsNullOrWhiteSpace(x.Observacion) 
+                    && x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
+                    .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacionReal).Ticks);
 
+                ticks = tiempoInasistencia - tiempoTrabajdo;
 
+                 //ticks = lista.Where(x => x.Observacion == "Inasistencia Injustificada")
+                 //   .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacionReal).Ticks);
+                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+            }
+            else return "00:00";
+        }
+
+        // tiempo de ausencia para asistencia legal - injustificado
+        public static string CalculaInasistenciaInjustificadaLegal(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            if (lista == null)
+                return "00:00";
+            if (lista.Any(x => x.Observacion == "Inasistencia Injustificada" && x.Observacion != "Festivo" && x.EntradaTeorica.HasValue && x.SalidaTeorica.HasValue))
+            {
+                long ticks = lista.Where(x => x.Observacion == "Inasistencia Injustificada" && x.Observacion != "Festivo" && x.EntradaTeorica.HasValue && x.SalidaTeorica.HasValue)
+                    .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacionReal).Ticks);
+                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+            }
+            else return "00:00";
+        }
     }
 }
