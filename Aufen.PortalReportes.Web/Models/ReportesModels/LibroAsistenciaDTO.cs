@@ -165,11 +165,11 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 {
                     if (this.Entrada.Value > this.EntradaTeorica.Value && String.IsNullOrWhiteSpace(this.Observacion))
                     {
-                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
+                        buffer = this.Entrada.Value.Subtract(this.EntradaTeorica.Value);
                         output = (int)buffer.TotalHours + buffer.ToString(@"\:mm");
                     }
                 }
-                return output;
+                return ("0" + output);
             }
         }
         public TimeSpan Atraso
@@ -181,7 +181,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 {
                     if (this.Entrada.Value > this.EntradaTeorica.Value && String.IsNullOrWhiteSpace(this.Observacion))
                     {
-                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
+                        buffer = this.Entrada.Value.Subtract(this.EntradaTeorica.Value);
                     }
                 }
                 return buffer;
@@ -369,9 +369,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         /// <returns>Ticks correspondientes al cálculo de los atrasos/returns>
         public static string CalculaAtrasoEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
-            return lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion)) ?
+            if (lista == null)
+                return "00:00";
+            long atraso = lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion)) ?
                 lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion))
-                .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks).ToString("HH:mm") : String.Empty;
+                .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks) : 0;
+            return new DateTime(atraso).ToString("HH:mm");
         }
 
         /// <summary>

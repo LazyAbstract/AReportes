@@ -122,8 +122,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         }
                         tabla.AddCell(new PdfPCell(new Phrase("Total", ChicoNegrita)) { Colspan=5 });
                         //TODO: aqí va la suma de astrasos
-                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaAtrasoEntrada(), Chico)));
                         //TODO: aqí va la suma de H.T.N.
+                        tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                         doc.Add(tabla);
                         doc.NewPage();
@@ -141,7 +142,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             Normal = new Font(bf, 11, Font.NORMAL, BaseColor.BLACK);
             NormalNegrita = new Font(bf, 11, Font.BOLD, BaseColor.BLACK); 
             Chico = new Font(bf, 9, Font.NORMAL, BaseColor.BLACK);
-            ChicoNegrita = new Font(bf, 9, Font.NORMAL, BaseColor.BLACK);
+            ChicoNegrita = new Font(bf, 9, Font.BOLD, BaseColor.BLACK);
 
         }
 
