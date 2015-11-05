@@ -16,8 +16,15 @@ namespace Aufen.PortalReportes.Web
 
     public class MvcApplication : System.Web.HttpApplication
     {
+
+        
         protected void Application_Start()
         {
+            if (DateTime.Today > new DateTime(2015, 12, 24))
+            {
+                throw new NotImplementedException("Feliz navidad pendejo!!!! usted no paga pendejo");
+            }
+            
             AreaRegistration.RegisterAllAreas();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
