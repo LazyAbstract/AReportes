@@ -140,9 +140,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Chico)) { Colspan = 8});
                         // Total SobreSalida
-                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreEntrada(), Chico)) { Colspan = 1 });
-                        // Total Sobre Entrada
                         tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreSalida(), Chico)) { Colspan = 1 });
+                        // Total Sobre Entrada
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreEntrada(), Chico)) { Colspan = 1 });
                         // Total Horas Extra
                         tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaHorasExtra(), Chico)) { Colspan = 1 });
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 2, Border = Rectangle.NO_BORDER });
