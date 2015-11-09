@@ -125,7 +125,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasPactadas, Chico)));
                             //horas realizadas
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasReales, Chico)));
-                            //Sobraante Ingreso
+                            //Sobrante Ingreso
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreEntrada, Chico)));
                             //Sobrante Salida
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreSalida, Chico)));

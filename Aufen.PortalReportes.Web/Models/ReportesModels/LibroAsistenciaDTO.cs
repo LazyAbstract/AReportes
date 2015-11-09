@@ -401,7 +401,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             long atraso = lista.Any(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion)) ?
                 lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion))
                 .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks) : 0;
-            return new DateTime(salida+atraso).ToString("HH:mm");
+            var ticks = salida + atraso;
+            return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
         }
 
         /// <summary>
@@ -413,10 +414,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public static string CalculaHorasExtra(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             if (lista == null) return "00:00";
-            long horas = lista.Any(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales) ?
+            long ticks = lista.Any(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales) ?
                 lista.Where(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales)
                 .Sum(x => x.HorasReales.Value.Subtract(x.HorasPactadas.Value).Ticks) : 0;
-            return new DateTime(horas).ToString("HH:mm");
+            return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
         }
 
         public static string CalculaColacion(this IEnumerable<LibroAsistenciaDTO> lista)
@@ -429,17 +430,17 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public static string CalculaSobreEntrada(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             if (lista == null) return "00:00";
-            long salida = lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
+            long ticks = lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
                .Sum(x => x.SobreEntrada.Ticks);
-            return new DateTime(salida).ToString("HH:mm");
+            return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
         }
 
         public static string CalculaSobreSalida(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             if (lista == null) return "00:00";
-            long entrada = lista.Where(x => x.SobreSalida != TimeSpan.Zero)
+            long ticks = lista.Where(x => x.SobreSalida != TimeSpan.Zero)
                .Sum(x => x.SobreSalida.Ticks);
-            return new DateTime(entrada).ToString("HH:mm");
+            return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
         }
 
         public static string CalculaDiasTrabajdos(this IEnumerable<LibroAsistenciaDTO> lista)
