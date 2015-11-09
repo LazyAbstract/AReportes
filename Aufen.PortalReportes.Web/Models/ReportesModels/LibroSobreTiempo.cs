@@ -100,9 +100,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("MI", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("MS", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("HTH", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("HTN", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("Sob.Salida", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HTN", Chico)));                       
                         tabla.AddCell(new PdfPCell(new Phrase("Sob.Ingreso", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Sob.Salida", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("P.Todo", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Cantidad", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Motivo", Chico)));
@@ -140,11 +140,12 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Chico)) { Colspan = 8});
                         // Total SobreSalida
-                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreSalida(), Chico)) { Colspan = 1 });
-                        // Total Sobre Entrada
                         tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreEntrada(), Chico)) { Colspan = 1 });
+                        // Total Sobre Entrada
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreSalida(), Chico)) { Colspan = 1 });
                         // Total Horas Extra
                         tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaHorasExtra(), Chico)) { Colspan = 1 });
+
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 2, Border = Rectangle.NO_BORDER });
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 13, Border = Rectangle.NO_BORDER });
                         tabla.AddCell(new PdfPCell(GetFirma()) { Colspan=13});

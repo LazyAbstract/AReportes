@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Aufen.PortalReportes.Web.Helpers;
 
 namespace Aufen.PortalReportes.Web.Models.ReportesModels
 {
@@ -144,7 +145,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             get
             {
                 TimeSpan buffer = new TimeSpan();
-                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue)
+                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue && this.SalidaTeorica.HasValue && this.EntradaTeorica.HasValue)
                 {
                     if (this.HorasReales > this.HorasPactadas)
                     {
@@ -338,7 +339,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 long ticks = lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
                     .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacionReal).Ticks);
-                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+                return ticks.ImprimeFormatoHoraAufen();
             }
             else return "00:00";
 
@@ -357,7 +358,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 long ticks = lista.Where(x => x.Salida.HasValue && x.Entrada.HasValue && x.Salida > x.Entrada)
                     .Sum(x => x.Salida.Value.Subtract(x.Entrada.Value).Subtract(x.TiempoColacionReal).Ticks);
-                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+                return ticks.ImprimeFormatoHoraAufen();
             }
             else return "00:00";
         }
@@ -375,7 +376,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {                
                 long ticks = lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion))
                 .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks);
-                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+                return ticks.ImprimeFormatoHoraAufen();
             }
             return "00:00";
         }
@@ -405,7 +406,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 lista.Where(x => x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Entrada > x.EntradaTeorica && String.IsNullOrWhiteSpace(x.Observacion))
                 .Sum(x => x.Entrada.Value.Subtract(x.EntradaTeorica.Value).Ticks) : 0;
             var ticks = salida + atraso;
-            return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+            return ticks.ImprimeFormatoHoraAufen();
         }
 
         /// <summary>
@@ -417,10 +418,14 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         public static string CalculaHorasExtra(this IEnumerable<LibroAsistenciaDTO> lista)
         {
             if (lista == null) return "00:00";
-            long ticks = lista.Any(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales) ?
-                lista.Where(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales)
-                .Sum(x => x.HorasReales.Value.Subtract(x.HorasPactadas.Value).Ticks) : 0;
-            return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+            if (lista.Any(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales && x.EntradaTeorica.HasValue && x.SalidaTeorica.HasValue))
+            {
+                long ticks = lista.Where(x => x.HorasReales.HasValue && x.HorasPactadas.HasValue && x.HorasPactadas < x.HorasReales && x.EntradaTeorica.HasValue && x.SalidaTeorica.HasValue)
+                    .Sum(x => x.HorasExtra.Ticks);
+                return ticks.ImprimeFormatoHoraAufen();
+            }
+            return "00:00";
+          
         }
 
         public static string CalculaColacion(this IEnumerable<LibroAsistenciaDTO> lista)
@@ -431,7 +436,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 long ticks = lista.Where(x => x.TiempoColacionReal != TimeSpan.Zero)
                     .Sum(x => x.TiempoColacionReal.Ticks);
-                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+                return ticks.ImprimeFormatoHoraAufen();
             }
             return "00:00";
         }
@@ -441,7 +446,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             if (lista == null) return "00:00";
             long ticks = lista.Where(x => x.SobreEntrada != TimeSpan.Zero)
                .Sum(x => x.SobreEntrada.Ticks);
-            return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+            return ticks.ImprimeFormatoHoraAufen();
         }
 
         public static string CalculaSobreSalida(this IEnumerable<LibroAsistenciaDTO> lista)
@@ -449,7 +454,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             if (lista == null) return "00:00";
             long ticks = lista.Where(x => x.SobreSalida != TimeSpan.Zero)
                .Sum(x => x.SobreSalida.Ticks);
-            return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+            return ticks.ImprimeFormatoHoraAufen();
         }
 
         public static string CalculaDiasTrabajdos(this IEnumerable<LibroAsistenciaDTO> lista)
@@ -513,7 +518,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                 //ticks = lista.Where(x => x.Observacion == "Inasistencia Injustificada")
                 //   .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacionReal).Ticks);
-                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+                return ticks.ImprimeFormatoHoraAufen();
             }
             else return "00:00";
         }
@@ -527,7 +532,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 long ticks = lista.Where(x => x.Observacion == "Inasistencia Injustificada" && x.Observacion != "Festivo" && x.EntradaTeorica.HasValue && x.SalidaTeorica.HasValue)
                     .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacionReal).Ticks);
-                return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString() + "00").Substring(0, 2));
+                return ticks.ImprimeFormatoHoraAufen();
             }
             else return "00:00";
         }

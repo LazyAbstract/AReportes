@@ -27,5 +27,10 @@ namespace Aufen.PortalReportes.Web.Helpers
 
             return MvcHtmlString.Create(builder.ToString());
         }
+
+        public static string ImprimeFormatoHoraAufen(this long ticks)
+        {
+            return String.Format("{0}:{1}", Math.Floor(TimeSpan.FromTicks(ticks).TotalHours), (Math.Floor(TimeSpan.FromTicks(ticks).TotalMinutes % 60).ToString("00")));
+        }
     }
 }
