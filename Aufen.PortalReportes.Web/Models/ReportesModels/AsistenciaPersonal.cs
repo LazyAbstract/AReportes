@@ -140,19 +140,19 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         //Subtotal
                         tabla.AddCell(new PdfPCell(new Phrase("Sub Total", Chico)) { Colspan = 6 });
                         //Horas pactadas po hombre
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaJornada(reporte), ChicoNegrita)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaJornada(reporte), Chico)));
                         //Horas realizadas
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAsistencia(reporte), ChicoNegrita)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAsistencia(reporte), Chico)));
                         //Horas extra
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaHorasExtra(reporte), ChicoNegrita)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaHorasExtra(reporte), Chico)));
                         // Atraso
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAtrasoEntrada(reporte), ChicoNegrita)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaAtrasoEntrada(reporte), Chico)));
                         // Salida adelantada
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSalidaAdelantada(reporte), ChicoNegrita)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSalidaAdelantada(reporte), Chico)));
                         // Colacón
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaColacion(reporte), ChicoNegrita)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaColacion(reporte), Chico)));
                         // S.Ent
-                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSobreEntrada(reporte), ChicoNegrita)));
+                        tabla.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaSobreEntrada(reporte), Chico)));
                         // Permisos
                         tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                         doc.Add(tabla);

@@ -422,6 +422,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public static string CalculaColacion(this IEnumerable<LibroAsistenciaDTO> lista)
         {
+            if (lista == null)
+                return "00:00";
             return lista.Any(x => x.TiempoColacionReal != TimeSpan.Zero) ?
                lista.Where(x => x.TiempoColacionReal != TimeSpan.Zero)
                .Sum(x => x.TiempoColacionReal.Ticks).ToString("HH:mm") : String.Empty;
