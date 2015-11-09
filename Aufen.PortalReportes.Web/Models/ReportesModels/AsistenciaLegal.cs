@@ -141,7 +141,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                  pdfStamper.AcroFields.SetField("ResumenAsistencia", reporte.CalculaAsistencia());
                                  pdfStamper.AcroFields.SetField("ResumenSalidas", reporte.CalculaInasistenciaJustificadaLegal());
                                  pdfStamper.AcroFields.SetField("ResumenAusencias", reporte.CalculaInasistenciaInjustificadaLegal());
-                                 pdfStamper.AcroFields.SetField("ResumenAtrasosSalidas", reporte.CalculaAtrasoSalida());
+                                 pdfStamper.AcroFields.SetField("ResumenAtrasosSalidas", reporte.CalculaAtrasoEntrada());
                                  pdfStamper.AcroFields.SetField("ResumenNumeroAtrasos", reporte.CalculaDiasAtraso());
                                  pdfStamper.AcroFields.SetField("ResumenNumeroSalidas", reporte.CalculaDiasSalidaAdelantada());
                                  pdfStamper.AcroFields.SetField("ResumenExtraConTurno", "");
