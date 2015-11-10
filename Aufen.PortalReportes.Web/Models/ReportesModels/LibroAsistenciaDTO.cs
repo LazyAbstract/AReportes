@@ -338,7 +338,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             if (lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue))
             {
                 long ticks = lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
-                    .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacionReal).Ticks);
+                    .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacion.GetValueOrDefault()).Ticks);
                 return ticks.ImprimeFormatoHoraAufen();
             }
             else return "00:00";
