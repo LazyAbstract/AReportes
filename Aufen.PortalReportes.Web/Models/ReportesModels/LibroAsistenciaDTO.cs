@@ -335,9 +335,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
         {
             if (lista == null)
                 return "00:00";
-            if (lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue))
+            //  solo los días que fue... lo que está mal pero insisten
+            if (lista.Any(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Salida.HasValue))
             {
-                long ticks = lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue)
+                long ticks = lista.Where(x => x.SalidaTeorica.HasValue && x.EntradaTeorica.HasValue && x.Entrada.HasValue && x.Salida.HasValue)
                     .Sum(x => x.SalidaTeorica.Value.Subtract(x.EntradaTeorica.Value).Subtract(x.TiempoColacion.GetValueOrDefault()).Ticks);
                 return ticks.ImprimeFormatoHoraAufen();
             }
