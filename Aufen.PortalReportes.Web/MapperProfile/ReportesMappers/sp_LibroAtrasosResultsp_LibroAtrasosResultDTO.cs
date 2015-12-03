@@ -28,7 +28,7 @@ namespace Aufen.PortalReportes.Web.MapperProfile.ReportesMappers
                 .ForMember(x => x.SalidaColacion, prop => prop.MapFrom(x => !String.IsNullOrEmpty(x.SalidaColacion) && !String.IsNullOrWhiteSpace(x.SalidaColacion) ? DateTime.ParseExact(x.Fecha + x.SalidaColacion.Substring(0,4)+"00", "yyyyMMddHHmmss", CultureInfo.CurrentCulture) : nulo))
                 .ForMember(x => x.EntradaTeorica, prop => prop.MapFrom(x => !String.IsNullOrEmpty(x.EntradaTeorica1) && !String.IsNullOrWhiteSpace(x.EntradaTeorica1) ? DateTime.ParseExact(x.Fecha + x.EntradaTeorica1, "yyyyMMddHHmm", CultureInfo.CurrentCulture) : nulo))
                 .ForMember(x => x.SalidaTeorica, prop => prop.MapFrom(x => !String.IsNullOrEmpty(x.SalidaTeorica1) && !String.IsNullOrWhiteSpace(x.SalidaTeorica1) ? DateTime.ParseExact(x.Fecha + x.SalidaTeorica1, "yyyyMMddHHmm", CultureInfo.CurrentCulture) : nulo))
-                .ForMember(x => x.TiempoColacion, prop => prop.MapFrom(x => TimeSpan.FromHours((double)x.Colacion.GetValueOrDefault(0))))
+                .ForMember(x => x.TiempoColacion, prop => prop.MapFrom(x => (double)x.Colacion.GetValueOrDefault(0) > 0 ? TimeSpan.FromHours((double)x.Colacion.GetValueOrDefault(0)) : TimeSpan.FromHours(0)))
                 .ForMember(x => x.Rut, prop=> prop.MapFrom(x =>x.Rut))
                 .ForMember(x => x.Nombres, prop => prop.MapFrom(x => x.Nombre))
                 .ForMember(x=> x.EsPermiso, prop => prop.MapFrom(x=> x.EsPermiso))

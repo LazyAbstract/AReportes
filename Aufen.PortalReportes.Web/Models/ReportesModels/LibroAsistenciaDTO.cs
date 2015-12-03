@@ -129,7 +129,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             {
                 TimeSpan buffer = new TimeSpan();
                 string output = String.Empty;
-                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue && this.SalidaTeorica.HasValue && this.EntradaTeorica.HasValue)
+                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue && this.SalidaTeorica.HasValue 
+                    && this.EntradaTeorica.HasValue && this.Entrada.HasValue && this.Salida.HasValue)
                 {
                     if (this.HorasReales > this.HorasPactadas)
                     {
@@ -145,7 +146,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             get
             {
                 TimeSpan buffer = new TimeSpan();
-                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue && this.SalidaTeorica.HasValue && this.EntradaTeorica.HasValue)
+                if (this.HorasReales.HasValue && this.HorasPactadas.HasValue && this.SalidaTeorica.HasValue
+                    && this.EntradaTeorica.HasValue && this.Entrada.HasValue && this.Salida.HasValue)
                 {
                     if (this.HorasReales > this.HorasPactadas)
                     {
@@ -322,6 +324,64 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                 return buffer;
             }
         }
+
+        public string printSobreTiempo
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
+                if ((this.Entrada.HasValue && this.EntradaTeorica.HasValue && this.Entrada < this.EntradaTeorica))
+                {
+                    if (this.Entrada.Value < this.EntradaTeorica.Value)
+                    {
+                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
+                    }
+                    else
+                    {
+                        buffer = TimeSpan.Zero;
+                    }
+                }
+                if((this.Salida.HasValue && this.SalidaTeorica.HasValue && this.Salida > this.SalidaTeorica))
+                {
+                    if (this.Salida.Value > this.SalidaTeorica.Value)
+                    {
+                        buffer = buffer + this.Salida.Value.Subtract(this.SalidaTeorica.Value);
+                    }
+                                       
+                }
+                output = (int)buffer.TotalHours + buffer.ToString(@"\:mm"); 
+                return output;
+            }
+        }
+        public TimeSpan SobreTiempo
+        {
+            get
+            {
+                TimeSpan buffer = new TimeSpan();
+                string output = String.Empty;
+                if ((this.Entrada.HasValue && this.EntradaTeorica.HasValue))
+                {
+                    if (this.Entrada.Value < this.EntradaTeorica.Value)
+                    {
+                        buffer = this.EntradaTeorica.Value.Subtract(this.Entrada.Value);
+                    }
+                    else
+                    {
+                        buffer = TimeSpan.Zero;
+                    }
+                }
+                if ((this.Salida.HasValue && this.SalidaTeorica.HasValue))
+                {
+                    if (this.Salida.Value > this.SalidaTeorica.Value)
+                    {
+                        buffer = buffer + this.Salida.Value.Subtract(this.SalidaTeorica.Value);
+                    }
+
+                }
+                return buffer;
+            }
+        }
     }
 
     public static class LibroAsistenciaDTOHelpers
@@ -427,6 +487,19 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             }
             return "00:00";
           
+        }
+
+        public static string CalculaSobreTiempo(this IEnumerable<LibroAsistenciaDTO> lista)
+        {
+            if (lista == null) return "00:00";
+            if (lista.Any(x => x.SobreTiempo > TimeSpan.Zero))
+            {
+                long ticks = lista.Where(x => x.SobreTiempo > TimeSpan.Zero)
+                    .Sum(x => x.SobreTiempo.Ticks);
+                return ticks.ImprimeFormatoHoraAufen();
+            }
+            return "00:00";
+
         }
 
         public static string CalculaColacion(this IEnumerable<LibroAsistenciaDTO> lista)

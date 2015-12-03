@@ -130,7 +130,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                             //Sobrante Salida
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreSalida, Chico)));
                             //P.Todo
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasExtra, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreTiempo, Chico)));
                             //Cantidad
                             tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                             //Motivo
@@ -144,7 +144,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         // Total Sobre Entrada
                         tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreSalida(), Chico)) { Colspan = 1 });
                         // Total Horas Extra
-                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaHorasExtra(), Chico)) { Colspan = 1 });
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreTiempo(), Chico)) { Colspan = 1 });
 
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 2, Border = Rectangle.NO_BORDER });
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 13, Border = Rectangle.NO_BORDER });
