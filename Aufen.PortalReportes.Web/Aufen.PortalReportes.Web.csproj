@@ -363,7 +363,8 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="App_Browsers\qt.browser" />
-    <Content Include="Content\ReporteAsistenciaLegal.pdf" />
+    <Content Include="Content\ReporteAsistenciaLegal5.pdf" />
+    <Content Include="Content\ReporteAsistenciaLegal6.pdf" />
     <None Include="Properties\PublishProfiles\LOCAL.pubxml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Rotativa\wkhtmltopdf.exe" />
