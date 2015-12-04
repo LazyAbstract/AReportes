@@ -21,9 +21,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
         public AsistenciaLegal(AufenPortalReportesDataContext db, EMPRESA empresa, vw_Ubicacione departamento, DateTime FechaDesde, DateTime FechaHasta, string path, string rut)
         {
-            // Nombre del archivo y ubiación en el árbol de carpetas
-             NombreArchivo = String.Format("{0}/{1}/AsistenciaLegal.pdf", empresa.Descripcion, departamento.Descripcion);
             // Vamos a buscar los datos que nos permitirtán armar elreporte
+            NombreArchivo = String.Format("{0}/{1}/LibroAtrasos.pdf", empresa.Descripcion, departamento.Descripcion);
             //Resultado de marcas
              IEnumerable<sp_LibroAsistenciaResult> resultadoLibroAtrasos =
                                            db.sp_LibroAsistencia(
@@ -68,9 +67,10 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                          var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                              x.IdUbicacion == reporte.Key.IdDepartamento &&
                                   x.Codigo == reporte.Key.Rut);
+                         int numeroSemanas = reporte.Max(x => x.NumSemana) == 6 ? 6 : 5;
                          using (MemoryStream ms = new MemoryStream())
                          {
-                             using (PdfReader pdfReader = new PdfReader(path + @"\ReporteAsistenciaLegal.pdf"))
+                             using (PdfReader pdfReader = new PdfReader(path + String.Format(@"\ReporteAsistenciaLegal{0}.pdf",  numeroSemanas)))
                              {
                                  DateTime fechaReferencia = reporte.First().Fecha.Value;
                                  DateTime primerDiaMes = new DateTime(fechaReferencia.Year, fechaReferencia.Month, 1);
@@ -97,7 +97,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                                  pdfStamper.AcroFields.SetField("UsuarioPagina1", "");
                                  pdfStamper.AcroFields.SetField("UsuarioPagina2", "");
                                  //Para todas las semanas
-                                 for (int i = 1; i <= 5; i++)
+                                 for (int i = 1; i <=  numeroSemanas; i++)
                                  {
                                      //Para todos los días de la semana
                                      var semana = reporte.Where(x => x.NumSemana == i);

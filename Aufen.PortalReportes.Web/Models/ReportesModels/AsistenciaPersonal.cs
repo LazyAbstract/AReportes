@@ -92,7 +92,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                         // Primera lìnea cabecera
                         tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("HI", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HI", Chico)) { });
                         tabla.AddCell(new PdfPCell(new Phrase("HS", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("HCol", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("MI", Chico)));
