@@ -101,9 +101,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("MS", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("HTH", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("HTN", Chico)));                       
-                        tabla.AddCell(new PdfPCell(new Phrase("Sob.Ingreso", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("Sob.Salida", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("P.Todo", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("SIn", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("SSa", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("PT", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Cantidad", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Motivo", Chico)));
                         // Filas con datos

@@ -32,7 +32,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
             tabla.AddCell(new PdfPCell(new Phrase(_Empresa.Direccion, ChicaNegrita)) { Border = Rectangle.NO_BORDER });
             tabla.AddCell(new PdfPCell(
                 new Phrase(
-                    String.Format("Fono: {0} Fax: {1}", (_Empresa.Fono ?? String.Empty).Trim(), (_Empresa.Fax ?? String.Empty).Trim()), ChicaNegrita)
+                    String.Format("Fono: {0}", (_Empresa.Fono ?? String.Empty).Trim()), ChicaNegrita)
                     ) { Border = Rectangle.NO_BORDER });
             tabla.AddCell(new PdfPCell(new Phrase(String.Format("Fecha Informe: {0}", DateTime.Now.ToShortDateString()), ChicaNegrita)) { Border = Rectangle.NO_BORDER });
             tabla.TotalWidth = document.Right - document.Left- 20;
