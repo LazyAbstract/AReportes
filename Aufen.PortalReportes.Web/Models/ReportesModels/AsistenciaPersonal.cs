@@ -99,7 +99,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("MS", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("HTH", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("HTN", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("H.Extra", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HE", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("ATR", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("ADL", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Col.", Chico)));
@@ -181,8 +181,9 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Vacaciones", Chico)) { Border = Rectangle.NO_BORDER });
                         resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+             
                         // Aquí va una tabla con el espacio para la firma
-                        resumen.AddCell(new PdfPCell(new Phrase("______________________ Firma Empleado", Chico)) { VerticalAlignment = Rectangle.ALIGN_BOTTOM, HorizontalAlignment = Rectangle.ALIGN_CENTER, Colspan = 2, Rowspan = 3, Border = Rectangle.NO_BORDER });
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { VerticalAlignment = Rectangle.ALIGN_BOTTOM, HorizontalAlignment = Rectangle.ALIGN_CENTER, Colspan = 2, Rowspan = 3, Border = Rectangle.NO_BORDER });
                         //
                         resumen.AddCell(new PdfPCell(new Phrase("Días Atraso", Chico)) { Border = Rectangle.NO_BORDER });
                         resumen.AddCell(new PdfPCell(new Phrase(LibroAsistenciaDTOHelpers.CalculaDiasAtraso(reporte), Chico)) { Border = Rectangle.NO_BORDER });
@@ -201,7 +202,29 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                         resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
                         resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER });
+
+                        resumen.AddCell(new PdfPCell(new Phrase(" ", Chico)) { Border = Rectangle.NO_BORDER, Colspan = 8, Rowspan = 5 });
+                        resumen.AddCell(new PdfPCell(new Phrase(" ", Chico)) { Border = Rectangle.NO_BORDER, Colspan = 8 });
+
+                        resumen.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER, Colspan = 6 });
+                        resumen.AddCell(new PdfPCell(new Phrase("______________________ Firma Empleado", Chico)) { VerticalAlignment = Rectangle.ALIGN_BOTTOM, HorizontalAlignment = Rectangle.ALIGN_CENTER, Colspan = 2, Border = Rectangle.NO_BORDER });
+
                         doc.Add(resumen);
+
+                        //PdfPTable firma = new PdfPTable(new float[] { 2, 1, 2, 1, 2, 1, 2, 1 });
+
+                        //firma.AddCell(new PdfPCell(new Phrase(" ", Chico)) { Border = Rectangle.NO_BORDER, Colspan = 8, Rowspan = 2 });
+                        ////firma.AddCell(new PdfPCell(new Phrase(" ", Chico)) { Border = Rectangle.NO_BORDER, Colspan = 8 });
+                       
+
+                        //firma.AddCell(new PdfPCell(new Phrase("", Chico)) { Border = Rectangle.NO_BORDER, Colspan = 6 });
+                        //firma.AddCell(new PdfPCell(new Phrase("______________________ Firma Empleado", Chico)) { VerticalAlignment = Rectangle.ALIGN_BOTTOM, HorizontalAlignment = Rectangle.ALIGN_CENTER, Colspan = 2, Border = Rectangle.NO_BORDER, FixedHeight = 1.7f });
+                        //doc.Add(new Phrase());
+                        //doc.Add(new Phrase());
+                        //doc.Add(new Phrase());
+                        //doc.Add(new Phrase());
+                        //doc.Add(firma);
+
                         doc.NewPage();
                     }
                     doc.Close();
