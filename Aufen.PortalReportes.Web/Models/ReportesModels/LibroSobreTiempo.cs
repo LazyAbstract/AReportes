@@ -93,61 +93,61 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         doc.Add(new Phrase());
                         // tabla
                         PdfPTable tabla = new PdfPTable(new float[] { 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 4 });
-                        tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)));
-                        tabla.AddCell(new PdfPCell(new Phrase("HI", Chico)) { BorderWidthLeft = 1.0f, BorderWidthTop = .7f, BorderWidthRight = 0.1f, BorderWidthBottom = 0.1f });
-                        tabla.AddCell(new PdfPCell(new Phrase("HS", Chico)) { BorderWidthTop = .7f });
-                        tabla.AddCell(new PdfPCell(new Phrase("HCol", Chico)) { BorderWidthRight = 1.0f, BorderWidthTop = .7f, BorderWidthLeft = 0.1f, BorderWidthBottom = 0.1f });
-                        tabla.AddCell(new PdfPCell(new Phrase("MI", Chico)) { BorderWidthTop = .7f });
-                        tabla.AddCell(new PdfPCell(new Phrase("MS", Chico)) { BorderWidthTop = .7f });
-                        tabla.AddCell(new PdfPCell(new Phrase("HTH", Chico)) { BorderWidthLeft = 1.0f, BorderWidthTop = .7f, BorderWidthRight = 0.1f, BorderWidthBottom = 0.1f });
-                        tabla.AddCell(new PdfPCell(new Phrase("HTN", Chico)) { BorderWidthRight = 1.0f, BorderWidthTop = .7f, BorderWidthLeft = 0.1f, BorderWidthBottom = 0.1f });
-                        tabla.AddCell(new PdfPCell(new Phrase("SIn", Chico)) { BorderWidthTop = .7f });
-                        tabla.AddCell(new PdfPCell(new Phrase("SSa", Chico)) { BorderWidthTop = .7f });
-                        tabla.AddCell(new PdfPCell(new Phrase("PT", Chico)) { BorderWidthTop = .7f });
-                        tabla.AddCell(new PdfPCell(new Phrase("Cantidad", Chico)) { BorderWidthLeft = 1.0f, BorderWidthTop = .7f, BorderWidthRight = 0.1f, BorderWidthBottom = 0.1f });
-                        tabla.AddCell(new PdfPCell(new Phrase("Motivo", Chico)) { BorderWidthRight = 1.0f, BorderWidthTop = .7f, BorderWidthLeft = 0.1f, BorderWidthBottom = 0.1f });
+                        tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)) { BorderWidthRight = 0.7f });
+                        tabla.AddCell(new PdfPCell(new Phrase("HI", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HS", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HCol", Chico)) { BorderWidthRight = 0.7f});
+                        tabla.AddCell(new PdfPCell(new Phrase("MI", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("MS", Chico)) { BorderWidthRight = 0.7f });
+                        tabla.AddCell(new PdfPCell(new Phrase("HTH", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("HTN", Chico)) { BorderWidthRight = 0.7f });
+                        tabla.AddCell(new PdfPCell(new Phrase("SIn", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("SSa", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("PT", Chico)) { BorderWidthRight = 0.7f });
+                        tabla.AddCell(new PdfPCell(new Phrase("Cantidad", Chico)));
+                        tabla.AddCell(new PdfPCell(new Phrase("Motivo", Chico)) { BorderWidthRight = 0.7f });
                         // Filas con datos
                         foreach (var sobretiempo in reporte)
                         {
                             //Fecha
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Fecha.Value.ToString("ddd dd/MM"), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Fecha.Value.ToString("ddd dd/MM"), Chico)) { BorderWidthRight = 0.7f });
                             //Hora Ingreso
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.EntradaTeorica.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)) { BorderWidthLeft = 1.0f, BorderWidthRight = 0.1f, BorderWidthBottom = 0.1f, BorderWidthTop = 0.1f  });
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.EntradaTeorica.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
                             //Hora Salida
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.SalidaTeorica.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
                             //Hora C0lación
-                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(sobretiempo.TiempoColacion.GetValueOrDefault(new TimeSpan()).Ticks).ToString("HH:mm"), Chico)) { BorderWidthRight = 1.0f, BorderWidthLeft = 0.1f, BorderWidthBottom = 0.1f, BorderWidthTop = 0.1f });
+                            tabla.AddCell(new PdfPCell(new Phrase(new DateTime(sobretiempo.TiempoColacion.GetValueOrDefault(new TimeSpan()).Ticks).ToString("HH:mm"), Chico)) { BorderWidthRight = 0.7f });
                             //Marca Ingreso
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Entrada.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
                             //Marca Salida
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Salida.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Salida.GetValueOrDefault(new DateTime()).ToString("HH:mm"), Chico)) { BorderWidthRight = 0.7f });
                             //Hora pactada por horario
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasPactadas, Chico)) { BorderWidthLeft = 1.0f, BorderWidthRight = 0.1f, BorderWidthBottom = 0.1f, BorderWidthTop = 0.1f });
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasPactadas, Chico)));
                             //horas realizadas
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasReales, Chico)) { BorderWidthRight = 1.0f, BorderWidthLeft = 0.1f, BorderWidthBottom = 0.1f, BorderWidthTop = 0.1f });
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printHorasReales, Chico)) { BorderWidthRight = 0.7f });
                             //Sobrante Ingreso
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreEntrada, Chico)));
                             //Sobrante Salida
                             tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreSalida, Chico)));
                             //P.Todo
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreTiempo, Chico)));
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.printSobreTiempo, Chico)) { BorderWidthRight = 0.7f });
                             //Cantidad
-                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)) { BorderWidthLeft = 1.0f, BorderWidthRight = 0.1f, BorderWidthBottom = 0.1f, BorderWidthTop = 0.1f });
+                            tabla.AddCell(new PdfPCell(new Phrase("", Chico)));
                             //Motivo
-                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Observacion, Chico)) { BorderWidthRight = 1.0f, BorderWidthLeft = 0.1f, BorderWidthBottom = 0.1f, BorderWidthTop = 0.1f });
+                            tabla.AddCell(new PdfPCell(new Phrase(sobretiempo.Observacion, Chico)) { BorderWidthRight = 0.7f });
                         }
 
 
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Chico)) { Colspan = 1 , Border = Rectangle.NO_BORDER});
-                        tabla.AddCell(new PdfPCell(new Phrase(" ", Chico)) { Colspan = 7, Border = Rectangle.TOP_BORDER, BorderWidthTop = 1.0f, BorderWidthBottom = 0f });
+                        tabla.AddCell(new PdfPCell(new Phrase(" ", Chico)) { Colspan = 7, Border = Rectangle.TOP_BORDER, BorderWidthRight = 0.1f });
                         // Total SobreSalida
-                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreEntrada(), Chico)) { Colspan = 1, BorderWidthLeft = 1.0f, BorderWidthRight = 0.1f, BorderWidthBottom = 1.0f, BorderWidthTop = 1f });
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreEntrada(), Chico)) { Colspan = 1, BorderWidthRight = 0.1f });
                         // Total Sobre Entrada
-                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreSalida(), Chico)) { Colspan = 1, BorderWidthBottom = 1.0f, BorderWidthTop = 1f });
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreSalida(), Chico)) { Colspan = 1 });
                         // Total Horas Extra
-                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreTiempo(), Chico)) { Colspan = 1, BorderWidthRight = 1.0f, BorderWidthLeft = 0.1f, BorderWidthBottom = 1.0f, BorderWidthTop = 1f });
+                        tabla.AddCell(new PdfPCell(new Phrase(reporte.CalculaSobreTiempo(), Chico)) { Colspan = 1, BorderWidthRight = 0.7f });
 
-                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 2, Border = Rectangle.TOP_BORDER, BorderWidthTop = 1.0f , BorderWidthBottom = 0f});
+                        tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 2, Border = Rectangle.TOP_BORDER, BorderWidthRight = 0.7f });
                         tabla.AddCell(new PdfPCell(new Phrase(" ", Normal)) { Colspan = 13, Border = Rectangle.NO_BORDER});
                         tabla.AddCell(new PdfPCell(GetFirma()) { Colspan = 13 });
                         doc.Add(tabla);

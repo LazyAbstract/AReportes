@@ -20,10 +20,10 @@ namespace Aufen.PortalReportes.Web
         
         protected void Application_Start()
         {
-            if (DateTime.Today > new DateTime(2015, 12, 24))
-            {
-                throw new NotImplementedException("Feliz navidad pendejo!!!! usted no paga pendejo");
-            }
+            //if (DateTime.Today > new DateTime(2015, 12, 24))
+            //{
+            //    throw new NotImplementedException("Feliz navidad pendejo!!!! usted no paga pendejo");
+            //}
             
             AreaRegistration.RegisterAllAreas();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
