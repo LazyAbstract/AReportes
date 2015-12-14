@@ -78,6 +78,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         informacionPersonal.AddCell(new PdfPCell(new Phrase(empleado.RutAufen, NormalNegrita)));
                         informacionPersonal.AddCell(new PdfPCell(new Phrase("Nombre:", Normal)));
                         informacionPersonal.AddCell(new PdfPCell(new Phrase(empleado.NombreCompleto, NormalNegrita)));
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase("Centro de Costos:", Normal)));
+                        informacionPersonal.AddCell(new PdfPCell(new Phrase(String.Empty, NormalNegrita)));
                         doc.Add(new Phrase());
 
                         doc.Add(informacionPersonal);

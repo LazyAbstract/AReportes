@@ -53,6 +53,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
 
                         parrafo.Add(new Paragraph("Informe de Personal Ausente (sin marcas)", Titulo) { Alignment = Element.ALIGN_CENTER });
                         parrafo.Add(new Paragraph(String.Format("Período: {0} a {1}", FechaDesde.ToShortDateString(), FechaHasta.ToShortDateString()), Normal) { Alignment = Element.ALIGN_CENTER });
+                        parrafo.Add(new Paragraph("Centro de Costos:", Normal));
+
                         doc.Add(parrafo);
                         doc.Add(new Phrase());
 
@@ -61,6 +63,7 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("Empleado", Normal)) { Colspan = 4});
                         tabla.AddCell(new PdfPCell(new Phrase("Horario", Normal)) { Colspan = 2 });
                         tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Normal)));
+
                         // 2 encabezado
                         tabla.AddCell(new PdfPCell(new Phrase("Fecha", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Rut", Chico)));
@@ -69,6 +72,8 @@ namespace Aufen.PortalReportes.Web.Models.ReportesModels
                         tabla.AddCell(new PdfPCell(new Phrase("Ing.", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Sal.", Chico)));
                         tabla.AddCell(new PdfPCell(new Phrase("Autorizaciones", Chico)));
+
+                        
 
                         var empleado = db.vw_Empleados.FirstOrDefault(x => x.IdEmpresa == empresa.Codigo &&
                             x.IdUbicacion == reporte.Key.IdDepartamento &&  x.Codigo == reporte.Key.Rut);
