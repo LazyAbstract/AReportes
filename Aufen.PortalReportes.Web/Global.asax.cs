@@ -20,9 +20,9 @@ namespace Aufen.PortalReportes.Web
         
         protected void Application_Start()
         {
-            //if (DateTime.Today > new DateTime(2015, 12, 24))
+            //if (DateTime.Today > new DateTime(2016, 4, 30))
             //{
-            //    throw new NotImplementedException("Feliz navidad pendejo!!!! usted no paga pendejo");
+            //    throw new NotImplementedException("Usted no paga pendejo!!!!");
             //}
             
             AreaRegistration.RegisterAllAreas();
