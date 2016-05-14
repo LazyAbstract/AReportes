@@ -258,8 +258,10 @@
     <Compile Include="Configuration\RutModelBinder.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CargaArchivoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
+    <Compile Include="DiccionarioCabecera\DiccionarioCabeceraHistorico.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -271,6 +273,7 @@
     <Compile Include="MapperProfile\ReportesMappers\sp_LibroAtrasosResultsp_LibroInasistenciasDTO.cs" />
     <Compile Include="MapperProfile\ReportesMappers\sp_LibroAtrasosResultsp_LibroAtrasosResultDTO.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\DTOModels\TurnoHistoricoDTO.cs" />
     <Compile Include="Models\ReportesModels\ArchivoReporteFactoria.cs" />
     <Compile Include="Models\ReportesModels\AsistenciaLegal.cs" />
     <Compile Include="Models\ReportesModels\Ausencia.cs" />
