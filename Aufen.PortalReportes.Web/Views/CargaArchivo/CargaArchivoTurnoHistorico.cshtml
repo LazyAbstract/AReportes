@@ -1,0 +1,59 @@
+﻿@model Aufen.PortalReportes.Web.Models.CargaArchivoModels.CargaArchivoTurnoHistoricoViewModel
+
+@{
+    ViewBag.Title = "Aufen - Carga Turno Históricos";
+}
+
+<div class="row">
+    <div class="col-md-11 col-md-push-1">
+        <ul>
+            <li>
+                La carga debe ser un archivo de extensión .xlsx.
+            </li>
+            <li>
+                La información a cargar debe estar en la primera hoja.
+            </li>
+            <li>
+                La carga debe hacerse con exactamente el formato especificado.
+            </li>
+        </ul>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Carga Archivos</h3>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form-carga", @class = "form-horizontal" }))
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                @Html.ValidationSummary()
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-1">
+                            @Html.LabelFor(x => x.Form.Archivo)
+                        </div>
+                        <div class="col-md-4">
+                            <input type="file" name="Form.Archivo" id="Form_Archivo" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-2 col-md-push-1">
+                            <input type="submit" value="Cargar Archivo" class="btn btn-success" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <br/>
+        @Html.ActionLink("Descargar Formato Archivo", "DescargarFormato", null, new { @class = "btn btn-primary btn-sm" })
+    </div>
+</div>

@@ -54,6 +54,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Rut.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="TipoReporte.cs" />
     <Compile Include="vw_Empleado.cs" />
     <Compile Include="vw_Ubicacione.cs" />

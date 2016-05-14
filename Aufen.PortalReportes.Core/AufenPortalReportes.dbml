@@ -34,6 +34,60 @@
       <Column Name="Descripcion" Member="Cargo" Type="System.String" DbType="Char(50)" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.HORARIOS01" Member="HORARIOS01s">
+    <Type Name="HORARIOS01">
+      <Column Name="Codigo" Type="System.String" DbType="Char(4) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Descripcion" Type="System.String" DbType="Char(50)" CanBeNull="true" />
+      <Column Name="InicioEntrada1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="FinEntrada1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="EntradaTeorica1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="ObligatorioDesde1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="InicioSalida1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="FinSalida1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="SalidaTeorica1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="ObligatorioHasta1" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="TotalPrimera" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="InicioEntrada2" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="FinEntrada2" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="EntradaTeorica2" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="ObligatorioDesde2" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="InicioSalida2" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="FinSalida2" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="SalidaTeorica2" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="ObligatorioHasta2" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="TotalSegunda" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ObligatorioIdIncidencia" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="TipoHorario" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Desde" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="Hasta" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="ControlVariante" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="JustificarIncidencias" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="JustificarIncidenciaEntrada" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="JustificarRetrasoCalendario" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="JustificarFueraHorario" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="ModoInicioIncidenciaFuera" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="ModoFinIncidenciaFuera" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="TiempoFinIncidenciaFuera" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdInterrupcion" Type="System.String" DbType="Char(2)" CanBeNull="true" />
+      <Column Name="ForzarMinimoFestivo" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="JustificarSoloSesion" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="HorarioExtendido" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="JustificarTiempoSession" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CALENDARIO01" Member="CALENDARIO01s">
+    <Type Name="CALENDARIO01">
+      <Column Name="Fecha" Type="System.String" DbType="Char(8) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Publico" Type="System.Byte" DbType="TinyInt NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdTipoDia" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+      <Column Name="IdVariante" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+      <Column Name="IdIncidencia" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="IdHorario" Type="System.String" DbType="Char(4)" CanBeNull="true" />
+      <Column Name="TipoVariante" Type="System.Byte" DbType="TinyInt" CanBeNull="true" />
+      <Column Name="Observaciones" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="IdCalendario" Type="System.String" DbType="Char(9) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+    </Type>
+  </Table>
   <Function Name="dbo.sp_LibroInasistencia" Method="sp_LibroInasistencia">
     <Parameter Name="fechaInicio" Type="System.String" DbType="VarChar(9)" />
     <Parameter Name="fechaFin" Type="System.String" DbType="VarChar(9)" />
