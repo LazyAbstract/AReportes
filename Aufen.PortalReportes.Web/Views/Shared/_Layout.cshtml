@@ -98,6 +98,14 @@
                                     <li>@Html.ActionLink("Reportes Asistencia", "ListarReporte", "Reportes")</li>
                                 </ul>
                             </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Administración<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Carga Turno Histórico", "CargaArchivoTurnoHistorico", "CargaArchivo")</li>
+                                </ul>
+                            </li>
                             @if (Request.IsAuthenticated)
                             {
                                 <li>

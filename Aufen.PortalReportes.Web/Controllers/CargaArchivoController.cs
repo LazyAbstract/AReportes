@@ -64,6 +64,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                     reglas.Add(new FechaHastaFormatoValidacion());
                     reglas.Add(new HorarioExisteValidacion());
                     reglas.Add(new HorarioRequeridoValidacion());
+                    reglas.Add(new FechaDesdeMenorFechaHastaValidacion());
                     CargadorExcelGenerico cargador = new CargadorExcelGenerico(libro, diccionario, reglas);
                     cargador.ValidarEncabezado();
 
@@ -72,7 +73,6 @@ namespace Aufen.PortalReportes.Web.Controllers
                         IEnumerable<TurnoHistoricoDTO> resultados =
                                 cargador.CargarArchivo<TurnoHistoricoDTO>();
 
-                        //  TODO: insertar en tabla turnohistorico
                         foreach (var resultado in resultados)
                         {
                             var empleado = db.Fn_DatosEmpleado(resultado.IdHorario, resultado.Rut, resultado.IdCalendario)
@@ -98,10 +98,10 @@ namespace Aufen.PortalReportes.Web.Controllers
                                     IdEmpleadoCalendarioHorariosHistorico01 = Guid.NewGuid(),
                                     CodigoEmpleado = empleado.CodigoEmpleado,
                                     CodigoHorario = resultado.IdHorario,
-                                    IdCalendario = resultado.IdCalendario
-                                    ,FechaCreacion = DateTime.Now
-                                     , FechaDesde= resultado.FechaDesdeAsDateTime.Value
-                                     , FechaHasta = resultado.FechaHastaAsDateTime.Value
+                                    IdCalendario = resultado.IdCalendario,
+                                    FechaCreacion = DateTime.Now,
+                                    FechaDesde= resultado.FechaDesdeAsDateTime.Value,
+                                    FechaHasta = resultado.FechaHastaAsDateTime.Value,
                                 });
                                 //Ordeno por Fecha desde
                                 insercion = insercion.OrderByDescending(x=> x.FechaDesde).ToList();

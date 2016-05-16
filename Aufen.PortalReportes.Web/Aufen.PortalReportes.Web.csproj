@@ -298,6 +298,7 @@
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\CalendarioExisteValidacion.cs" />
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\CalendarioRequeridoValidacion.cs" />
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\FechaDesdeFormatoValidacion.cs" />
+    <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\FechaDesdeMenorFechaHastaValidacion.cs" />
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\FechaDesdeRequeridoValidacion.cs" />
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\FechaHastaFormatoValidacion.cs" />
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\HorarioExisteValidacion.cs" />
