@@ -39,10 +39,13 @@ namespace Aufen.PortalReportes.Core
     partial void InsertCALENDARIO01(CALENDARIO01 instance);
     partial void UpdateCALENDARIO01(CALENDARIO01 instance);
     partial void DeleteCALENDARIO01(CALENDARIO01 instance);
+    partial void InsertEmpleadoCalendarioHorariosHistorico01(EmpleadoCalendarioHorariosHistorico01 instance);
+    partial void UpdateEmpleadoCalendarioHorariosHistorico01(EmpleadoCalendarioHorariosHistorico01 instance);
+    partial void DeleteEmpleadoCalendarioHorariosHistorico01(EmpleadoCalendarioHorariosHistorico01 instance);
     #endregion
 		
 		public AufenPortalReportesDataContext() : 
-				base(global::Aufen.PortalReportes.Core.Properties.Settings.Default.ZkTimeEnterpriseConnectionString2, mappingSource)
+				base(global::Aufen.PortalReportes.Core.Properties.Settings.Default.ZkTimeEnterpriseConnectionString3, mappingSource)
 		{
 			OnCreated();
 		}
@@ -111,6 +114,14 @@ namespace Aufen.PortalReportes.Core
 			}
 		}
 		
+		public System.Data.Linq.Table<EmpleadoCalendarioHorariosHistorico01> EmpleadoCalendarioHorariosHistorico01s
+		{
+			get
+			{
+				return this.GetTable<EmpleadoCalendarioHorariosHistorico01>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_LibroInasistencia")]
 		public ISingleResult<sp_LibroInasistenciaResult> sp_LibroInasistencia([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(9)")] string fechaInicio, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(9)")] string fechaFin, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string num, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(2)")] string depto, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(9)")] string rut)
 		{
@@ -123,6 +134,12 @@ namespace Aufen.PortalReportes.Core
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), fechaInicio, fechaFin, num, depto, rut);
 			return ((ISingleResult<sp_LibroAsistenciaResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.Fn_DatosEmpleado", IsComposable=true)]
+		public IQueryable<Fn_DatosEmpleadoResult> Fn_DatosEmpleado([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(255)")] string turno, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(255)")] string rut, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(255)")] string calendario)
+		{
+			return this.CreateMethodCallQuery<Fn_DatosEmpleadoResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), turno, rut, calendario);
 		}
 	}
 	
@@ -1812,6 +1829,236 @@ namespace Aufen.PortalReportes.Core
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EmpleadoCalendarioHorariosHistorico01")]
+	public partial class EmpleadoCalendarioHorariosHistorico01 : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _IdEmpleadoCalendarioHorariosHistorico01;
+		
+		private string _CodigoEmpleado;
+		
+		private string _CodigoHorario;
+		
+		private string _IdCalendario;
+		
+		private System.DateTime _FechaDesde;
+		
+		private System.Nullable<System.DateTime> _FechaHasta;
+		
+		private System.DateTime _FechaCreacion;
+		
+		private string _Donde;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdEmpleadoCalendarioHorariosHistorico01Changing(System.Guid value);
+    partial void OnIdEmpleadoCalendarioHorariosHistorico01Changed();
+    partial void OnCodigoEmpleadoChanging(string value);
+    partial void OnCodigoEmpleadoChanged();
+    partial void OnCodigoHorarioChanging(string value);
+    partial void OnCodigoHorarioChanged();
+    partial void OnIdCalendarioChanging(string value);
+    partial void OnIdCalendarioChanged();
+    partial void OnFechaDesdeChanging(System.DateTime value);
+    partial void OnFechaDesdeChanged();
+    partial void OnFechaHastaChanging(System.Nullable<System.DateTime> value);
+    partial void OnFechaHastaChanged();
+    partial void OnFechaCreacionChanging(System.DateTime value);
+    partial void OnFechaCreacionChanged();
+    partial void OnDondeChanging(string value);
+    partial void OnDondeChanged();
+    #endregion
+		
+		public EmpleadoCalendarioHorariosHistorico01()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdEmpleadoCalendarioHorariosHistorico01", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+		public System.Guid IdEmpleadoCalendarioHorariosHistorico01
+		{
+			get
+			{
+				return this._IdEmpleadoCalendarioHorariosHistorico01;
+			}
+			set
+			{
+				if ((this._IdEmpleadoCalendarioHorariosHistorico01 != value))
+				{
+					this.OnIdEmpleadoCalendarioHorariosHistorico01Changing(value);
+					this.SendPropertyChanging();
+					this._IdEmpleadoCalendarioHorariosHistorico01 = value;
+					this.SendPropertyChanged("IdEmpleadoCalendarioHorariosHistorico01");
+					this.OnIdEmpleadoCalendarioHorariosHistorico01Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CodigoEmpleado", DbType="Char(9) NOT NULL", CanBeNull=false)]
+		public string CodigoEmpleado
+		{
+			get
+			{
+				return this._CodigoEmpleado;
+			}
+			set
+			{
+				if ((this._CodigoEmpleado != value))
+				{
+					this.OnCodigoEmpleadoChanging(value);
+					this.SendPropertyChanging();
+					this._CodigoEmpleado = value;
+					this.SendPropertyChanged("CodigoEmpleado");
+					this.OnCodigoEmpleadoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CodigoHorario", DbType="Char(4) NOT NULL", CanBeNull=false)]
+		public string CodigoHorario
+		{
+			get
+			{
+				return this._CodigoHorario;
+			}
+			set
+			{
+				if ((this._CodigoHorario != value))
+				{
+					this.OnCodigoHorarioChanging(value);
+					this.SendPropertyChanging();
+					this._CodigoHorario = value;
+					this.SendPropertyChanged("CodigoHorario");
+					this.OnCodigoHorarioChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdCalendario", DbType="Char(9) NOT NULL", CanBeNull=false)]
+		public string IdCalendario
+		{
+			get
+			{
+				return this._IdCalendario;
+			}
+			set
+			{
+				if ((this._IdCalendario != value))
+				{
+					this.OnIdCalendarioChanging(value);
+					this.SendPropertyChanging();
+					this._IdCalendario = value;
+					this.SendPropertyChanged("IdCalendario");
+					this.OnIdCalendarioChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaDesde", DbType="DateTime NOT NULL")]
+		public System.DateTime FechaDesde
+		{
+			get
+			{
+				return this._FechaDesde;
+			}
+			set
+			{
+				if ((this._FechaDesde != value))
+				{
+					this.OnFechaDesdeChanging(value);
+					this.SendPropertyChanging();
+					this._FechaDesde = value;
+					this.SendPropertyChanged("FechaDesde");
+					this.OnFechaDesdeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaHasta", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FechaHasta
+		{
+			get
+			{
+				return this._FechaHasta;
+			}
+			set
+			{
+				if ((this._FechaHasta != value))
+				{
+					this.OnFechaHastaChanging(value);
+					this.SendPropertyChanging();
+					this._FechaHasta = value;
+					this.SendPropertyChanged("FechaHasta");
+					this.OnFechaHastaChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FechaCreacion", DbType="DateTime NOT NULL")]
+		public System.DateTime FechaCreacion
+		{
+			get
+			{
+				return this._FechaCreacion;
+			}
+			set
+			{
+				if ((this._FechaCreacion != value))
+				{
+					this.OnFechaCreacionChanging(value);
+					this.SendPropertyChanging();
+					this._FechaCreacion = value;
+					this.SendPropertyChanged("FechaCreacion");
+					this.OnFechaCreacionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Donde", DbType="VarChar(50)")]
+		public string Donde
+		{
+			get
+			{
+				return this._Donde;
+			}
+			set
+			{
+				if ((this._Donde != value))
+				{
+					this.OnDondeChanging(value);
+					this.SendPropertyChanging();
+					this._Donde = value;
+					this.SendPropertyChanged("Donde");
+					this.OnDondeChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
 	public partial class sp_LibroInasistenciaResult
 	{
 		
@@ -2309,6 +2556,68 @@ namespace Aufen.PortalReportes.Core
 				if ((this._EsPermiso != value))
 				{
 					this._EsPermiso = value;
+				}
+			}
+		}
+	}
+	
+	public partial class Fn_DatosEmpleadoResult
+	{
+		
+		private string _CodigoEmpleado;
+		
+		private string _CodigoHorario;
+		
+		private string _IdCalendario;
+		
+		public Fn_DatosEmpleadoResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CodigoEmpleado", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string CodigoEmpleado
+		{
+			get
+			{
+				return this._CodigoEmpleado;
+			}
+			set
+			{
+				if ((this._CodigoEmpleado != value))
+				{
+					this._CodigoEmpleado = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CodigoHorario", DbType="VarChar(255)")]
+		public string CodigoHorario
+		{
+			get
+			{
+				return this._CodigoHorario;
+			}
+			set
+			{
+				if ((this._CodigoHorario != value))
+				{
+					this._CodigoHorario = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IdCalendario", DbType="VarChar(255)")]
+		public string IdCalendario
+		{
+			get
+			{
+				return this._IdCalendario;
+			}
+			set
+			{
+				if ((this._IdCalendario != value))
+				{
+					this._IdCalendario = value;
 				}
 			}
 		}

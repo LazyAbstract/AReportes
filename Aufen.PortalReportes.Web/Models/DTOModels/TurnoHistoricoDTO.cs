@@ -12,5 +12,31 @@ namespace Aufen.PortalReportes.Web.Models.DTOModels
         public string IdCalendario { get; set; }
         public string FechaDesde { get; set; }
         public string FechaHasta { get; set; }
+
+        public DateTime? FechaHastaAsDateTime
+        {
+            get
+            {
+                DateTime buffer = DateTime.Now;
+                if (DateTime.TryParse(FechaHasta, out buffer))
+                {
+                    return buffer;
+                }
+                return null;
+            }
+        }
+
+        public DateTime? FechaDesdeAsDateTime
+        {
+            get
+            {
+                DateTime buffer = DateTime.Now;
+                if (DateTime.TryParse(FechaDesde, out buffer))
+                {
+                    return buffer;
+                }
+                return null;
+            }
+        }
     }
 }

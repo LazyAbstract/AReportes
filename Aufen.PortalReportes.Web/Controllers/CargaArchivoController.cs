@@ -1,4 +1,5 @@
-﻿using Aufen.PortalReportes.Web.Models.CargaArchivoModels;
+﻿using Aufen.PortalReportes.Core;
+using Aufen.PortalReportes.Web.Models.CargaArchivoModels;
 using Aufen.PortalReportes.Web.Models.DTOModels;
 using Aufen.PortalReportes.Web.Models.ReglaValidacionModels;
 using Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionTurnoHistoricoModels;
@@ -68,11 +69,86 @@ namespace Aufen.PortalReportes.Web.Controllers
 
                     if (cargador.EsEncabezadoValido)
                     {
-                        IEnumerable<TurnoHistoricoDTO> resultado =
+                        IEnumerable<TurnoHistoricoDTO> resultados =
                                 cargador.CargarArchivo<TurnoHistoricoDTO>();
 
                         //  TODO: insertar en tabla turnohistorico
-
+                        foreach (var resultado in resultados)
+                        {
+                            var empleado = db.Fn_DatosEmpleado(resultado.IdHorario, resultado.Rut, resultado.IdCalendario)
+                                .FirstOrDefault();
+                            if (empleado != null && resultado.FechaHastaAsDateTime.HasValue && resultado.FechaDesdeAsDateTime.HasValue)
+                            {
+                                var empleadoCalendarioHorariosHistorico01s = db.EmpleadoCalendarioHorariosHistorico01s
+                                    .Where(x => x.CodigoEmpleado == empleado.CodigoEmpleado &&
+                                    x.FechaDesde < resultado.FechaHastaAsDateTime.Value &&
+                                    (!x.FechaHasta.HasValue || 
+                                        (x.FechaHasta.HasValue && x.FechaHasta.Value > resultado.FechaDesdeAsDateTime))
+                                    ).ToList();// si existe el empleado deberia al menos tener un registro con ultima fecha null
+                                // Elimino las antiguas pera no tener problemas
+                                db.EmpleadoCalendarioHorariosHistorico01s.DeleteAllOnSubmit(empleadoCalendarioHorariosHistorico01s);
+                                // Ahora  omito las que quedan dentro del intervalo que quiero insertar desde el excel, es >= y <= ya que podria querer agregar el mismo registro y lo omito tambien para evitar duplicados
+                                List<EmpleadoCalendarioHorariosHistorico01> insercion = empleadoCalendarioHorariosHistorico01s.Where(x=>!(
+                                    x.FechaDesde >= resultado.FechaDesdeAsDateTime && 
+                                    x.FechaHasta <= resultado.FechaHastaAsDateTime.Value))
+                                    .ToList();
+                                // Agrego el que quiero insertar desde el excel
+                                insercion.Add(new EmpleadoCalendarioHorariosHistorico01()
+                                {
+                                    IdEmpleadoCalendarioHorariosHistorico01 = Guid.NewGuid(),
+                                    CodigoEmpleado = empleado.CodigoEmpleado,
+                                    CodigoHorario = resultado.IdHorario,
+                                    IdCalendario = resultado.IdCalendario
+                                    ,FechaCreacion = DateTime.Now
+                                     , FechaDesde= resultado.FechaDesdeAsDateTime.Value
+                                     , FechaHasta = resultado.FechaHastaAsDateTime.Value
+                                });
+                                //Ordeno por Fecha desde
+                                insercion = insercion.OrderByDescending(x=> x.FechaDesde).ToList();
+                                // agrego el que tiene fecha hasta null
+                                EmpleadoCalendarioHorariosHistorico01 bufferInsercion = insercion.First();
+                                db.EmpleadoCalendarioHorariosHistorico01s.InsertOnSubmit(new EmpleadoCalendarioHorariosHistorico01() { 
+                                    IdEmpleadoCalendarioHorariosHistorico01 = Guid.NewGuid(),
+                                    FechaHasta = null,
+                                    FechaDesde = bufferInsercion.FechaDesde,
+                                    FechaCreacion = bufferInsercion.FechaCreacion,
+                                    CodigoEmpleado = bufferInsercion.CodigoEmpleado,
+                                    IdCalendario = bufferInsercion.IdCalendario,
+                                    CodigoHorario = bufferInsercion.CodigoHorario,
+                                    Donde = ""
+                                });
+                                foreach (var insertar in insercion.Skip(1))
+                                {
+                                    EmpleadoCalendarioHorariosHistorico01 bufferInsertar = new EmpleadoCalendarioHorariosHistorico01()
+                                    {
+                                        IdEmpleadoCalendarioHorariosHistorico01 = Guid.NewGuid(),
+                                        FechaDesde = insertar.FechaDesde,
+                                        FechaHasta = insertar.FechaHasta,
+                                        FechaCreacion = insertar.FechaCreacion,
+                                         CodigoEmpleado = insertar.CodigoEmpleado, 
+                                         IdCalendario = insertar.IdCalendario, 
+                                         CodigoHorario = insertar.CodigoHorario, 
+                                         Donde = ""
+                                    };
+                                    // Me aseguro de conservar el intervalo proeniente del excel como corresponde
+                                    if (bufferInsertar.FechaDesde > resultado.FechaDesdeAsDateTime.Value &&
+                                        bufferInsertar.FechaDesde < resultado.FechaHastaAsDateTime.Value)
+                                    {
+                                        bufferInsertar.FechaDesde = resultado.FechaHastaAsDateTime.Value.AddDays(1);
+                                    }
+                                    // seteo la fecha hasta hasta el intervalo que viene adelante
+                                    bufferInsertar.FechaHasta = bufferInsercion.FechaDesde.AddDays(-1);
+                                    if (bufferInsertar.FechaHasta >= insertar.FechaDesde)
+                                    {
+                                        // porsiaca, para no insertar intervalos invalidos
+                                        db.EmpleadoCalendarioHorariosHistorico01s.InsertOnSubmit(bufferInsertar);
+                                    }
+                                    bufferInsercion = insertar;
+                                }
+                            }
+                            db.SubmitChanges();
+                        }
+                        
                         if (!cargador.EsArchivoValido)
                         {
                             MemoryStream salidaExcel = new MemoryStream();
