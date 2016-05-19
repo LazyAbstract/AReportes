@@ -31,6 +31,11 @@ namespace Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionT
                 validacion = false;
                 MensajeError = "El calendario no puede ser vacío"; 
             }
+            else if(dto.IdCalendario.Length != 9)
+            {
+                validacion = false;
+                MensajeError = "El calendario no puede tener menos de 9 carateres."; 
+            }
             return validacion;
         }
     }

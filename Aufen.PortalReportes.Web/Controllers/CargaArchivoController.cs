@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 
@@ -97,7 +98,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                                 {
                                     IdEmpleadoCalendarioHorariosHistorico01 = Guid.NewGuid(),
                                     CodigoEmpleado = empleado.CodigoEmpleado,
-                                    CodigoHorario = resultado.IdHorario,
+                                    CodigoHorario = ("0000" + resultado.IdHorario).Right(4),
                                     IdCalendario = resultado.IdCalendario,
                                     FechaCreacion = DateTime.Now,
                                     FechaDesde= resultado.FechaDesdeAsDateTime.Value,
@@ -114,7 +115,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                                     FechaCreacion = bufferInsercion.FechaCreacion,
                                     CodigoEmpleado = bufferInsercion.CodigoEmpleado,
                                     IdCalendario = bufferInsercion.IdCalendario,
-                                    CodigoHorario = bufferInsercion.CodigoHorario,
+                                    CodigoHorario = ("0000" + bufferInsercion.CodigoHorario).Right(4),
                                     Donde = ""
                                 });
                                 foreach (var insertar in insercion.Skip(1))
@@ -127,7 +128,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                                         FechaCreacion = insertar.FechaCreacion,
                                          CodigoEmpleado = insertar.CodigoEmpleado, 
                                          IdCalendario = insertar.IdCalendario, 
-                                         CodigoHorario = insertar.CodigoHorario, 
+                                         CodigoHorario = ("0000" + insertar.CodigoHorario).Right(4), 
                                          Donde = ""
                                     };
                                     // Me aseguro de conservar el intervalo proeniente del excel como corresponde
@@ -177,7 +178,8 @@ namespace Aufen.PortalReportes.Web.Controllers
 
         public ActionResult DescargarFormato()
         {
-            throw new NotImplementedException();
+            String path = HttpContext.Server.MapPath("~/Content/Estructura Carga Historico.xlsx");
+            return File(path, MediaTypeNames.Text.Plain, "Estructura Carga Historico.xlsx");
         }
     }
 }
