@@ -2,6 +2,7 @@
 using Aufen.PortalReportes.Web.Models.CargaArchivoModels;
 using Aufen.PortalReportes.Web.Models.DTOModels;
 using Aufen.PortalReportes.Web.Models.ReglaValidacionModels;
+using Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionIncidenciaHistoricoModels;
 using Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionTurnoHistoricoModels;
 using NPOI.XSSF.UserModel;
 using System;
@@ -57,7 +58,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                     }
 
                     List<IReglaValidacion> reglas = new List<IReglaValidacion>();
-                    reglas.Add(new RutRequeridoValidacion());
+                    reglas.Add(new Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionTurnoHistoricoModels.RutRequeridoValidacion());
                     reglas.Add(new CalendarioRequeridoValidacion());
                     reglas.Add(new CalendarioExisteValidacion());
                     reglas.Add(new FechaDesdeFormatoValidacion());
@@ -180,6 +181,101 @@ namespace Aufen.PortalReportes.Web.Controllers
         {
             String path = HttpContext.Server.MapPath("~/Content/Estructura Carga Historico.xlsx");
             return File(path, MediaTypeNames.Text.Plain, "Estructura Carga Historico.xlsx");
+        }
+
+        public ActionResult CargaArchivoIncidenciaHistorico()
+        {
+            CargaArchivoIncidenciaHistoricoViewModel model =
+                new CargaArchivoIncidenciaHistoricoViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CargaArchivoIncidenciaHistorico(CargaArchivoIncidenciaHistoricoFormModel Form)
+        {
+            CargaArchivoIncidenciaHistoricoViewModel model = new CargaArchivoIncidenciaHistoricoViewModel(Form);
+            Dictionary<string, string> diccionario = DiccionarioCabecera.DiccionarioCabeceraIncidencia.GetDiccionarioIncidenciaHistorico();
+            if (diccionario == null || (diccionario != null && !diccionario.Any()))
+            {
+                ModelState.AddModelError("Form.Archivo", "No se puede reconocer la estrucutra del archivo.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                int largo = Form.Archivo.ContentLength;
+                byte[] buffer = new byte[largo];
+                Form.Archivo.InputStream.Read(buffer, 0, largo);
+                using (MemoryStream ms = new MemoryStream(buffer))
+                {
+                    XSSFWorkbook libro = null;
+                    var stream = Form.Archivo.InputStream;
+                    try
+                    {
+                        libro = new XSSFWorkbook(ms);
+                    }
+                    catch
+                    {
+                        ModelState.AddModelError(String.Empty, "Formato de achivo incorrecto.");
+                        return View(model);
+                    }
+
+                    List<IReglaValidacion> reglas = new List<IReglaValidacion>();
+                    reglas.Add(new FechaCorrectaValidacion());
+                    reglas.Add(new IncidenciaExisteValidacion());
+                    reglas.Add(new Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionIncidenciaHistoricoModels.RutRequeridoValidacion());
+                    reglas.Add(new RutExisteValidacion());
+                    reglas.Add(new TipoDiaExisteValidacion());
+                    reglas.Add(new LlaveUnicaValidacion());
+                    CargadorExcelGenerico cargador = new CargadorExcelGenerico(libro, diccionario, reglas);
+                    cargador.ValidarEncabezado();
+
+                    if (cargador.EsEncabezadoValido)
+                    {
+                        IEnumerable<IncidenciaHistoricoDTO> resultados =
+                                cargador.CargarArchivo<IncidenciaHistoricoDTO>();
+                        foreach (var resultado in resultados)
+                        {
+                            DateTime _fecha = DateTime.Parse(resultado.Fecha);
+                            CALENDARIO01 calendario = new CALENDARIO01()
+                            {
+                                Fecha = _fecha.Year.ToString() + ("0" + _fecha.Month.ToString()).Right(2) + ("0" + _fecha.Day.ToString()).Right(2),
+                                Publico = 0,
+                                IdTipoDia = Convert.ToChar(resultado.IdTipoDia),
+                                IdIncidencia = ("0000" + resultado.IdIncidencia).Right(4),
+                                IdCalendario = ("000000000" + resultado.Rut).Right(9),
+                            };
+                        }
+
+                        if (!cargador.EsArchivoValido)
+                        {
+                            MemoryStream salidaExcel = new MemoryStream();
+                            var salida = cargador.GetSalida();
+                            salida.Write(salidaExcel);
+                            return File(salidaExcel.ToArray(),
+                                "application/vnd.ms-excel",
+                                "Errores_" + DateTime.Now.ToString("dd-MM-yyyy") + ".xlsx");
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in cargador.GetErroresEncabezado)
+                        {
+                            ModelState.AddModelError(String.Empty, item);
+                        }
+                        return View(model);
+                    }
+                }
+                Mensaje = "El proceso de carga ha finalizado exitosamente.";
+                return RedirectToAction("ListarReporte", "Reportes");
+            }
+            Mensaje = "Ha ocurrido un problema con el proceso de carga.";
+            return View(model);
+        }
+
+        public ActionResult DescargarFormatoIncidencia()
+        {
+            String path = HttpContext.Server.MapPath("~/Content/Estructura Carga Incidencia.xlsx");
+            return File(path, MediaTypeNames.Text.Plain, "Estructura Carga Incidencia.xlsx");
         }
     }
 }

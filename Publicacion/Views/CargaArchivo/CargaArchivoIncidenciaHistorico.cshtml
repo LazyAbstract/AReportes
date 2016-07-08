@@ -1,7 +1,7 @@
-﻿@model Aufen.PortalReportes.Web.Models.CargaArchivoModels.CargaArchivoTurnoHistoricoViewModel
+﻿@model Aufen.PortalReportes.Web.Models.CargaArchivoModels.CargaArchivoIncidenciaHistoricoViewModel
 
 @{
-    ViewBag.Title = "Aufen - Carga Turno Históricos";
+    ViewBag.Title = "Aufen - Carga Archivo Incidencia Histórico";
 }
 
 <div class="row">
@@ -24,7 +24,7 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Carga Archivos Turno Histórico</h3>
+                <h3 class="panel-title">Carga Archivos Incidencias Histórico</h3>
             </div>
             <div class="panel-body">
                 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form-carga", @class = "form-horizontal" }))
@@ -53,7 +53,7 @@
                 }
             </div>
         </div>
-        <br/>
-        @Html.ActionLink("Descargar Formato Archivo", "DescargarFormato", null, new { @class = "btn btn-primary btn-sm" })
+        <br />
+        @Html.ActionLink("Descargar Formato Archivo", "DescargarFormatoIncidencia", null, new { @class = "btn btn-primary btn-sm" })
     </div>
 </div>

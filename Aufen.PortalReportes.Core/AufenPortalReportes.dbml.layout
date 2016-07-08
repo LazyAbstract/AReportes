@@ -1,41 +1,119 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 12.75" name="AufenPortalReportes">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 24.25" name="AufenPortalReportes">
   <DataContextMoniker Name="/AufenPortalReportesDataContext" />
   <nestedChildShapes>
-    <classShape Id="75839f86-25b6-4e1e-95bf-76cc3e040339" absoluteBounds="1.5, 3.875, 2, 1.3862939453125">
+    <classShape Id="75839f86-25b6-4e1e-95bf-76cc3e040339" absoluteBounds="0.5, 3.875, 2, 1.3862939453125">
       <DataClassMoniker Name="/AufenPortalReportesDataContext/vw_Ubicacione" />
       <nestedChildShapes>
-        <elementListCompartment Id="98ceaa66-4abc-47ce-990b-eb5dc631b1b1" absoluteBounds="1.5150000000000001, 4.335, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="98ceaa66-4abc-47ce-990b-eb5dc631b1b1" absoluteBounds="0.51500000000000012, 4.335, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="7bb3873e-d3e9-4e0a-9af4-cc0b93b7ddbe" absoluteBounds="0.875, 0.875, 2, 2.5401025390625">
+    <classShape Id="7bb3873e-d3e9-4e0a-9af4-cc0b93b7ddbe" absoluteBounds="0.5, 0.5, 2, 2.5401025390625">
       <DataClassMoniker Name="/AufenPortalReportesDataContext/EMPRESA" />
       <nestedChildShapes>
-        <elementListCompartment Id="59c0a2ab-b7d1-4dc0-bc71-de463294acae" absoluteBounds="0.89, 1.335, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="59c0a2ab-b7d1-4dc0-bc71-de463294acae" absoluteBounds="0.515, 0.96, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="f2a6a63e-cdae-4bc4-b21a-a0d0b8960342" absoluteBounds="4.125, 1.125, 2, 2.7324039713541666">
+    <classShape Id="f2a6a63e-cdae-4bc4-b21a-a0d0b8960342" absoluteBounds="3, 0.5, 2, 2.7324039713541666">
       <DataClassMoniker Name="/AufenPortalReportesDataContext/vw_Empleado" />
       <nestedChildShapes>
-        <elementListCompartment Id="0cdfee0d-02da-48f7-8149-a12a157ab1fe" absoluteBounds="4.1400000000000006, 1.585, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="0cdfee0d-02da-48f7-8149-a12a157ab1fe" absoluteBounds="3.0150000000000006, 0.96, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="b6923eff-da5f-4181-847c-f11e975073bd" absoluteBounds="3.75, 4.625, 2, 7.9245426432291648">
+    <classShape Id="b6923eff-da5f-4181-847c-f11e975073bd" absoluteBounds="2.875, 3.5, 2, 7.9245426432291648">
       <DataClassMoniker Name="/AufenPortalReportesDataContext/HORARIOS01" />
       <nestedChildShapes>
-        <elementListCompartment Id="c8140780-c209-4fb5-8861-624d289b27d2" absoluteBounds="3.7649999999999997, 5.085, 1.9700000000000002, 7.3645426432291661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="c8140780-c209-4fb5-8861-624d289b27d2" absoluteBounds="2.8899999999999997, 3.96, 1.9700000000000002, 7.3645426432291661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="1b9a22e2-aa9f-4516-b4a6-03419343d818" absoluteBounds="6.5, 0.5, 2, 2.5401025390625">
+    <classShape Id="1b9a22e2-aa9f-4516-b4a6-03419343d818" absoluteBounds="5.375, 0.5, 2, 2.5401025390625">
       <DataClassMoniker Name="/AufenPortalReportesDataContext/CALENDARIO01" />
       <nestedChildShapes>
-        <elementListCompartment Id="b29195da-df22-4d0b-93c9-896049013a4b" absoluteBounds="6.5150000000000006, 0.96, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="b29195da-df22-4d0b-93c9-896049013a4b" absoluteBounds="5.3900000000000006, 0.96, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="c701605b-c962-4bee-ae4c-8812d92fe814" absoluteBounds="5.875, 4.375, 2, 2.3478011067708335">
+    <classShape Id="c701605b-c962-4bee-ae4c-8812d92fe814" absoluteBounds="5.125, 3.75, 3, 2.3478011067708335">
       <DataClassMoniker Name="/AufenPortalReportesDataContext/EmpleadoCalendarioHorariosHistorico01" />
       <nestedChildShapes>
-        <elementListCompartment Id="8f0291b0-795d-4c88-b80e-4f1b4958e79d" absoluteBounds="5.89, 4.835, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="8f0291b0-795d-4c88-b80e-4f1b4958e79d" absoluteBounds="5.14, 4.21, 2.9699999999999998, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="33823834-9731-4cdf-8558-7a174c9a9ea2" absoluteBounds="7.75, 0.625, 2, 2.5401025390625">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/CALENDARIO02" />
+      <nestedChildShapes>
+        <elementListCompartment Id="949aec67-4d12-46bb-b829-58fb3b887ce1" absoluteBounds="7.7650000000000006, 1.085, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="44e584e1-6e80-4e84-96ea-ce6d5723620f" absoluteBounds="8.25, 3.375, 2, 2.5401025390625">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/CALENDARIO03" />
+      <nestedChildShapes>
+        <elementListCompartment Id="638e7e60-ceab-4a7c-8dbd-cf2a9d7df68a" absoluteBounds="8.265, 3.835, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="b2890429-0110-4191-aa76-72e6a38000b6" absoluteBounds="4.625, 12.125, 2, 6.7707340494791657">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/EMPLEADOS01" />
+      <nestedChildShapes>
+        <elementListCompartment Id="efde384d-1b25-4076-8468-1192cd17a290" absoluteBounds="4.64, 12.585, 1.9700000000000002, 6.2107340494791661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="15c867ec-c7c3-46f7-a7d2-1a3a5c41c121" absoluteBounds="7.125, 10.375, 2, 6.7707340494791657">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/EMPLEADOS02" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c353182a-9435-436c-8fce-081705ea0210" absoluteBounds="7.14, 10.835, 1.9700000000000002, 6.2107340494791661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="80f682b1-e329-4e72-afee-08f360cc5bb7" absoluteBounds="2.25, 12, 2, 6.7707340494791657">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/EMPLEADOS03" />
+      <nestedChildShapes>
+        <elementListCompartment Id="0a303974-5328-4fcb-b660-80afa85eb1a4" absoluteBounds="2.265, 12.46, 1.9700000000000002, 6.2107340494791661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="719a8854-2266-4617-b1ad-46367391fc6f" absoluteBounds="0.5, 18.875, 2, 1.3862939453125">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/TIPO_DIA01" />
+      <nestedChildShapes>
+        <elementListCompartment Id="dabc2686-f203-42d0-8614-3a13be7a5727" absoluteBounds="0.51499999999999968, 19.335, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="8dc0770d-9613-4acf-928f-613bb19db324" absoluteBounds="6.75, 18.25, 2, 1.3862939453125">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/TIPO_DIA02" />
+      <nestedChildShapes>
+        <elementListCompartment Id="7f5d98c6-c4ed-4f2f-a3d0-78e47670bda9" absoluteBounds="6.765, 18.71, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="cc91a2e9-abd1-4b93-bd40-c7b822162f20" absoluteBounds="0.5, 17.625, 2, 1.3862939453125">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/TIPO_DIA03" />
+      <nestedChildShapes>
+        <elementListCompartment Id="402fcb2d-560c-4920-9388-27538766d5a9" absoluteBounds="0.51500000000000012, 18.085, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="e5932722-b12b-4247-bfaa-32991ccbcd8e" absoluteBounds="1.25, 8.625, 2, 7.9245426432291648">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/HORARIOS02" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e1f83f10-9e82-415f-9172-75ab851b113f" absoluteBounds="1.2650000000000001, 9.085, 1.9700000000000002, 7.3645426432291661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="73f24705-5803-477e-ba0c-99ecff4fbbea" absoluteBounds="5, 9, 2, 7.9245426432291648">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/HORARIOS03" />
+      <nestedChildShapes>
+        <elementListCompartment Id="a045b1fb-833c-4175-952e-70123ec67d10" absoluteBounds="5.015, 9.46, 1.9700000000000002, 7.3645426432291661" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="ee66b2d3-b441-4ecf-8050-0cc8fa1a7061" absoluteBounds="3.375, 20.375, 2, 2.9247054036458331">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/INCIDENCIAS01" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b3c79cc6-7f86-4115-b7b2-a5e29bd15b3a" absoluteBounds="3.39, 20.835, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="f018140a-041c-46b5-8b19-78efad3b25fd" absoluteBounds="6, 20.625, 2, 2.9247054036458331">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/INCIDENCIAS02" />
+      <nestedChildShapes>
+        <elementListCompartment Id="996ea6bd-328d-450a-8dfe-62123ac28b47" absoluteBounds="6.015, 21.085, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="0170925a-2c53-4c20-8c11-eaef0d9b5435" absoluteBounds="1.25, 21.125, 2, 2.9247054036458331">
+      <DataClassMoniker Name="/AufenPortalReportesDataContext/INCIDENCIAS03" />
+      <nestedChildShapes>
+        <elementListCompartment Id="4c088109-abc5-4be4-a46c-f766adacd49f" absoluteBounds="1.2650000000000001, 21.585, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

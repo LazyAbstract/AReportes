@@ -5,8 +5,8 @@ using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using DotNetOpenAuth.AspNet;
-using Microsoft.Web.WebPages.OAuth;
+//using DotNetOpenAuth.AspNet;
+//using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using Aufen.PortalReportes.Web.Filters;
 using Aufen.PortalReportes.Web.Models;
@@ -125,80 +125,80 @@ namespace Aufen.PortalReportes.Web.Controllers
         //
         // GET: /Account/Manage
 
-        public ActionResult Manage(ManageMessageId? message)
-        {
-            ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Tu contraseña ha sido guardada con éxito."
-                : message == ManageMessageId.SetPasswordSuccess ? "Tu contraseña ha sido guardada."
-                : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : "";
-            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-            ViewBag.ReturnUrl = Url.Action("Manage");
-            return View();
-        }
+        //public ActionResult Manage(ManageMessageId? message)
+        //{
+        //    ViewBag.StatusMessage =
+        //        message == ManageMessageId.ChangePasswordSuccess ? "Tu contraseña ha sido guardada con éxito."
+        //        : message == ManageMessageId.SetPasswordSuccess ? "Tu contraseña ha sido guardada."
+        //        : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+        //        : "";
+        //    ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+        //    ViewBag.ReturnUrl = Url.Action("Manage");
+        //    return View();
+        //}
 
         //
         // POST: /Account/Manage
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Manage(LocalPasswordModel model)
-        {
-            bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-            ViewBag.HasLocalPassword = hasLocalAccount;
-            ViewBag.ReturnUrl = Url.Action("Manage");
-            if (hasLocalAccount)
-            {
-                if (ModelState.IsValid)
-                {
-                    // ChangePassword will throw an exception rather than return false in certain failure scenarios.
-                    bool changePasswordSucceeded;
-                    try
-                    {
-                        changePasswordSucceeded = WebSecurity.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
-                    }
-                    catch (Exception)
-                    {
-                        changePasswordSucceeded = false;
-                    }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Manage(LocalPasswordModel model)
+        //{
+        //    bool hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
+        //    ViewBag.HasLocalPassword = hasLocalAccount;
+        //    ViewBag.ReturnUrl = Url.Action("Manage");
+        //    if (hasLocalAccount)
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            // ChangePassword will throw an exception rather than return false in certain failure scenarios.
+        //            bool changePasswordSucceeded;
+        //            try
+        //            {
+        //                changePasswordSucceeded = WebSecurity.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword);
+        //            }
+        //            catch (Exception)
+        //            {
+        //                changePasswordSucceeded = false;
+        //            }
 
-                    if (changePasswordSucceeded)
-                    {
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "La contraseña actual es incorrecta o la nueva contraseña no es válida.");
-                    }
-                }
-            }
-            else
-            {
-                // User does not have a local password so remove any validation errors caused by a missing
-                // OldPassword field
-                ModelState state = ModelState["OldPassword"];
-                if (state != null)
-                {
-                    state.Errors.Clear();
-                }
+        //            if (changePasswordSucceeded)
+        //            {
+        //                return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+        //            }
+        //            else
+        //            {
+        //                ModelState.AddModelError("", "La contraseña actual es incorrecta o la nueva contraseña no es válida.");
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // User does not have a local password so remove any validation errors caused by a missing
+        //        // OldPassword field
+        //        ModelState state = ModelState["OldPassword"];
+        //        if (state != null)
+        //        {
+        //            state.Errors.Clear();
+        //        }
 
-                if (ModelState.IsValid)
-                {
-                    try
-                    {
-                        WebSecurity.CreateAccount(User.Identity.Name, model.NewPassword);
-                        return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
-                    }
-                    catch (Exception)
-                    {
-                        ModelState.AddModelError("", String.Format("No se ha podido crear la cuenta. ya existe un suaurio con el nombre: \"{0}\".", User.Identity.Name));
-                    }
-                }
-            }
+        //        if (ModelState.IsValid)
+        //        {
+        //            try
+        //            {
+        //                WebSecurity.CreateAccount(User.Identity.Name, model.NewPassword);
+        //                return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
+        //            }
+        //            catch (Exception)
+        //            {
+        //                ModelState.AddModelError("", String.Format("No se ha podido crear la cuenta. ya existe un suaurio con el nombre: \"{0}\".", User.Identity.Name));
+        //            }
+        //        }
+        //    }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
+        //    // If we got this far, something failed, redisplay form
+        //    return View(model);
+        //}
 
         //
         // POST: /Account/ExternalLogin
@@ -348,22 +348,22 @@ namespace Aufen.PortalReportes.Web.Controllers
             RemoveLoginSuccess,
         }
 
-        internal class ExternalLoginResult : ActionResult
-        {
-            public ExternalLoginResult(string provider, string returnUrl)
-            {
-                Provider = provider;
-                ReturnUrl = returnUrl;
-            }
+        //internal class ExternalLoginResult : ActionResult
+        //{
+        //    public ExternalLoginResult(string provider, string returnUrl)
+        //    {
+        //        Provider = provider;
+        //        ReturnUrl = returnUrl;
+        //    }
 
-            public string Provider { get; private set; }
-            public string ReturnUrl { get; private set; }
+        //    public string Provider { get; private set; }
+        //    public string ReturnUrl { get; private set; }
 
-            public override void ExecuteResult(ControllerContext context)
-            {
-                OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
-            }
-        }
+        //    public override void ExecuteResult(ControllerContext context)
+        //    {
+        //        OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
+        //    }
+        //}
 
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
