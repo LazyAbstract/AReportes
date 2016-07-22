@@ -316,6 +316,7 @@
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\FechaHastaFormatoValidacion.cs" />
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\HorarioExisteValidacion.cs" />
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\HorarioRequeridoValidacion.cs" />
+    <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\RutExisteValidacion.cs" />
     <Compile Include="Models\ReglaValidacionModels\ReglaValidacionTurnoHistoricoModels\RutRequeridoValidacion.cs" />
     <Compile Include="Models\ReportesModels\ArchivoReporteFactoria.cs" />
     <Compile Include="Models\ReportesModels\AsistenciaLegal.cs" />

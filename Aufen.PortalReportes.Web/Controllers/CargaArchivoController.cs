@@ -59,6 +59,7 @@ namespace Aufen.PortalReportes.Web.Controllers
 
                     List<IReglaValidacion> reglas = new List<IReglaValidacion>();
                     reglas.Add(new Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionTurnoHistoricoModels.RutRequeridoValidacion());
+                    reglas.Add(new Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionTurnoHistoricoModels.RutExisteValidacion());
                     reglas.Add(new CalendarioRequeridoValidacion());
                     reglas.Add(new CalendarioExisteValidacion());
                     reglas.Add(new FechaDesdeFormatoValidacion());
@@ -223,7 +224,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                     reglas.Add(new FechaCorrectaValidacion());
                     reglas.Add(new IncidenciaExisteValidacion());
                     reglas.Add(new Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionIncidenciaHistoricoModels.RutRequeridoValidacion());
-                    reglas.Add(new RutExisteValidacion());
+                    reglas.Add(new Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionIncidenciaHistoricoModels.RutExisteValidacion());
                     reglas.Add(new TipoDiaExisteValidacion());
                     reglas.Add(new LlaveUnicaValidacion());
                     CargadorExcelGenerico cargador = new CargadorExcelGenerico(libro, diccionario, reglas);
