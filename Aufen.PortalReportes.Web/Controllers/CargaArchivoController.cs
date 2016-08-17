@@ -131,7 +131,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                                          CodigoEmpleado = insertar.CodigoEmpleado, 
                                          IdCalendario = insertar.IdCalendario, 
                                          CodigoHorario = ("0000" + insertar.CodigoHorario).Right(4), 
-                                         Donde = ""
+                                         Donde = "Turno Historico"
                                     };
                                     // Me aseguro de conservar el intervalo proeniente del excel como corresponde
                                     if (bufferInsertar.FechaDesde > resultado.FechaDesdeAsDateTime.Value &&
@@ -143,6 +143,68 @@ namespace Aufen.PortalReportes.Web.Controllers
                                     bufferInsertar.FechaHasta = bufferInsercion.FechaDesde.AddDays(-1);
                                     if (bufferInsertar.FechaHasta >= insertar.FechaDesde)
                                     {
+                                        // voy a eliminar todos los registros que queden dentro de la fecha
+                                        var aEliminar = db.EmpleadoCalendarioHorariosHistorico01s.Where(x => x.CodigoEmpleado == bufferInsertar.CodigoEmpleado
+                                            && x.FechaHasta.HasValue
+                                            && x.FechaDesde >= bufferInsertar.FechaDesde
+                                            && x.FechaHasta <= bufferInsertar.FechaHasta
+                                            );
+                                        db.EmpleadoCalendarioHorariosHistorico01s.DeleteAllOnSubmit(aEliminar);
+                                        db.SubmitChanges();
+
+                                        // voy a cortar los que quedan afuera por los dos lados
+                                        var aCortar = db.EmpleadoCalendarioHorariosHistorico01s.Where(x => x.CodigoEmpleado == bufferInsertar.CodigoEmpleado
+                                           && x.FechaHasta.HasValue
+                                           && x.FechaDesde <= bufferInsertar.FechaDesde
+                                           && x.FechaHasta >= bufferInsertar.FechaHasta.GetValueOrDefault(x.FechaHasta.Value));
+
+                                        foreach(var item in aCortar)
+                                        {
+                                            item.FechaHasta = bufferInsertar.FechaDesde.AddDays(-1);
+                                            if (bufferInsertar.FechaHasta.HasValue)
+                                            {
+                                                db.EmpleadoCalendarioHorariosHistorico01s.InsertOnSubmit(new EmpleadoCalendarioHorariosHistorico01()
+                                                {
+                                                    IdEmpleadoCalendarioHorariosHistorico01 = Guid.NewGuid(),
+                                                    CodigoEmpleado = item.CodigoEmpleado,
+                                                    CodigoHorario = item.CodigoHorario,
+                                                    IdCalendario = item.IdCalendario,
+                                                    FechaDesde = bufferInsertar.FechaHasta.Value.AddDays(1),
+                                                    FechaHasta = item.FechaHasta,
+                                                    FechaCreacion = DateTime.Now,
+                                                    Donde = "Turno Historico",
+                                                });
+                                            }
+                                        }
+                                        db.SubmitChanges();
+
+                                        // voy a cortar los que parten antes y tienen nulo hacia el futuro
+                                        var aCortar2 = db.EmpleadoCalendarioHorariosHistorico01s.Where(x => x.CodigoEmpleado == bufferInsertar.CodigoEmpleado
+                                           && !x.FechaHasta.HasValue
+                                           && x.FechaDesde <= bufferInsertar.FechaDesde);
+
+                                        foreach (var item in aCortar2)
+                                        {
+                                            item.FechaHasta = bufferInsertar.FechaDesde.AddDays(-1);
+                                            if (bufferInsertar.FechaHasta.HasValue)
+                                            {
+                                                db.EmpleadoCalendarioHorariosHistorico01s.InsertOnSubmit(new EmpleadoCalendarioHorariosHistorico01()
+                                                {
+                                                    IdEmpleadoCalendarioHorariosHistorico01 = Guid.NewGuid(),
+                                                    CodigoEmpleado = item.CodigoEmpleado,
+                                                    CodigoHorario = item.CodigoHorario,
+                                                    IdCalendario = item.IdCalendario,
+                                                    FechaDesde = bufferInsertar.FechaHasta.Value.AddDays(1),
+                                                    FechaHasta = null,
+                                                    FechaCreacion = DateTime.Now,
+                                                    Donde = "Turno Historico",
+                                                });
+                                            }
+                                        }
+                                        db.SubmitChanges();
+
+                                        // quedan mucho otros caso pero cualquier overlap la bd va a tirar error                                        
+
                                         // porsiaca, para no insertar intervalos invalidos
                                         db.EmpleadoCalendarioHorariosHistorico01s.InsertOnSubmit(bufferInsertar);
                                     }

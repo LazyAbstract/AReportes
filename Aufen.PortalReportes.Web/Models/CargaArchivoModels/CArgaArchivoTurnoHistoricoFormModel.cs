@@ -10,7 +10,7 @@ namespace Aufen.PortalReportes.Web.Models.CargaArchivoModels
     public class CargaArchivoTurnoHistoricoFormModel
     {
         [Required]
-        [AValidFile(Allowed = new string[] { ".xlsx" }, MaxLength = 1024 * 1024 * 100, ErrorMessage = "El archivo debe tener extensión .xlsx y pesar, cómo máximo, 100MG.")]
+        [AValidFile(Allowed = new string[] { ".xlsx", ".XLSX" }, MaxLength = 1024 * 1024 * 100 , ErrorMessage = "El archivo debe tener extensión .xlsx y pesar, cómo máximo, 100MG.")]
         public HttpPostedFileBase Archivo { get; set; }
 
         public string Error

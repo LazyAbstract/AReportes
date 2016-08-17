@@ -162,11 +162,11 @@ namespace Aufen.PortalReportes.Web.Models.CargaArchivoModels
                     XSSFCell celdaFila = (XSSFCell)fila.GetCell(j);
                     if (celdaCabecera != null && !String.IsNullOrEmpty(celdaCabecera.ToString()))
                     {
-                        if (Diccionario.Any(x => x.Key.ToLower() == celdaCabecera.ToString().ToLower()))
+                        if (Diccionario.Any(x => x.Key.ToLower() == celdaCabecera.ToString().Trim().ToLower()))
                         {
                             // Validaciones de estructura
                             var atributo = Diccionario.SingleOrDefault(x => x.Key.ToLower() ==
-                                celdaCabecera.ToString().ToLower());
+                                celdaCabecera.ToString().Trim().ToLower());
 
                             //string valor = celdaFila != null && celdaFila.CellType != NPOI.SS.UserModel.CellType.Blank ? celdaFila.ToString() : "";
                             string valor = celdaFila != null ? celdaFila.ToString() : "";
