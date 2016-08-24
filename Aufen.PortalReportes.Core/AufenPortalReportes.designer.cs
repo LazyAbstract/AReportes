@@ -284,6 +284,13 @@ namespace Aufen.PortalReportes.Core
 		{
 			return this.CreateMethodCallQuery<Fn_DatosEmpleadoResult>(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), turno, rut, calendario);
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.sp_EliminaHistoricos")]
+		public int sp_EliminaHistoricos([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(9)")] string rut, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTime")] System.Nullable<System.DateTime> ultimafecha)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), rut, ultimafecha);
+			return ((int)(result.ReturnValue));
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.vw_Ubicaciones")]

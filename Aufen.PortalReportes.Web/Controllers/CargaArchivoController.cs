@@ -1,4 +1,5 @@
 ﻿using Aufen.PortalReportes.Core;
+using Aufen.PortalReportes.Web.Helpers;
 using Aufen.PortalReportes.Web.Models.CargaArchivoModels;
 using Aufen.PortalReportes.Web.Models.DTOModels;
 using Aufen.PortalReportes.Web.Models.ReglaValidacionModels;
@@ -25,12 +26,28 @@ namespace Aufen.PortalReportes.Web.Controllers
         public ActionResult CargaArchivoTurnoHistorico()
         {
             CargaArchivoTurnoHistoricoViewModel model = new CargaArchivoTurnoHistoricoViewModel();
+            LectorMonthPicker lector = new LectorMonthPicker();
+            model.Periodo = lector.GetMonthNameFromInt(DateTime.Now.AddMonths(-1).Month)
+                + " " + DateTime.Now.AddMonths(-1).Year.ToString();
             return View(model);
         }
 
         [HttpPost]
         public ActionResult CargaArchivoTurnoHistorico(CargaArchivoTurnoHistoricoFormModel Form)
         {
+            int Mes;
+            int Ano;
+            if (String.IsNullOrWhiteSpace(Form.Periodo))
+            {
+                Mes = DateTime.Now.AddMonths(-1).Month;
+                Ano = DateTime.Now.AddMonths(-1).Year;
+            }
+            else
+            {
+                LectorMonthPicker lector = new LectorMonthPicker(Form.Periodo);
+                Mes = lector.GetMes;
+                Ano = lector.GetAnno;
+            }
             CargaArchivoTurnoHistoricoViewModel model = new CargaArchivoTurnoHistoricoViewModel(Form);
             Dictionary<string, string> diccionario = DiccionarioCabecera.DiccionarioCabeceraHistorico.GetDiccionarioTurnoHistorico();
             if (diccionario == null || (diccionario != null && !diccionario.Any()))
@@ -62,9 +79,9 @@ namespace Aufen.PortalReportes.Web.Controllers
                     reglas.Add(new Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionTurnoHistoricoModels.RutExisteValidacion());
                     reglas.Add(new CalendarioRequeridoValidacion());
                     reglas.Add(new CalendarioExisteValidacion());
-                    reglas.Add(new FechaDesdeFormatoValidacion());
+                    reglas.Add(new FechaDesdeFormatoValidacion(Mes, Ano));
                     reglas.Add(new FechaDesdeRequeridoValidacion());
-                    reglas.Add(new FechaHastaFormatoValidacion());
+                    reglas.Add(new FechaHastaFormatoValidacion(Mes, Ano));
                     reglas.Add(new HorarioExisteValidacion());
                     reglas.Add(new HorarioRequeridoValidacion());
                     reglas.Add(new FechaDesdeMenorFechaHastaValidacion());
@@ -76,8 +93,14 @@ namespace Aufen.PortalReportes.Web.Controllers
                         IEnumerable<TurnoHistoricoDTO> resultados =
                                 cargador.CargarArchivo<TurnoHistoricoDTO>();
 
-                        foreach (var resultado in resultados)
+                        foreach(var rut in resultados.GroupBy(x => x.Rut))
                         {
+                            //  elimino todo lo del rut para el periodo y hacia adelante
+                            db.sp_EliminaHistoricos(rut.Key, new DateTime(Ano, Mes, 1).AddDays(-1));
+                        }
+
+                        foreach (var resultado in resultados)
+                        {         
                             var empleado = db.Fn_DatosEmpleado(resultado.IdHorario, resultado.Rut, resultado.IdCalendario)
                                 .FirstOrDefault();
                             if (empleado != null && resultado.FechaHastaAsDateTime.HasValue && resultado.FechaDesdeAsDateTime.HasValue)
@@ -119,7 +142,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                                     CodigoEmpleado = bufferInsercion.CodigoEmpleado,
                                     IdCalendario = bufferInsercion.IdCalendario,
                                     CodigoHorario = ("0000" + bufferInsercion.CodigoHorario).Right(4),
-                                    Donde = ""
+                                    Donde = "Turno Historico"
                                 });
                                 foreach (var insertar in insercion.Skip(1))
                                 {
@@ -256,6 +279,7 @@ namespace Aufen.PortalReportes.Web.Controllers
                                     && x.IdCalendario == calendario.IdCalendario);
                                 cal.IdTipoDia = calendario.IdTipoDia;
                                 cal.IdIncidencia = calendario.IdIncidencia;
+                                cal.Observaciones = cal.Observaciones + ".";
                             }
                             else
                             {

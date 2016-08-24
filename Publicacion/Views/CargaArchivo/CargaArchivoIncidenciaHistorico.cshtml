@@ -25,6 +25,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Carga Archivos Incidencias Histórico</h3>
+                <p>Atención: la carga de incidencias debe hacerse después de la carga de turnos históricos.</p>
             </div>
             <div class="panel-body">
                 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", id = "form-carga", @class = "form-horizontal" }))

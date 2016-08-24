@@ -12,9 +12,17 @@ namespace Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionT
         AufenPortalReportesDataContext db = new AufenPortalReportesDataContext()
             .WithConnectionStringFromConfiguration();
         private string MensajeError { get; set; }
+        private int mes { get; set; }
+        private int ano { get; set; }
         public FechaDesdeFormatoValidacion()
         {
             MensajeError = String.Empty;
+        }
+
+        public FechaDesdeFormatoValidacion(int _mes, int _ano) : this()
+        {
+            mes = _mes;
+            ano = _ano;
         }
 
         public string Mensaje
@@ -31,6 +39,11 @@ namespace Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionT
             {
                 validacion = false;
                 MensajeError = "No se pudo leer la fecha de inicio";
+            }
+            else if(DateTime.Parse(dto.FechaDesde).Month != mes || DateTime.Parse(dto.FechaDesde).Year != ano)
+            {
+                validacion = false;
+                MensajeError = "La fecha desde está fuera del periodo indicado.";
             }
             return validacion;
         }

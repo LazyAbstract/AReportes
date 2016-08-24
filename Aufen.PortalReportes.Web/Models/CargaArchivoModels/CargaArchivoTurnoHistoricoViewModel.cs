@@ -8,6 +8,7 @@ namespace Aufen.PortalReportes.Web.Models.CargaArchivoModels
     public class CargaArchivoTurnoHistoricoViewModel
     {
         public CargaArchivoTurnoHistoricoFormModel Form { get; set; }
+        public string Periodo { get; set; }
 
         public CargaArchivoTurnoHistoricoViewModel()
         {

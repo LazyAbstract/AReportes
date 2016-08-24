@@ -290,6 +290,7 @@
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\HtmlHelpers.cs" />
     <Compile Include="Helpers\ImageHelpers.cs" />
+    <Compile Include="Helpers\LectorMonthPicker.cs" />
     <Compile Include="MapperProfile\DefaultProfileMapper.cs" />
     <Compile Include="MapperProfile\ReportesMappers\sp_LibroAtrasosResultsp_LibroInasistenciasDTO.cs" />
     <Compile Include="MapperProfile\ReportesMappers\sp_LibroAtrasosResultsp_LibroAtrasosResultDTO.cs" />

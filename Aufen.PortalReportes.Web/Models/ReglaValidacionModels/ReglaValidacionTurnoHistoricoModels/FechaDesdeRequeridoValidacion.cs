@@ -12,10 +12,13 @@ namespace Aufen.PortalReportes.Web.Models.ReglaValidacionModels.ReglaValidacionT
         AufenPortalReportesDataContext db = new AufenPortalReportesDataContext()
             .WithConnectionStringFromConfiguration();
         private string MensajeError { get; set; }
+
         public FechaDesdeRequeridoValidacion()
         {
             MensajeError = String.Empty;
         }
+
+      
 
         public string Mensaje
         {
