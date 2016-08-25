@@ -18,6 +18,7 @@ namespace Aufen.PortalReportes.Core
             if (connectionString == null && String.IsNullOrEmpty(connectionString)) throw new ConfigurationErrorsException(String.Format("El ConnectionString especificado para la llave \"{0}\" está vacío.", key));
 
             this.Connection.ConnectionString = settingsCollection.ConnectionString;
+            this.CommandTimeout = 6 * 60; // 6 minutos
             return this;
         }
 
