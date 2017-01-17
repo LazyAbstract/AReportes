@@ -96,7 +96,8 @@ namespace Aufen.PortalReportes.Web.Controllers
                         foreach(var rut in resultados.GroupBy(x => x.Rut))
                         {
                             //  elimino todo lo del rut para el periodo y hacia adelante
-                            db.sp_EliminaHistoricos(rut.Key, new DateTime(Ano, Mes, 1).AddDays(-1));
+                            string _rut = ("000" + rut.Key).Right(9);
+                            db.sp_EliminaHistoricos(_rut, new DateTime(Ano, Mes, 1).AddDays(-1));
                         }
 
                         foreach (var resultado in resultados)
