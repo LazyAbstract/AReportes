@@ -265,18 +265,18 @@ namespace Aufen.PortalReportes.Web.Controllers
                             CALENDARIO01 calendario = new CALENDARIO01()
                             {
                                 Fecha = _fecha.Year.ToString() + ("0" + _fecha.Month.ToString()).Right(2) + ("0" + _fecha.Day.ToString()).Right(2),
-                                Publico = 0,
+                                Publico = 1,
                                 IdTipoDia = Convert.ToChar(resultado.IdTipoDia),
                                 IdIncidencia = ("0000" + resultado.IdIncidencia).Right(4),
                                 IdCalendario = ("000000000" + resultado.Rut).Right(9),
                             };
 
                             if(db.CALENDARIO01s.Any(x => x.Fecha == calendario.Fecha 
-                                && x.Publico == calendario.Publico 
+                                //&& x.Publico == calendario.Publico 
                                 && x.IdCalendario == calendario.IdCalendario))
                             {
                                 var cal = db.CALENDARIO01s.Single(x => x.Fecha == calendario.Fecha
-                                    && x.Publico == calendario.Publico
+                                    //&& x.Publico == calendario.Publico
                                     && x.IdCalendario == calendario.IdCalendario);
                                 cal.IdTipoDia = calendario.IdTipoDia;
                                 cal.IdIncidencia = calendario.IdIncidencia;
