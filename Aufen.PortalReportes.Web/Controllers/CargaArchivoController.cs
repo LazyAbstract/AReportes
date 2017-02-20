@@ -272,11 +272,11 @@ namespace Aufen.PortalReportes.Web.Controllers
                             };
 
                             if(db.CALENDARIO01s.Any(x => x.Fecha == calendario.Fecha 
-                                //&& x.Publico == calendario.Publico 
+                                && x.Publico == calendario.Publico 
                                 && x.IdCalendario == calendario.IdCalendario))
                             {
                                 var cal = db.CALENDARIO01s.Single(x => x.Fecha == calendario.Fecha
-                                    //&& x.Publico == calendario.Publico
+                                    && x.Publico == calendario.Publico
                                     && x.IdCalendario == calendario.IdCalendario);
                                 cal.IdTipoDia = calendario.IdTipoDia;
                                 cal.IdIncidencia = calendario.IdIncidencia;
